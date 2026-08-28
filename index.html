@@ -6,13 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>whatrushik — Developer & Founder of WHAT Technologies</title>
 
-    <meta name="description" content="Личный сайт разработчика whatrushik (Гор). Android, Compose, Python, Web. Основатель WHAT Technologies.">
+    <meta name="description"
+        content="Личный сайт разработчика whatrushik (Гор). Android, Compose, Python, Web. Основатель WHAT Technologies.">
     <meta name="author" content="whatrushik">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -35,11 +38,9 @@
             --accent-glow: rgba(255, 255, 255, 0.05);
             --theme-bg-glow: rgba(255, 255, 255, 0.02);
             --grid-line: rgba(255, 255, 255, 0.03);
-            --grid-highlight: rgba(255, 255, 255, 0.08);
 
             --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             --transition-normal: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         [data-theme="blue"] {
@@ -106,31 +107,35 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
             overflow-x: hidden;
+            height: 100%;
         }
 
         body {
             background-color: var(--background);
             color: var(--foreground);
             font-family: var(--font-sans);
-            font-size: 16px;
-            line-height: 1.6;
+            font-size: 15px;
+            line-height: 1.5;
             overflow-x: hidden;
             transition: background-color var(--transition-normal), color var(--transition-normal);
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
         }
+
         ::-webkit-scrollbar-track {
             background: var(--background);
         }
+
         ::-webkit-scrollbar-thumb {
             background: var(--border);
             border-radius: var(--radius);
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
         }
@@ -150,10 +155,10 @@
 
         .mouse-glow {
             position: fixed;
-            width: 600px;
-            height: 600px;
+            width: 500px;
+            height: 500px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(var(--accent-rgb), 0.07) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%);
             pointer-events: none;
             z-index: 1;
             transform: translate(-50%, -50%);
@@ -170,13 +175,13 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            background-image: 
+            background-image:
                 linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
                 linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
             background-size: 80px 80px;
             mask-image: radial-gradient(circle 80% at 50% 50%, black 30%, transparent 100%);
             -webkit-mask-image: radial-gradient(circle 80% at 50% 50%, black 30%, transparent 100%);
-            opacity: 0.85;
+            opacity: 0.8;
         }
 
         /* Cursor */
@@ -190,21 +195,19 @@
             pointer-events: none;
             z-index: 9999;
             mix-blend-mode: difference;
-            transition: width 0.2s, height 0.2s;
             display: none;
         }
 
         .custom-cursor-outline {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border: 1px solid var(--accent);
             border-radius: 50%;
             position: fixed;
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 9998;
-            opacity: 0.5;
-            transition: width 0.2s, height 0.2s, opacity 0.2s;
+            opacity: 0.4;
             display: none;
         }
 
@@ -214,15 +217,16 @@
         }
 
         body.cursor-hover .custom-cursor {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             opacity: 0.15;
             mix-blend-mode: normal;
         }
+
         body.cursor-hover .custom-cursor-outline {
-            width: 55px;
-            height: 55px;
-            opacity: 1;
+            width: 50px;
+            height: 50px;
+            opacity: 0.8;
         }
 
         /* Navbar */
@@ -231,7 +235,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            padding: 1.25rem 2rem;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -240,12 +244,6 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
-            transition: background var(--transition-normal), padding var(--transition-normal);
-        }
-
-        .navbar.scrolled {
-            padding: 0.85rem 2rem;
-            background: rgba(var(--background-rgb), 0.9);
         }
 
         .nav-brand {
@@ -255,7 +253,7 @@
             text-decoration: none;
             color: var(--foreground);
             font-family: var(--font-mono);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
         }
 
@@ -275,7 +273,7 @@
         }
 
         .nav-link {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             font-weight: 500;
             color: var(--muted-foreground);
             text-decoration: none;
@@ -286,60 +284,74 @@
             color: var(--foreground);
         }
 
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
         .theme-switcher {
             display: flex;
             align-items: center;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            padding: 4px;
+            padding: 3px;
             border-radius: 30px;
             gap: 4px;
         }
 
         .theme-btn {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             border: 2px solid transparent;
             cursor: pointer;
-            transition: transform var(--transition-fast);
             padding: 0;
+            transition: transform var(--transition-fast);
         }
 
         .theme-btn:hover {
-            transform: scale(1.2);
+            transform: scale(1.15);
         }
 
         .theme-btn.active {
             border-color: var(--foreground);
         }
 
-        .theme-btn-black { background: #fafafa; }
-        .theme-btn-blue { background: #1F2137; }
-        .theme-btn-burgundy { background: #691616; }
-        .theme-btn-orange { background: #D27731; }
-        .theme-btn-green { background: #275325; }
-
-        /* Typography & Layout */
-        .section {
-            padding: 6.5rem 2rem 5rem;
-            position: relative;
-            z-index: 2;
-            max-width: 1100px;
-            margin: 0 auto;
+        .theme-btn-black {
+            background: #fafafa;
         }
 
-        .first-section {
-            padding-top: 3.5rem;
-            min-height: 80vh;
+        .theme-btn-blue {
+            background: #1F2137;
+        }
+
+        .theme-btn-burgundy {
+            background: #691616;
+        }
+
+        .theme-btn-orange {
+            background: #D27731;
+        }
+
+        .theme-btn-green {
+            background: #275325;
+        }
+
+        /* --- 100VH SECTIONS STRUCTURE --- */
+        .section-wrapper {
+            height: 100vh;
+            min-height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            padding: 5rem 2rem 1.5rem;
+            box-sizing: border-box;
+            z-index: 2;
+        }
+
+        .section-container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
         }
 
         .section-divider {
@@ -351,11 +363,11 @@
             background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
         }
 
-        /* --- 3D INTERACTIVE AVATAR CARD --- */
+        /* --- SECTION 1: ABOUT --- */
         .profile-grid {
             display: grid;
-            grid-template-columns: 360px 1fr;
-            gap: 4rem;
+            grid-template-columns: 310px 1fr;
+            gap: 3.5rem;
             align-items: center;
             width: 100%;
         }
@@ -377,7 +389,7 @@
 
         .founder-visual:hover {
             border-color: var(--border-hover);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--accent-glow);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
         }
 
         .founder-scan-line {
@@ -400,8 +412,13 @@
         }
 
         @keyframes scanVertical {
-            0% { top: 0%; }
-            100% { top: 100%; }
+            0% {
+                top: 0%;
+            }
+
+            100% {
+                top: 100%;
+            }
         }
 
         .founder-image-img {
@@ -411,7 +428,7 @@
             border-radius: var(--radius);
             filter: grayscale(100%) contrast(110%);
             mix-blend-mode: luminosity;
-            transition: filter var(--transition-normal), transform var(--transition-normal);
+            transition: filter var(--transition-normal);
             z-index: 2;
         }
 
@@ -420,7 +437,6 @@
             mix-blend-mode: normal;
         }
 
-        /* Fallback if photo not found */
         .founder-fallback {
             display: none;
             position: absolute;
@@ -431,32 +447,27 @@
             z-index: 1;
         }
 
-        .founder-content {
-            display: flex;
-            flex-direction: column;
-        }
-
         .founder-name {
-            font-size: clamp(2.4rem, 4vw, 3.2rem);
+            font-size: clamp(2.2rem, 3.5vw, 3rem);
             font-weight: 800;
             line-height: 1.1;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.3rem;
         }
 
         .founder-role {
             font-family: var(--font-mono);
             color: var(--accent);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             letter-spacing: 0.05em;
-            margin-bottom: 1.75rem;
+            margin-bottom: 1.25rem;
             text-transform: uppercase;
         }
 
         .founder-bio {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--muted-foreground);
-            line-height: 1.7;
-            margin-bottom: 2rem;
+            line-height: 1.65;
+            margin-bottom: 1.75rem;
         }
 
         .founder-bio strong {
@@ -469,21 +480,16 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             border-top: 1px solid var(--border);
-            padding-top: 1.75rem;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
+            padding-top: 1.25rem;
         }
 
         .stat-val {
             font-family: var(--font-mono);
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: var(--foreground);
             line-height: 1;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.3rem;
         }
 
         .stat-val::after {
@@ -493,35 +499,35 @@
         }
 
         .stat-lbl {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--muted-foreground);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        /* --- PROJECTS SECTION --- */
+        /* --- SECTION 2: PROJECTS --- */
         .section-title-simple {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: 700;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.75rem;
             letter-spacing: -0.02em;
         }
 
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .project-card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 2rem;
+            padding: 1.75rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 320px;
+            min-height: 290px;
             text-decoration: none;
             transition: border-color var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-normal);
         }
@@ -536,12 +542,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .project-cat {
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--accent);
             border: 1px solid var(--border);
             padding: 3px 8px;
@@ -560,54 +566,65 @@
         }
 
         .project-title {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.6rem;
             color: var(--foreground);
         }
 
         .project-desc {
             color: var(--muted-foreground);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             line-height: 1.5;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .project-tech {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.4rem;
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
         .project-tech-item {
             color: var(--muted-foreground);
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            padding: 3px 8px;
+            padding: 2px 7px;
             border-radius: 4px;
         }
 
-        /* --- CONTACT & SOCIALS --- */
+        /* --- SECTION 3: CONTACT & FOOTER IN 100VH --- */
+        .contact-section-wrapper {
+            justify-content: space-between;
+            padding-top: 5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .contact-content {
+            margin: auto 0;
+            width: 100%;
+        }
+
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: start;
+            gap: 2.5rem;
+            align-items: center;
         }
 
         .socials-list {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0.85rem;
         }
 
         .social-card {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 1.25rem;
+            padding: 1rem 1.15rem;
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
@@ -628,29 +645,29 @@
 
         .social-card-name {
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .social-card-handle {
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--muted-foreground);
         }
 
         .social-icon {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             color: var(--accent);
+            flex-shrink: 0;
         }
 
-        /* Form */
         .contact-form {
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 0.85rem;
             background: var(--card);
             border: 1px solid var(--border);
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: var(--radius);
         }
 
@@ -658,11 +675,11 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
-            padding: 0.85rem 1rem;
+            padding: 0.75rem 0.9rem;
             color: var(--foreground);
             border-radius: var(--radius);
             font-family: var(--font-sans);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: border-color var(--transition-fast);
         }
 
@@ -675,10 +692,10 @@
             background: var(--foreground);
             color: var(--background);
             border: none;
-            padding: 0.85rem;
+            padding: 0.75rem;
             border-radius: var(--radius);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: opacity var(--transition-fast);
         }
@@ -687,20 +704,14 @@
             opacity: 0.9;
         }
 
-        /* Footer */
-        .footer {
+        .integrated-footer {
+            width: 100%;
             border-top: 1px solid var(--border);
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer-inner {
-            max-width: 1100px;
-            margin: 0 auto;
+            padding-top: 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--muted-foreground);
         }
 
@@ -717,52 +728,64 @@
             border-bottom-color: var(--accent);
         }
 
-        /* Mobile */
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            flex-direction: column;
-            gap: 5px;
-        }
+        /* --- RESPONSIVE FALLBACK --- */
+        @media (max-width: 900px),
+        (max-height: 650px) {
+            html {
+                scroll-snap-type: none;
+                height: auto;
+            }
 
-        .mobile-toggle span {
-            width: 22px;
-            height: 2px;
-            background: var(--foreground);
-        }
+            .section-wrapper {
+                height: auto;
+                min-height: auto;
+                padding: 6rem 1.5rem 3rem;
+            }
 
-        @media (max-width: 900px) {
             .profile-grid {
                 grid-template-columns: 1fr;
                 gap: 2.5rem;
             }
+
             .founder-visual {
-                max-width: 320px;
+                max-width: 280px;
                 margin: 0 auto;
             }
+
             .projects-grid {
                 grid-template-columns: 1fr;
             }
+
             .contact-grid {
                 grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .contact-section-wrapper {
+                padding-bottom: 2rem;
+            }
+
+            .integrated-footer {
+                margin-top: 2.5rem;
             }
         }
 
         @media (max-width: 600px) {
             .navbar {
-                padding: 1rem;
+                padding: 0.85rem 1.25rem;
             }
-            .socials-list {
-                grid-template-columns: 1fr;
-            }
+
             .nav-menu {
                 display: none;
             }
-            .footer-inner {
+
+            .socials-list {
+                grid-template-columns: 1fr;
+            }
+
+            .integrated-footer {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.75rem;
                 text-align: center;
             }
         }
@@ -778,156 +801,228 @@
     <div class="mouse-glow"></div>
     <div class="background-grid"></div>
 
-    <!-- 1. ABOUT & 3D PHOTO -->
-    <section class="section first-section" id="about">
-        <div class="profile-grid">
-            
-            <!-- 3D INTERACTIVE TILT CARD -->
-            <div class="founder-visual" id="avatar-card">
-                <div class="founder-scan-line"></div>
-                <!-- Фотография: укажи путь к своему файлу (например: avatar.jpg или assets/avatar.jpg) -->
-                <img src="assets/me.webp" class="founder-image-img" alt="Гор (whatrushik)" onerror="this.style.display='none'; document.querySelector('.founder-fallback').style.display='block';">
-                <div class="founder-fallback">WHAT</div>
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="#about" class="nav-brand">
+            <span>whatrushik</span>
+            <span class="nav-brand-badge">DEV</span>
+        </a>
+
+        <nav class="nav-menu">
+            <a href="#about" class="nav-link">Обо мне</a>
+            <a href="#projects" class="nav-link">Проекты</a>
+            <a href="#contact" class="nav-link">Контакты</a>
+        </nav>
+
+        <div class="nav-actions">
+            <div class="theme-switcher" title="Сменить тему">
+                <button class="theme-btn theme-btn-black active" data-theme-name="black" aria-label="Black"></button>
+                <button class="theme-btn theme-btn-blue" data-theme-name="blue" aria-label="Blue"></button>
+                <button class="theme-btn theme-btn-burgundy" data-theme-name="burgundy" aria-label="Burgundy"></button>
+                <button class="theme-btn theme-btn-orange" data-theme-name="orange" aria-label="Orange"></button>
+                <button class="theme-btn theme-btn-green" data-theme-name="green" aria-label="Green"></button>
             </div>
+        </div>
+    </header>
 
-            <!-- BIO CONTENT -->
-            <div class="founder-content">
-                <h1 class="founder-name">Гор</h1>
-                <div class="founder-role">Lead Developer & Founder · WHAT Technologies</div>
+    <!-- 1. ABOUT BLOCK (SCREEN 1) -->
+    <section class="section-wrapper" id="about">
+        <div class="section-container">
+            <div class="profile-grid">
 
-                <div class="founder-bio">
-                    <p>
-                        Разрабатываю нативные и кроссплатформенные клиенты на <strong>Kotlin</strong> и <strong>Jetpack Compose</strong>, пишу асинхронные бэкенды на <strong>Python</strong> и создаю адаптивный веб. Руковожу разработкой проектов в комьюнити <strong>WHAT Technologies</strong>.
-                    </p>
-                    <p style="margin-top: 10px;">
-                        Ценю аккуратную архитектуру, отзывчивый UI без лишнего визуального шума и регулярную практику на хакатонах.
-                    </p>
+                <!-- 3D INTERACTIVE TILT CARD -->
+                <div class="founder-visual" id="avatar-card">
+                    <div class="founder-scan-line"></div>
+                    <img src="assets/me.webp" class="founder-image-img" alt="Гор (whatrushik)"
+                        onerror="this.style.display='none'; document.querySelector('.founder-fallback').style.display='block';">
+                    <div class="founder-fallback">WHAT</div>
                 </div>
 
-                <div class="founder-stats">
-                    <div class="stat-item">
-                        <span class="stat-val">4</span>
-                        <span class="stat-lbl">Года в коде</span>
+                <!-- BIO CONTENT -->
+                <div class="founder-content">
+                    <h1 class="founder-name">Гор</h1>
+                    <div class="founder-role">Lead Developer & Founder · WHAT Technologies</div>
+
+                    <div class="founder-bio">
+                        <p>
+                            Разрабатываю нативные и кроссплатформенные клиенты на <strong>Kotlin</strong> и
+                            <strong>Jetpack Compose</strong>, создаю асинхронный бэкенд на <strong>Python</strong> и
+                            быстрый веб. Руковожу проектами в открытом сообществе <strong>WHAT Technologies</strong>.
+                        </p>
+                        <p style="margin-top: 8px;">
+                            Ценю чистую архитектуру, высокую отзывчивость UI без визуального мусора и постоянную
+                            практику на хакатонах.
+                        </p>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-val">15</span>
-                        <span class="stat-lbl">Хакатонов</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-val">100%</span>
-                        <span class="stat-lbl">Open Source</span>
+
+                    <div class="founder-stats">
+                        <div class="stat-item">
+                            <span class="stat-val">4</span>
+                            <span class="stat-lbl">Года в коде</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-val">15</span>
+                            <span class="stat-lbl">Хакатонов</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-val">100%</span>
+                            <span class="stat-lbl">Open Source</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
         <div class="section-divider"></div>
     </section>
 
-    <!-- 2. PROJECTS -->
-    <section class="section" id="projects">
-        <h2 class="section-title-simple">Проекты</h2>
+    <!-- 2. PROJECTS BLOCK (SCREEN 2) -->
+    <section class="section-wrapper" id="projects">
+        <div class="section-container">
+            <h2 class="section-title-simple">Проекты</h2>
 
-        <div class="projects-grid">
-            <!-- WHAT Schedule -->
-            <a href="https://github.com/whatrushki/WHAT-Schedule-android" target="_blank" rel="noopener" class="project-card">
-                <div>
-                    <div class="project-top">
-                        <span class="project-cat">Android</span>
-                        <span class="project-arrow">↗</span>
+            <div class="projects-grid">
+                <!-- WHAT Schedule -->
+                <a href="https://github.com/whatrushki/WHAT-Schedule-android" target="_blank" rel="noopener"
+                    class="project-card">
+                    <div>
+                        <div class="project-top">
+                            <span class="project-cat">Android</span>
+                            <span class="project-arrow">↗</span>
+                        </div>
+                        <h3 class="project-title">WHAT Schedule</h3>
+                        <p class="project-desc">
+                            Нативное Android-приложение расписания с локальным кэшированием, оффлайн-режимом и виджетами
+                            на Jetpack Glance.
+                        </p>
                     </div>
-                    <h3 class="project-title">WHAT Schedule</h3>
-                    <p class="project-desc">
-                        Мобильное расписание для студентов и преподавателей. Быстрый локальный кэш, оффлайн-режим и виджеты для главного экрана.
-                    </p>
-                </div>
-                <div class="project-tech">
-                    <span class="project-tech-item">Kotlin</span>
-                    <span class="project-tech-item">Compose</span>
-                    <span class="project-tech-item">Room</span>
-                    <span class="project-tech-item">Ktor</span>
-                </div>
-            </a>
+                    <div class="project-tech">
+                        <span class="project-tech-item">Kotlin</span>
+                        <span class="project-tech-item">Compose</span>
+                        <span class="project-tech-item">Ktor</span>
+                        <span class="project-tech-item">Room</span>
+                    </div>
+                </a>
 
-            <!-- Urartu Web -->
-            <a href="https://whatrushki.github.io/urartu/" target="_blank" rel="noopener" class="project-card">
-                <div>
-                    <div class="project-top">
-                        <span class="project-cat">Web</span>
-                        <span class="project-arrow">↗</span>
+                <!-- Лес Куб -->
+                <a href="https://leskub.ru/" target="_blank" rel="noopener" class="project-card">
+                    <div>
+                        <div class="project-top">
+                            <span class="project-cat">Web</span>
+                            <span class="project-arrow">↗</span>
+                        </div>
+                        <h3 class="project-title">Лес Куб</h3>
+                        <p class="project-desc">
+                            Интерактивный e-commerce каталог пиломатериалов с калькулятором пересчета кубатуры и заказом
+                            через Telegram API.
+                        </p>
                     </div>
-                    <h3 class="project-title">Urartu Web</h3>
-                    <p class="project-desc">
-                        Официальный промо-сайт и медиа-платформа ансамбля армянских народных танцев «Урарту». Адаптивная верстка и галерея.
-                    </p>
-                </div>
-                <div class="project-tech">
-                    <span class="project-tech-item">JavaScript</span>
-                    <span class="project-tech-item">HTML5</span>
-                    <span class="project-tech-item">CSS3</span>
-                </div>
-            </a>
+                    <div class="project-tech">
+                        <span class="project-tech-item">JavaScript</span>
+                        <span class="project-tech-item">HTML5</span>
+                        <span class="project-tech-item">CSS3</span>
+                        <span class="project-tech-item">Telegram API</span>
+                    </div>
+                </a>
+
+                <!-- Urartu Ensemble -->
+                <a href="https://whatrushki.github.io/urartu/" target="_blank" rel="noopener" class="project-card">
+                    <div>
+                        <div class="project-top">
+                            <span class="project-cat">Web</span>
+                            <span class="project-arrow">↗</span>
+                        </div>
+                        <h3 class="project-title">Urartu Ensemble</h3>
+                        <p class="project-desc">
+                            Атмосферный промо-сайт и медиа-платформа ансамбля этнических танцев с плавной анимацией и
+                            галереей.
+                        </p>
+                    </div>
+                    <div class="project-tech">
+                        <span class="project-tech-item">HTML5</span>
+                        <span class="project-tech-item">CSS3</span>
+                        <span class="project-tech-item">JavaScript</span>
+                        <span class="project-tech-item">BEM</span>
+                    </div>
+                </a>
+            </div>
         </div>
         <div class="section-divider"></div>
     </section>
 
-    <!-- 3. CONTACT & SOCIALS -->
-    <section class="section" id="contact">
-        <h2 class="section-title-simple">Связаться</h2>
+    <!-- 3. CONTACT & INTEGRATED FOOTER (SCREEN 3) -->
+    <section class="section-wrapper contact-section-wrapper" id="contact">
+        <div class="section-container contact-content">
+            <h2 class="section-title-simple">Связаться</h2>
 
-        <div class="contact-grid">
-            <!-- Social Cards -->
-            <div class="socials-list">
-                <a href="https://t.me/whatrushik" target="_blank" rel="noopener" class="social-card">
-                    <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                    <div class="social-card-info">
-                        <span class="social-card-name">Telegram</span>
-                        <span class="social-card-handle">@whatrushik</span>
-                    </div>
-                </a>
+            <div class="contact-grid">
+                <!-- Social Cards -->
+                <div class="socials-list">
+                    <a href="https://t.me/whatrushik" target="_blank" rel="noopener" class="social-card">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m22 2-7 20-4-9-9-4Z" />
+                            <path d="M22 2 11 13" />
+                        </svg>
+                        <div class="social-card-info">
+                            <span class="social-card-name">Telegram</span>
+                            <span class="social-card-handle">@whatrushik</span>
+                        </div>
+                    </a>
 
-                <a href="https://github.com/topanim" target="_blank" rel="noopener" class="social-card">
-                    <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                    <div class="social-card-info">
-                        <span class="social-card-name">GitHub</span>
-                        <span class="social-card-handle">@topanim</span>
-                    </div>
-                </a>
+                    <a href="https://github.com/topanim" target="_blank" rel="noopener" class="social-card">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                        </svg>
+                        <div class="social-card-info">
+                            <span class="social-card-name">GitHub</span>
+                            <span class="social-card-handle">@topanim</span>
+                        </div>
+                    </a>
 
-                <a href="https://vk.com/whatrushik" target="_blank" rel="noopener" class="social-card">
-                    <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M8 10c1.5 3 3.5 4 6 4V7"/></svg>
-                    <div class="social-card-info">
-                        <span class="social-card-name">VK</span>
-                        <span class="social-card-handle">vk.com/whatrushik</span>
-                    </div>
-                </a>
+                    <a href="https://vk.com/whatrushik" target="_blank" rel="noopener" class="social-card">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <path d="M8 10c1.5 3 3.5 4 6 4V7" />
+                        </svg>
+                        <div class="social-card-info">
+                            <span class="social-card-name">VK</span>
+                            <span class="social-card-handle">vk.com/whatrushik</span>
+                        </div>
+                    </a>
 
-                <a href="mailto:gorogannisan641@gmail.com" class="social-card">
-                    <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" radius="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                    <div class="social-card-info">
-                        <span class="social-card-name">Email</span>
-                        <span class="social-card-handle">gorogannisan641...</span>
-                    </div>
-                </a>
+                    <a href="mailto:gorogannisan641@gmail.com" class="social-card">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                        <div class="social-card-info">
+                            <span class="social-card-name">Email</span>
+                            <span class="social-card-handle">gorogannisan641...</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Direct Message Form -->
+                <form class="contact-form" id="tg-form">
+                    <input type="text" id="tg-name" class="form-input" placeholder="Ваше имя" required>
+                    <input type="text" id="tg-contact" class="form-input"
+                        placeholder="Telegram ник или почта для связи">
+                    <textarea id="tg-message" class="form-input" rows="2" placeholder="Сообщение или идея..."
+                        required></textarea>
+                    <button type="submit" class="btn-submit">Отправить в Telegram →</button>
+                </form>
             </div>
+        </div>
 
-            <!-- Direct Message Form -->
-            <form class="contact-form" id="tg-form">
-                <input type="text" id="tg-name" class="form-input" placeholder="Ваше имя" required>
-                <input type="text" id="tg-contact" class="form-input" placeholder="Telegram ник или почта для ответа">
-                <textarea id="tg-message" class="form-input" rows="3" placeholder="Сообщение или задача..." required></textarea>
-                <button type="submit" class="btn-submit">Отправить в Telegram →</button>
-            </form>
+        <div class="section-container">
+            <div class="integrated-footer">
+                <span>© 2026 whatrushik</span>
+                <a href="https://whatrushki.github.io" target="_blank" rel="noopener"
+                    class="footer-org-link">whatrushki.github.io ↗</a>
+            </div>
         </div>
     </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <span>© 2026 whatrushik</span>
-            <a href="https://whatrushki.github.io" target="_blank" rel="noopener" class="footer-org-link">whatrushki.github.io ↗</a>
-        </div>
-    </footer>
 
     <!-- JAVASCRIPT -->
     <script>
@@ -935,7 +1030,6 @@
             initTilt();
             initThemes();
             initCursor();
-            initNavbar();
             initContactForm();
         });
 
@@ -1032,14 +1126,7 @@
             });
         }
 
-        function initNavbar() {
-            const navbar = document.querySelector('.navbar');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 30) navbar.classList.add('scrolled');
-                else navbar.classList.remove('scrolled');
-            });
-        }
-
+        // Contact Form
         function initContactForm() {
             const form = document.getElementById('tg-form');
             if (!form) return;
@@ -1058,4 +1145,5 @@
         }
     </script>
 </body>
+
 </html>
