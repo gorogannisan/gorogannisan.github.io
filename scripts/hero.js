@@ -18,7 +18,7 @@
 
    Accessibility: the split glyphs are aria-hidden and unselectable, and the
    real string rides along in a visually hidden span, so the heading is still
-   read and copied as "Hey I'm OPUSJAKE" rather than spelled out. Reduced
+   read and copied as "Hey I'm GOR" rather than spelled out. Reduced
    motion returns before anything is touched, so the markup stays as authored.
    =========================================================================== */
 (function () {
@@ -39,7 +39,7 @@
     if (window.matchMedia
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    /* The mark is OPUSJAKE alone (Jake, Oct 2026: the name no longer
+    /* The mark is GOR alone (Gor, Oct 2026: the name no longer
        alternates in). With more than one word it would alternate, rebuilding
        the cells at the start of each load-in while the word is off screen;
        with one it builds in once on arrival and stays. A word the reader is

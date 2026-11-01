@@ -42,7 +42,7 @@ with open('articles/articles_raw.js', 'w', encoding='utf-8') as f:
 print("Generated articles/articles_raw.js")
 
 # Badges and shelf mapping
-# OpusJake shelves: rs-playbooks, rs-guides, rs-skills, rs-prompts
+# Gor shelves: rs-playbooks, rs-guides, rs-skills, rs-prompts
 SHELF_MAP = {
     'badge-guides': 'rs-guides',
     'badge-skills': 'rs-skills',

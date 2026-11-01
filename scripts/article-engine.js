@@ -1,6 +1,6 @@
 /**
  * article-engine.js - Pure JavaScript Client-Side Engine for Gor's Library
- * Parses extended Markdown into authentic OpusJake DOM in the browser.
+ * Parses extended Markdown into authentic Gor DOM in the browser.
  * No Python or backend needed!
  */
 

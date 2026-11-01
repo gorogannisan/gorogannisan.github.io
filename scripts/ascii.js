@@ -173,7 +173,7 @@
           keep = step(h, t);
 
           if (uShoulderTaper > 0.0) {
-            /* Jake's right shoulder reaches the plate edge below the face. A
+            /* Gor's right shoulder reaches the plate edge below the face. A
                second, directional dissolve turns that short vertical wall
                into a rising wedge: it still meets the frame near the top,
                then recedes farther inward as the shoulder falls. Keep this
