@@ -1,0 +1,3962 @@
+
+/* ==== base.css ==== */
+/* ===========================================================================
+   base.css   the OpusJake brand layer for the single page
+
+   Three instructions from the client govern this file and everything built
+   on it: keep oatmeal and indigo, keep the current fonts, keep it simple.
+   So there is exactly ONE hue on this site, and exactly THREE typefaces.
+
+   The page moves through seven aesthetic modes. Because hue and typeface are
+   fixed, the modes separate through texture, value, density, shadow and
+   negative space instead. That constraint is the design, not a limitation
+   worked around.
+   =========================================================================== */
+
+@font-face { font-family: 'Endless'; src: url('/fonts/endless.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Pixeboy'; src: url('/fonts/pixeboy.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/JetBrainsMono-Medium.woff2') format('woff2'); font-weight: 500 600; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+:root {
+  color-scheme: light;
+
+  --paper:   #EDE9DE;
+  --card:    #F5F2EA;
+  --muted:   #E4DFD1;
+  --ink:     #2F2B25;
+  --ink-2:   #6C6659;
+  --ink-3:   #A8A294;
+  --rule:    #2F2B2524;
+  --rule-2:  #CFC8B8;
+
+  /* the only hue on the site */
+  --indigo:  #4b4aef;
+
+  /* the inverted ground, used by the ledger mode alone */
+  --ground:  #1E1B16;
+
+  --sans:  'Endless', system-ui, sans-serif;
+  --pixel: 'Pixeboy', ui-monospace, monospace;
+  --mono:  'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  /* 8px grid. Every spacing value in this project is a multiple of --u. */
+  --u: 8px;
+
+  /* Radius is a scale with a job per step, not a preference. 0 is structure,
+     s is a small object, m is a panel, l is a large surface, pill is anything
+     pressable. See DESIGN.md. A value off this scale is a bug. */
+  --r-xs:   6px;
+  --r-s:    10px;
+  /* panels and large surfaces share one tight corner, 8px (Jake, Oct 2026,
+     pointing at openai.com's cards); controls keep Astryx's 10px */
+  --r-m:    8px;
+  --r-l:    8px;
+  --r-pill: 999px;
+
+  /* Two elevations. Paper does not float: a content card gets a hairline. */
+  --shadow-1: 0 1px 2px rgba(31, 29, 58, 0.14);
+  --shadow-2: 0 10px 24px rgba(31, 29, 58, 0.14);
+  /* the Apple pair: a tight contact shadow plus a wide, soft ambient one
+     (Oct 10: Jake asked for depth on the boxes and buttons, as in Apple's UI) */
+  --shadow-card: 0 1px 2px rgba(31, 29, 58, 0.08), 0 12px 28px -8px rgba(31, 29, 58, 0.24);
+  --shadow-float: 0 1px 2px rgba(31, 29, 58, 0.10), 0 24px 56px -12px rgba(31, 29, 58, 0.34);
+
+  /* section rhythm, 120px to 200px */
+  --section-y: clamp(120px, 14vh, 200px);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+html, body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { overflow-x: hidden; }
+
+a { color: var(--indigo); }
+
+/* the contained column. Full bleed sections opt out by not using it. */
+.wrap {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+/* shared type helpers. Sections may use these but must not restyle them. */
+.mono-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.wordmark-pixel {
+  font-family: var(--pixel);
+  font-weight: 400;
+  color: var(--indigo);
+  letter-spacing: 0.04em;
+  /* Pixeboy digits and caps sit ON the baseline and are exactly half an em
+     tall, so a 100px font-size draws 50px of ink. Author by visible height
+     and derive the size, never by eyeballing line-height. */
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ==== parts/hero.css ==== */
+/* ===========================================================================
+   hero.css   prefix: hr-
+   Plate left, words right, on one row.
+
+   The plate is shown whole, at its native 1715 / 1920, with no zoom and no
+   crop anchor: every cell that was drawn is on screen.
+
+   The alignment is the deliberate part: the copy shares the canvas row and
+   hangs from its bottom edge, so the buttons finish level with the bottom of
+   the plate instead of floating against its middle.
+   =========================================================================== */
+
+.hr-hero {
+  /* The hero owns the first screen and sits in the middle of it. Previously it
+     started 128px down and ran 780px tall in a 900px viewport, so it spilled
+     past the fold while still looking top heavy. */
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: calc(var(--u) * 10);
+}
+
+.hr-hero > .wrap { width: 100%; }
+
+.hr-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  gap: calc(var(--u) * 2) calc(var(--u) * 5);
+}
+
+/* --- the plate ----------------------------------------------------------- */
+
+.hr-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* native shape of the grid: 343 x 240 cells at 5 x 8 px */
+  aspect-ratio: 1715 / 1920;
+  /* same radius as the figure wells and the buttons */
+  border-radius: var(--r-l);
+  /* Keep the complete WebGL portrait, but clip its outer corners with the
+     same card-shaped edge used throughout the page. */
+  clip-path: inset(0 round var(--r-l));   /* the same corner as every other box */
+  max-height: calc(100svh - var(--u) * 22);
+  color: var(--ink);
+  grid-column: 1;
+  grid-row: 1;
+}
+
+
+/* --- the words ----------------------------------------------------------- */
+
+.hr-title {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: clamp(38px, 5.2vw, 68px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* Pixeboy draws exactly half an em of ink and sits on the baseline, so the
+   size is raised to match the Endless cap height beside it. */
+.hr-title b {
+  font-family: var(--pixel);
+  font-weight: 400;
+  color: var(--indigo);
+  font-size: 1.34em;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.hr-sub {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 42ch;
+  margin: calc(var(--u) * 1.5) 0 calc(var(--u) * 4);
+  /* the sentence carries the gap down to the buttons */
+}
+
+/* --- buttons -------------------------------------------------------------- */
+
+.hr-actions { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 1.5); }
+.hr-copy > :last-child { margin-bottom: 0; }
+
+.hr-btn {
+  display: inline-block;
+  font: 500 15px/1 var(--sans);
+  padding: calc(var(--u) * 2) calc(var(--u) * 3);
+  border-radius: var(--r-s);
+  text-decoration: none;
+  border: 0;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.hr-btn-solid { background: var(--indigo); color: #fff; }
+.hr-btn-soft { background: var(--muted); color: var(--ink); }
+
+/* --- desktop: plate left, words right ------------------------------------ */
+
+@media (min-width: 900px) {
+  .hr-grid {
+    /* The plate takes the larger share now. Holding the grid in to 1008 made
+       the composition tidy but left roughly 450px of dead vertical space in a
+       900px viewport, because a 396px plate cannot fill a screen it owns.
+       Full column, plate-weighted, and the plate grows to meet the section. */
+    grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
+    column-gap: calc(var(--u) * 9);
+  }
+  /* the copy shares the canvas row and hangs from its bottom edge, so the
+     buttons finish level with the bottom of the plate */
+  .hr-copy { grid-column: 2; grid-row: 1; align-self: end; }
+}
+
+/* --- wordmark load-in ------------------------------------------------------
+   The wordmark loads in the way a sprite arrives: cell by cell, left to right.
+   Each glyph gets a solid indigo block first, the block unfolds from a seed
+   line at the baseline in three snapped heights, then it is eaten from the
+   left in four steps as the letter fills in underneath it from the same edge.
+   Every timing function is steps(), so nothing about it eases.
+
+   NOTHING TRAVELS. The word sits in its final box from the first frame. The
+   only movement is a 6px stepped nudge per cell, which is a transform, so it
+   cannot reflow the line, and it points inward (left to right), so it cannot
+   push anything past the right edge of the page either.
+
+   Anti-stranding: every rule that HIDES something is behind html.hr-js, which
+   hero.js only sets once the split has been built. No script, or a script that
+   throws, leaves a plain fully drawn wordmark.
+
+   Letter-spacing is the one metric trap here. Chrome adds letter-spacing after
+   an atomic inline as well as after a character, so an inline-block per glyph
+   inside a tracked parent would be charged the 0.03em twice and the word would
+   grow by a fifth of a character. The tracking is therefore carried by exactly
+   one level, the element that holds the character, and cleared on the wrappers
+   above it. The word measures the same to the pixel as it did undivided.
+   -------------------------------------------------------------------------- */
+
+.hr-title b {
+  /* one source for the tracking, so the cells can restate it without drift */
+  --hr-wm-ls: 0.03em;
+  letter-spacing: var(--hr-wm-ls);
+
+  /* The sprite cell, in em, so it rides every clamp of the headline. These
+     two numbers are measured off the rendered pixels, not guessed: inside a
+     glyph box one em tall, Pixeboy puts its ink between 0.225em and 0.718em,
+     which is high and shallow compared with a normal face. Each edge carries
+     about a pixel of bleed so the block covers the letter completely and no
+     part of the glyph can peek out from behind it. */
+  --hr-wm-cell-y: 0.213em;
+  --hr-wm-cell-h: 0.516em;
+
+  /* fallbacks: hero.js restates these on the element, but the animation has to
+     be sane if the custom properties never arrive */
+  --hr-wm-step: 55ms;
+  --hr-wm-dur: 300ms;
+  --hr-wm-lead: 140ms;
+}
+
+/* the real string, for assistive tech and the clipboard */
+.hr-wm-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hr-wm-ink {
+  /* the cells are atomic inlines: tracking here would be charged twice, and a
+     break opportunity here would let a single word wrap mid-glyph */
+  letter-spacing: normal;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.hr-wm-ch {
+  display: inline-block;
+  position: relative;
+  letter-spacing: normal;
+}
+
+.hr-wm-g {
+  display: inline-block;
+  letter-spacing: var(--hr-wm-ls);
+}
+
+/* the block that stands in for the glyph while it loads */
+.hr-wm-ch::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: var(--hr-wm-ls);
+  top: var(--hr-wm-cell-y);
+  height: var(--hr-wm-cell-h);
+  background: currentColor;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+
+/* resting state: only ever reachable once hero.js has built the cells */
+html.hr-js .hr-wm-g,
+html.hr-js .hr-wm-ch::before { opacity: 0; }
+html.hr-js .hr-lead { opacity: 0; }
+
+html.hr-js .hr-intro .hr-lead {
+  animation: hr-lead-in 300ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* forwards, never both. A backwards fill would paint every cell's first frame
+   during its own delay, so all eight blocks would be sitting there before the
+   first one had loaded and the word would arrive as a full width row of stubs
+   rather than as a thing being built from the left. With forwards, a cell is
+   the resting nothing until its turn comes. */
+html.hr-js .hr-run .hr-wm-ch {
+  animation: hr-wm-nudge var(--hr-wm-dur) steps(3, end) forwards;
+  animation-delay: calc(var(--hr-wm-lead) + var(--i) * var(--hr-wm-step));
+}
+html.hr-js .hr-run .hr-wm-g {
+  animation: hr-wm-glyph var(--hr-wm-dur) linear forwards;
+  animation-delay: calc(var(--hr-wm-lead) + var(--i) * var(--hr-wm-step));
+}
+html.hr-js .hr-run .hr-wm-ch::before {
+  animation: hr-wm-cell var(--hr-wm-dur) linear forwards;
+  animation-delay: calc(var(--hr-wm-lead) + var(--i) * var(--hr-wm-step));
+}
+
+/* THE LOAD OUT. Not the load-in reversed: `animation-direction: reverse` with
+   a forwards fill would settle on the block's 0% keyframe, which is a visible
+   seed line at opacity 1, so every glyph would leave a thin indigo bar behind.
+   The out therefore has its own keyframes that finish at opacity 0, which is
+   the same resting state the cells hold between cycles. */
+html.hr-js .hr-out .hr-wm-ch {
+  animation: hr-wm-nudge-out var(--hr-wm-dur) steps(3, end) forwards;
+  animation-delay: calc(var(--i) * var(--hr-wm-step));
+}
+html.hr-js .hr-out .hr-wm-g {
+  animation: hr-wm-glyph-out var(--hr-wm-dur) linear forwards;
+  animation-delay: calc(var(--i) * var(--hr-wm-step));
+}
+html.hr-js .hr-out .hr-wm-ch::before {
+  animation: hr-wm-cell-out var(--hr-wm-dur) linear forwards;
+  animation-delay: calc(var(--i) * var(--hr-wm-step));
+}
+
+/* six pixels, in three snaps, and never outside the cell */
+@keyframes hr-wm-nudge {
+  from { transform: translateX(-6px); }
+  to   { transform: translateX(0); }
+}
+
+/* the letter, held back under the block, then filled from the left in four */
+@keyframes hr-wm-glyph {
+  0% {
+    opacity: 0;
+    clip-path: inset(-60% 100% -60% 0);
+    animation-timing-function: steps(1, end);
+  }
+  46% {
+    opacity: 1;
+    clip-path: inset(-60% 100% -60% 0);
+    animation-timing-function: steps(4, end);
+  }
+  100% { opacity: 1; clip-path: inset(-60% 0 -60% 0); }
+}
+
+/* the block: a seed line, two snaps to full, then eaten from the left */
+@keyframes hr-wm-cell {
+  0% {
+    opacity: 1;
+    transform: scaleY(0.26);
+    clip-path: inset(-60% 0 -60% 0);
+    animation-timing-function: steps(1, end);
+  }
+  20% { transform: scaleY(0.62); animation-timing-function: steps(1, end); }
+  36% { transform: scaleY(1); animation-timing-function: steps(1, end); }
+  46% {
+    opacity: 1;
+    transform: scaleY(1);
+    clip-path: inset(-60% 0 -60% 0);
+    animation-timing-function: steps(4, end);
+  }
+  100% { opacity: 1; transform: scaleY(1); clip-path: inset(-60% 0 -60% 100%); }
+}
+
+/* the letter is eaten back from the right, then the block collapses to the
+   seed line it grew from and goes out. Exactly the in, played backwards, but
+   written out so the final frame can be opacity 0. */
+@keyframes hr-wm-glyph-out {
+  0% {
+    opacity: 1;
+    clip-path: inset(-60% 0 -60% 0);
+    animation-timing-function: steps(4, end);
+  }
+  54% {
+    opacity: 1;
+    clip-path: inset(-60% 100% -60% 0);
+    animation-timing-function: steps(1, end);
+  }
+  100% { opacity: 0; clip-path: inset(-60% 100% -60% 0); }
+}
+
+@keyframes hr-wm-cell-out {
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+    clip-path: inset(-60% 0 -60% 100%);
+    animation-timing-function: steps(4, end);
+  }
+  54% {
+    opacity: 1;
+    transform: scaleY(1);
+    clip-path: inset(-60% 0 -60% 0);
+    animation-timing-function: steps(1, end);
+  }
+  70%  { transform: scaleY(0.62); animation-timing-function: steps(1, end); }
+  86%  { transform: scaleY(0.26); animation-timing-function: steps(1, end); }
+  100% { opacity: 0; transform: scaleY(0.26); }
+}
+
+@keyframes hr-wm-nudge-out {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-6px); }
+}
+
+@keyframes hr-lead-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Reduced motion never reaches any of this: hero.js returns before it splits
+   the word or sets .hr-js. This is the belt to that braces, in case the class
+   is somehow present when the preference flips mid-session. */
+@media (prefers-reduced-motion: reduce) {
+  html.hr-js .hr-wm-g,
+  html.hr-js .hr-lead { opacity: 1; animation: none; }
+  html.hr-js .hr-wm-ch { animation: none; transform: none; }
+  html.hr-js .hr-wm-ch::before { display: none; animation: none; }
+}
+
+/* --- stacked, centred title + the alternating mark ------------------------ */
+
+/* "Hey I'm" on its own line with the mark centred beneath it. */
+.hr-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.02em;
+  container-type: inline-size;
+}
+
+/* Both marks render at the SAME size. The title is a size container and the
+   marks take min(1.34em, 11.5cqi): 11.5% of the title's width is the largest
+   size at which JAKE SCHINCARIOL's 15 Pixeboy glyphs still fit the column, so
+   the pair share one size everywhere and the long word can never overflow. */
+.hr-title .hr-wm { font-size: min(1.34em, 11.5cqi); }
+.hr-wm.hr-wm-long { letter-spacing: 0.02em; }
+
+/* the gap in the name: a spacer with no cell block to animate */
+.hr-wm-sp { display: inline-block; width: 0.22em; }
+
+/* --- audit: the name dominates, and the column agrees with itself ---------
+   FINDING-001: at desktop the greeting ran 68px against a 59px wordmark, so
+   the page led with "Hey I'm" and whispered the name. The greeting steps down
+   to 0.6em and the mark carries the line.
+   FINDING-002: alignment is breakpoint-aware. Phones and the stacked tablet
+   layout stay centred, while the desktop copy remains in its existing right
+   grid column and aligns every line to that column's left edge. */
+@media (min-width: 721px) {
+  .hr-title .hr-lead { font-size: 0.6em; }
+  .hr-copy { text-align: center; }
+  .hr-sub { margin-inline: auto; }
+  .hr-actions { justify-content: center; }
+}
+
+@media (min-width: 900px) {
+  .hr-title { align-items: flex-start; text-align: left; }
+  .hr-copy { text-align: left; }
+  .hr-sub { margin-inline: 0; }
+  .hr-actions { justify-content: flex-start; }
+}
+
+/* --- phones: the mark ------------------------------------------------------
+   OPUSJAKE alone now (the name no longer alternates in). It runs about 77% of
+   the column (19.25cqi, the width SCHINCARIOL used to set), and sits at
+   line-height 0.7: Pixeboy draws only half an em of ink, so at 1 the mark
+   carried half an em of air above and below and gaped away from "Hey I'm".
+   The loading blocks are placed in em from the top of each cell, so their
+   offset follows the tighter line: 0.213em less the 0.15em given up above. */
+@media (max-width: 720px) {
+  .hr-title { row-gap: var(--u); }
+  .hr-title .hr-wm {
+    font-size: min(19.25cqi, 72px);
+    line-height: 0.7;
+    --hr-wm-cell-y: 0.063em;
+  }
+}
+
+
+/* ==== parts/figures.css ==== */
+/* ===========================================================================
+   figures.css   prefix fg-   the three FIG cards
+
+   Every rule in this file is scoped to a class beginning fg-. Nothing here
+   touches :root, a bare element, or a base.css helper.
+
+   The reference is a technical figure plate, so the vocabulary is: hairline
+   rules, tiny mono caps, a bordered square well on a slightly recessed
+   ground, and two dashed leader annotations. Flat throughout. There is no
+   border radius, no shadow and no gradient in this file, and --indigo is the
+   only hue that appears.
+
+   Spacing is authored in multiples of --u (8px) with no exceptions.
+   =========================================================================== */
+
+/* --- the card ----------------------------------------------------------- */
+
+.fg-fig {
+  padding-block: calc(var(--u) * 12);
+  background: var(--paper);
+}
+
+/* the header row: number hard left, system label hard right */
+.fg-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--u) * 2);
+  padding-bottom: calc(var(--u) * 2);
+}
+
+.fg-num,
+.fg-sys {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.fg-num { color: var(--ink-2); }
+.fg-sys { color: var(--ink-3); }
+
+/* --- the two column body ------------------------------------------------ */
+
+/* Narrow first. One column, and the figure is placed in row 1 so the plate
+   reads above the copy on a phone. Source order is still copy then figure. */
+.fg-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--u) * 6);
+  margin-top: calc(var(--u) * 6);
+}
+
+.fg-copy   { grid-column: 1; grid-row: 2; min-width: 0; }
+.fg-figure {
+  grid-column: 1; grid-row: 1; margin: 0; min-width: 0;
+  /* Cap the well at the same size it holds on desktop, so the narrow
+     band cannot inflate the plate into a full bleed square. 58 units. */
+  max-width: calc(var(--u) * 58);
+  margin-inline: auto;
+}
+
+/* --- copy --------------------------------------------------------------- */
+
+.fg-h {
+  margin: 0;
+  font-family: var(--sans);
+  /* Endless ships one weight, so never ask for bold and get a synthetic one. */
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.fg-p {
+  margin: calc(var(--u) * 3) 0 0;
+  max-width: 44ch;
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* --- the action --------------------------------------------------------- */
+
+.fg-act {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u);
+  margin-top: calc(var(--u) * 4);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--indigo);
+}
+
+/* FIG 01 and FIG 03: a quiet text action on a hairline. */
+.fg-act-link {
+  padding-bottom: var(--u);
+  border-bottom: 1px solid var(--indigo);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.fg-act-x { transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+
+/* FIG 02: the client asked for a button here, so this is the one filled
+   element in the whole spine. That is the entire reason it reads as the
+   loudest thing on the page. */
+.fg-act-btn {
+  padding: calc(var(--u) * 2) calc(var(--u) * 4);
+  border: 1px solid var(--indigo);
+  background: var(--indigo);
+  color: var(--paper);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.fg-act:focus-visible { outline: 2px solid var(--indigo); outline-offset: calc(var(--u) / 2); }
+
+/* --- the figure well ---------------------------------------------------- */
+
+/* Square, because every plate is a 240 x 240 grid. Bordered, on a ground one
+   step darker than the paper so it reads as recessed, with a generous inner
+   band so the subject floats and the annotations have clean ground to sit on. */
+.fg-well {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  /* rounded to match the card and the buttons, one radius across the site */
+  border-radius: var(--r-l);
+  overflow: hidden;
+  padding: calc(var(--u) * 5);
+  border: 1px solid var(--rule-2);
+  background: var(--muted);
+}
+
+/* the exact box the plate occupies, and the coordinate space the annotations
+   are positioned against */
+.fg-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* The renderer reads getComputedStyle(canvas).color to pick its ink, so the
+   colour declaration here is load bearing, not decoration. Never give this a
+   background. */
+.fg-plate {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--indigo);
+}
+
+
+/* --- the annotations ---------------------------------------------------- */
+
+/* Two per card, no more. The label always sits in the well's padding band, on
+   clean ground, so it is legible whatever the plate is doing underneath. Only
+   the dashed leader crosses onto the plate, and it crosses at 28 percent and
+   78 percent of the width, well clear of the centre column where all three
+   subjects live. These never move and never animate. */
+.fg-anno {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.fg-anno::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: calc(var(--u) * 7);
+  border-left: 1px dashed var(--ink-3);
+}
+
+/* the terminal tick, so the leader points at something rather than trailing off */
+.fg-anno::before {
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--ink-3);
+}
+
+/* upper right label, leader dropping into the plate */
+.fg-anno-a { top: calc(var(--u) * -3); right: 0; }
+.fg-anno-a::after  { top: calc(100% + var(--u)); left: calc(var(--u) * 3); }
+.fg-anno-a::before { top: calc(100% + var(--u) * 8); left: calc(var(--u) * 3); margin-left: -1px; }
+
+/* lower left label, leader rising into the plate */
+.fg-anno-b { bottom: calc(var(--u) * -3); left: 0; }
+.fg-anno-b::after  { bottom: calc(100% + var(--u)); right: calc(var(--u) * 3); }
+.fg-anno-b::before { bottom: calc(100% + var(--u) * 8); right: calc(var(--u) * 3); margin-right: -1px; }
+
+/* On a phone the well is small enough that two leaders crowd the subject, so
+   the second one steps back. One annotation is still an annotation. */
+@media (max-width: 639px) {
+  .fg-anno-b { display: none; }
+}
+
+/* --- wide layout -------------------------------------------------------- */
+
+@media (min-width: 900px) {
+
+  .fg-fig { padding-block: calc(var(--u) * 16); }
+
+  /* FIG 02 follows the longest tool-call run. Pull its opening edge up by
+     eight grid units (64px), trimming roughly one eighth of the white gap in
+     the desktop composition without changing the card's internal spacing. */
+  .fg-fig-b { padding-top: calc(var(--u) * 8); }
+
+  .fg-body {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: calc(var(--u) * 10);
+    align-items: center;
+    margin-top: calc(var(--u) * 9);
+  }
+
+  .fg-copy   { grid-row: 1; max-width: 480px; }
+  .fg-figure { grid-row: 1; width: 100%; max-width: calc(var(--u) * 58); }
+
+  /* Alternation happens here and only here: the source order never changes,
+     the columns do. FIG 01 and FIG 03 put the copy left and the plate right,
+     FIG 02 mirrors it. Each figure is pushed to the outer page edge so the
+     spine reads as a zigzag rather than a stack of centred boxes. */
+  .fg-fig-a .fg-copy,
+  .fg-fig-c .fg-copy   { grid-column: 1; }
+  .fg-fig-a .fg-figure,
+  .fg-fig-c .fg-figure { grid-column: 2; margin-inline-start: auto; }
+
+  .fg-fig-b .fg-copy   { grid-column: 2; }
+  .fg-fig-b .fg-figure { grid-column: 1; margin-inline-end: auto; }
+}
+
+/* --- scroll reveal ------------------------------------------------------ */
+
+/* IMPORTANT. Everything above is the finished, resting, fully visible state.
+   The hidden state below only exists while figures.js is running, because
+   only figures.js ever adds .fg-armed. If the script never loads, never
+   parses, or bails out, the cards are already correct.
+
+   figures.js reaches .fg-in by four independent routes: a first pass position
+   check, an IntersectionObserver, a setInterval position poll, and a plain
+   setTimeout hard stop. No two of them share a dependency, so neither the
+   observer nor requestAnimationFrame is ever the only path to opacity 1.
+   Measured: in a hidden tab neither rAF nor the observer fires at all, and
+   the timers are what carry it. */
+
+.fg-armed .fg-head,
+.fg-armed .fg-h,
+.fg-armed .fg-p,
+.fg-armed .fg-act {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+
+/* The well fades as one piece. The annotations inside it therefore never
+   translate, which is the requirement: they must not move. */
+.fg-armed .fg-well,
+.fg-armed 
+.fg-in .fg-head,
+.fg-in .fg-h,
+.fg-in .fg-p,
+.fg-in .fg-act {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==== parts/nav.css ==== */
+/* ===========================================================================
+   nav.css   prefix: nv-
+   =========================================================================== */
+
+.nv-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 3);
+  padding: calc(var(--u) * 3) calc(var(--u) * 4);
+  opacity: 1;
+  background: transparent;
+  transition: background-color 260ms ease, border-color 260ms ease;
+  border-bottom: 1px solid transparent;
+}
+
+/* Once the reader is past the hero the bar earns a ground so type does not
+   collide with the content running under it. */
+.nv-nav.nv-in {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom-color: var(--rule-2);
+}
+
+.nv-brand {
+  font-family: var(--pixel);
+  font-size: 32px;   /* Pixeboy draws half an em, so this is 16px of ink */
+  line-height: 1;
+  color: var(--indigo);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  /* the home link: a 44px target around 16px of ink, the layout unmoved */
+  padding-block: 12px;
+  margin-block: -12px;
+}
+
+.nv-links { margin-left: auto; display: flex; align-items: center; gap: var(--u); }
+
+/* The nav items are buttons, cut to the same shape as the pair in the hero:
+   10px radius, a soft fill for the quiet ones and the solid indigo for the
+   single call to action. */
+.nv-link {
+  font: 500 14px/1 var(--sans);
+  color: var(--ink);
+  text-decoration: none;
+  /* FINDING-006: 38px tall missed the 44px target floor */
+  padding: 15px calc(var(--u) * 2);
+  border-radius: var(--r-s);
+  border: 0;
+  background: transparent;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.nv-link-cta {
+  background: var(--indigo);
+  color: #fff;
+}
+
+/* --- the current page ------------------------------------------------------
+   Marked at build time with aria-current, so it is right in the first frame
+   and means the same to a screen reader. Its look is Astryx's selected ghost
+   (a 10% indigo tint, indigo label) and lives in button.css with every other
+   button state. */
+
+/* A tint is invisible in forced colours, so restate the state as a border. */
+@media (forced-colors: active) {
+  .nv-link[aria-current="page"] { border: 2px solid; }
+}
+
+
+@media (max-width: 720px) {
+  .nv-nav { padding: calc(var(--u) * 2); gap: calc(var(--u) * 2); }
+  .nv-links { gap: calc(var(--u) * 0.5); }
+  .nv-link { font-size: 13px; padding: calc(var(--u) * 1.25) calc(var(--u) * 1.5); }
+}
+
+/* ==== parts/calls.css ==== */
+/* ===========================================================================
+   calls.css   prefix: tc-
+   A light ground rendering of the ChatToolCalls reference.
+
+   One deliberate departure from "indigo is the only hue": the check is green
+   and the cross and deletion count are red. In the reference those carry
+   MEANING, not brand, and every design system separates semantic status from
+   accent hue for exactly that reason. They appear nowhere else on the site and
+   are used at 12px, so the page still reads as oatmeal and indigo.
+   =========================================================================== */
+
+.tc-wrap { padding-block: calc(var(--u) * 10); }
+
+/* The solo join opens the page, so it does not need a run's worth of air under
+   it: FIG 01 already carries 128px of its own top padding. Its own bottom
+   padding is dropped, and .tc-join's 4u gap below the rule does the spacing. */
+.tc-join-solo { padding-block: calc(var(--u) * 6) 0; }
+
+.tc-group {
+  max-width: calc(var(--u) * 73);   /* 584: 528 plus ten percent */
+  margin-inline: auto;              /* centred in the column, not hung left */
+  font-family: var(--mono);
+}
+
+/* --- header: wrench, count, chevron -------------------------------------
+   The run is set on a LOOSE vertical rhythm on purpose. Packed at 6px a row it
+   read as a table of data; at 15 it reads as a sequence of events, which is
+   what it is, and it also gives each line's arrival somewhere to land. Every
+   gap below is part of one scale: 32 under the join, 24 under the header, 15
+   either side of each row, 32 above the generating line. */
+
+.tc-head {
+  display: flex;
+  align-items: center;
+  gap: var(--u);
+  padding-bottom: calc(var(--u) * 3);
+}
+
+.tc-wrench {
+  width: 18px; height: 18px; flex: none;
+  fill: var(--ink-2);
+}
+
+.tc-count {
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
+
+.tc-chev {
+  width: 18px; height: 18px; flex: none;
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-left: var(--u);
+}
+
+/* --- rows ---------------------------------------------------------------- */
+
+.tc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tc-row {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 1.5);
+  padding-block: calc(var(--u) * 1.875);
+  font-size: 14.5px;
+  line-height: 1.4;
+  transition: transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1),
+              opacity 260ms ease;
+}
+
+/* THE RESTING STATE IS INVISIBLE, NOT DIM. At 0.55 every row was already
+   legible before its turn, so the whole run looked populated on arrival and
+   the sequence read as a brightening rather than as lines appearing. A line
+   that has not happened yet should not be on the page at all.
+
+   Armed only once calls.js has added .tc-js to the document, so if the script
+   never runs every row renders finished rather than blank, which is the
+   failure mode that has bitten this project twice. */
+.tc-js .tc-row { transform: translateY(8px); opacity: 0; }
+
+/* THE WHOLE TRANSCRIPT BUILDS, not just the calls. The join marker and the
+   group header take the same resting state and the same release, so a reader
+   scrolling in watches the session assemble line by line from the top rather
+   than finding a finished header sitting above calls that then trickle in. */
+.tc-js .tc-join,
+.tc-js .tc-head { transform: translateY(6px); opacity: 0; }
+.tc-js .tc-join.tc-in,
+.tc-js .tc-head.tc-in {
+  transform: none; opacity: 1;
+  transition: transform 300ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 300ms ease;
+}
+
+/* landed, in either direction */
+.tc-row.tc-done,
+.tc-row.tc-fail,
+.tc-row.tc-run { transform: none; opacity: 1; }
+
+/* the result cluster snaps in a beat after the row settles, so the green and
+   the red arrive as the payoff rather than sliding with everything else */
+.tc-js .tc-stat, .tc-js .tc-ms {
+  opacity: 0;
+  transition: opacity 200ms ease 140ms;
+}
+.tc-row.tc-done .tc-stat, .tc-row.tc-done .tc-ms,
+.tc-row.tc-fail .tc-stat, .tc-row.tc-fail .tc-ms { opacity: 1; }
+
+/* the status glyph. Hollow ring while it waits, filled with a check when it
+   lands, filled with a cross when it does not. Drawn in CSS so there is no
+   icon font and no emoji. */
+.tc-mark {
+  position: relative;
+  flex: none;
+  align-self: center;
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--ink-3);
+  border-radius: 50%;
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+/* The landed glyph is a soft disc carrying a darker mark, not a saturated disc
+   carrying a paper mark. Two reasons it changed. A #3f9e4d dot next to warm
+   oatmeal was the loudest thing in a section that is meant to read as a quiet
+   log, and the mark itself was a rotated CSS border, so its ends were cut
+   square at 43 degrees and the short arm never met the long one cleanly.
+   It is a masked SVG stroke now, which gives the round caps and the true
+   check geometry the flat-square version could not.
+
+   Contrast holds: mark on disc is 3.6:1 for the check and 4.2:1 for the cross,
+   both clear of the 3:1 that non-text graphics need. The disc on paper is only
+   1.3:1 by design, since the disc is a tint and the mark is the signal. */
+.tc-row.tc-done .tc-mark,
+.tc-row.tc-fail .tc-mark { border-color: transparent; }
+
+.tc-row.tc-done .tc-mark { background: #BCD5B7; }
+.tc-row.tc-fail .tc-mark { background: #E6C4BE; }
+
+.tc-row.tc-done .tc-mark::before,
+.tc-row.tc-fail .tc-mark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 11px 11px;
+          mask-size: 11px 11px;
+}
+
+.tc-row.tc-done .tc-mark::before {
+  background: #3A7342;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.6 9.8 17.4 19 7.2'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.6 9.8 17.4 19 7.2'/%3E%3C/svg%3E");
+}
+
+.tc-row.tc-fail .tc-mark::before {
+  background: #9E3B2F;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7.2 7.2 16.8 16.8M16.8 7.2 7.2 16.8'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7.2 7.2 16.8 16.8M16.8 7.2 7.2 16.8'/%3E%3C/svg%3E");
+}
+
+.tc-fn {
+  flex: none;
+  min-width: calc(var(--u) * 6.6);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tc-target {
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tc-stat {
+  margin-left: auto;
+  flex: none;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.tc-add, .tc-del { font-style: normal; }
+.tc-add { color: #3f9e4d; }
+.tc-del { color: #c0483c; }
+
+.tc-ms {
+  flex: none;
+  min-width: calc(var(--u) * 7.7);
+  text-align: right;
+  color: var(--ink-3);
+}
+
+/* --- the run ------------------------------------------------------------- */
+
+/* Nothing here starts hidden. A row that has not run yet is a hollow ring with
+   its text at reduced contrast, which is a legitimate resting state, so if the
+   script never runs the group still reads correctly rather than vanishing. */
+
+
+/* the ring spins only while a row is actively running */
+.tc-row.tc-run .tc-mark {
+  border-color: var(--indigo);
+  border-top-color: transparent;
+  animation: tc-spin 700ms linear infinite;
+}
+@keyframes tc-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tc-row .tc-mark { animation: none !important; }
+  .tc-row { transform: none !important; opacity: 1 !important; }
+  .tc-stat, .tc-ms { opacity: 1 !important; }
+}
+
+/* --- mobile: ONE CALL, ONE LINE -------------------------------------------
+   A call that wraps stops being a call. The whole point of the row is that it
+   reads like a line in a terminal, and a wrapped row reads as a paragraph with
+   a tick next to it, so the run stops looking like a run.
+
+   The row therefore never wraps below 720. Everything that could force a wrap
+   is dealt with explicitly, in the order it is worth losing:
+
+     target   TRUNCATES. It is the only flexible item, so it absorbs whatever
+              space is left. min-width: 0 is what makes that possible: a flex
+              item's default min-width is auto, which is its content width, so
+              without this the target refuses to shrink and pushes the row wide
+              no matter what overflow rules it carries.
+     ms       DROPS below 560. Duration is texture; the stat next to it often
+              carries the actual payload ("exit 1  still exists").
+     fn       keeps its width. The verb is the one thing that must never
+              truncate, because read/bash/edit is what the row IS.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .tc-wrap { padding-block: calc(var(--u) * 7); }
+  .tc-group { max-width: 100%; }
+
+  .tc-row {
+    flex-wrap: nowrap;
+    gap: var(--u);
+    padding-block: calc(var(--u) * 1.5);
+    font-size: 12px;
+    align-items: center;
+  }
+  .tc-fn { flex: 0 0 auto; min-width: 0; }
+  /* the only item allowed to give way */
+  .tc-target { flex: 1 1 auto; min-width: 0; }
+  .tc-stat { flex: 0 0 auto; margin-left: auto; }
+  .tc-ms { flex: 0 0 auto; min-width: 0; }
+
+  .tc-join span, .tc-count { font-size: 9px; letter-spacing: 0.18em; }
+  .tc-gen { font-size: 11px; }
+}
+
+@media (max-width: 560px) {
+  .tc-row { font-size: 11px; gap: var(--u); }
+  .tc-mark { width: 14px; height: 14px; }
+  .tc-row.tc-done .tc-mark::before,
+  .tc-row.tc-fail .tc-mark::before { -webkit-mask-size: 9px 9px; mask-size: 9px 9px; }
+  /* duration goes before anything meaningful does */
+  .tc-ms { display: none; }
+}
+
+@media (max-width: 400px) {
+  .tc-row { gap: var(--u); }
+  .tc-gen { font-size: 10px; gap: var(--u); }
+  .tc-join span { font-size: 8px; }
+}
+
+/* The generating claim is a SENTENCE, not a call, so it is allowed to run to a
+   second line rather than truncate: cutting "Agent is turning on the money
+   print..." kills the only joke on the page. What it may not do is drag the
+   icon and the ellipsis down with it, so the row aligns to the first line and
+   the two glyphs are pinned there. */
+@media (max-width: 560px) {
+  .tc-gen { align-items: flex-start; line-height: 1.45; }
+  .tc-spark { margin-top: 1px; }
+  .tc-gen-t { flex: 1 1 auto; min-width: 0; }
+  .tc-dots { align-self: flex-start; }
+}
+
+
+/* --- the agent joining ---------------------------------------------------
+   The astryx ChatSystemMessage divider shape, a centred label with the rule
+   running out to both edges, carrying the icon variant's user-plus glyph. Two
+   growing hairlines rather than a background gradient, so the gap around the
+   label is exactly the gap and does not change with the label's length.
+
+   role="separator" with an aria-label, because visually it divides the scroll
+   and semantically it announces a participant. A bare div would give a screen
+   reader the words with none of the structure. */
+
+.tc-join {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.5);
+  padding-bottom: calc(var(--u) * 4);
+}
+.tc-join::before,
+.tc-join::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule-2);
+}
+.tc-join span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u);
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* the glyph is stroked, not filled, to sit at the same visual weight as 10px
+   mono at this tracking; a filled icon reads a full step heavier than the text
+   it labels */
+.tc-join-i {
+  width: 14px; height: 14px; flex: none;
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* --- the agent's generating state ----------------------------------------
+   Sits under the run because it is what happens next: the tools have returned
+   and the model is now writing. It is REVEALED by calls.js once every row in
+   the group has landed, so it cannot sit there claiming to generate while the
+   calls above it are still pending.
+
+   Resting state is hidden only under .tc-js, the same anti-stranding rule the
+   rows use: with no JS the line is simply visible, which still reads correctly. */
+
+.tc-gen {
+  display: flex;
+  align-items: center;
+  gap: var(--u);
+  margin: calc(var(--u) * 4) 0 0;
+  padding-top: calc(var(--u) * 4);
+  border-top: 1px solid var(--rule-2);
+  font: 500 13px/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.tc-spark {
+  width: 15px; height: 15px; flex: none;
+  fill: none;
+  stroke: var(--indigo);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: tc-spark-breathe 2.4s ease-in-out infinite;
+}
+@keyframes tc-spark-breathe {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* the ellipsis is three steps of a fixed-width box, so the line never reflows
+   as the dots come and go */
+.tc-dots {
+  font-style: normal;
+  width: 1.4em;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.tc-dots::before {
+  content: '...';
+  display: inline-block;
+  animation: tc-dots 1.4s steps(4, end) infinite;
+  clip-path: inset(0 100% 0 0);
+}
+@keyframes tc-dots {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.tc-js .tc-gen { opacity: 0; transform: translateY(4px); }
+/* the rotating claim swaps text under a fade, so the line never jumps */
+.tc-gen-t { transition: opacity 260ms ease; }
+.tc-gen-t.tc-swap { opacity: 0; }
+.tc-js .tc-group.tc-settled .tc-gen {
+  opacity: 1;
+  transform: none;
+  transition: opacity 320ms ease, transform 320ms cubic-bezier(.2,.9,.2,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tc-spark, .tc-dots::before { animation: none; }
+  .tc-dots::before { clip-path: none; }
+  .tc-js .tc-gen { opacity: 1; transform: none; }
+  .tc-js .tc-join, .tc-js .tc-head { opacity: 1; transform: none; }
+  .tc-gen-t { transition: none; }
+}
+
+/* ==== parts/faq.css ==== */
+/* ===========================================================================
+   faq.css   prefix: fq-
+   Hairlines, no boxes, one open at a time is NOT enforced: forcing a single
+   open panel means a reader comparing two answers has to keep reopening one of
+   them. Native details lets them hold both.
+
+   The marker is a plus that becomes a minus. It is drawn with two 1px bars and
+   a rotation rather than a glyph, so it is exactly aligned at every size and
+   there is no font dependency for a piece of interface.
+   =========================================================================== */
+
+/* 10u, not 14u. Every band on the page pairs 128px against 80px, which makes
+   each seam 208px; the FAQ's 112px was the one value that did not belong to
+   that pair and it made the figure-to-FAQ seam 240px, the only seam on the
+   page that differed from the four above it. */
+.fq-wrap { padding-block: calc(var(--u) * 10); }
+
+.fq-head { margin-bottom: calc(var(--u) * 5); }
+.fq-eyebrow {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--ink-3); display: block; margin-bottom: calc(var(--u) * 2);
+}
+.fq-h {
+  font-family: var(--sans); font-weight: 400;
+  font-size: clamp(28px, 3.2vw, 42px);
+  line-height: 1.06; letter-spacing: -0.02em; margin: 0; color: var(--ink);
+}
+
+.fq-list { border-top: 1px solid var(--rule-2); }
+.fq-item { border-bottom: 1px solid var(--rule-2); }
+
+.fq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: calc(var(--u) * 3);
+  padding: calc(var(--u) * 3) 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--sans); font-size: clamp(16px, 1.7vw, 19px);
+  font-weight: 400; letter-spacing: -0.01em; color: var(--ink);
+  transition: color 160ms ease;
+}
+.fq-q::-webkit-details-marker { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .fq-q:hover { color: var(--indigo); }
+}
+.fq-q:focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; }
+
+/* the plus, drawn not typed */
+.fq-x { position: relative; flex: none; width: 13px; height: 13px; }
+.fq-x::before, .fq-x::after {
+  content: ''; position: absolute; left: 0; top: 6px;
+  width: 13px; height: 1px; background: var(--ink-2);
+  transition: transform 240ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.fq-x::after { transform: rotate(90deg); }
+.fq-item[open] .fq-x::after { transform: rotate(0deg); }
+.fq-item[open] .fq-q { color: var(--indigo); }
+.fq-item[open] .fq-x::before,
+.fq-item[open] .fq-x::after { background: var(--indigo); }
+
+.fq-a { padding: 0 0 calc(var(--u) * 4); }
+.fq-a p {
+  margin: 0; max-width: 56ch;  /* FINDING-005: 62ch rendered ~77 real characters */
+  font-family: var(--sans); font-size: 15px; line-height: 1.65; color: var(--ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fq-x::before, .fq-x::after { transition: none; }
+}
+
+@media (max-width: 720px) {
+  .fq-wrap { padding-block: calc(var(--u) * 9); }
+  .fq-q { font-size: 16px; gap: calc(var(--u) * 2); }
+}
+
+/* ==== parts/footer.css ==== */
+/* ===========================================================================
+   footer.css   prefix: ft-
+   A skyline of gradient columns rising out of the PAPER. Same oatmeal ground
+   as every other section, so the footer is the page continuing rather than a
+   dark slab bolted to the bottom.
+
+   THE BARS FADE INTO THE GROUND AT THEIR TOPS. That is what makes this work on
+   a light page: each bar starts as oatmeal, indistinguishable from the paper,
+   and saturates downward through near white, lilac, periwinkle and into the
+   indigo base. There is no bar edge anywhere near the top, so the skyline has
+   no hard silhouette against the page, it emerges.
+
+   That arrangement is also what pays for the type. Copy sits in the UPPER half
+   where the bars are still paper coloured, so ink keeps its contrast without a
+   single scrim, box or blur. An earlier pass put white type on a dark ground
+   with a wash over the bars, which crushed the gradient to purple grey; a
+   second pass added per block blurred floors, which drew visible rectangles
+   across the skyline. Neither is needed if the bars are light where the words
+   are.
+
+   ALIVE THE WAY THE CARDS ARE. No bar moves, no gradient slides. The single
+   sheet behind the silhouette runs the same displacement filter as the figure
+   cards, so its colour evolves slowly and continuously in place. Subtle by
+   construction rather than by tuning a speed down.
+   =========================================================================== */
+
+.ft {
+  position: relative;
+  isolation: isolate;    /* the bars sit at z-index 0. Without this they paint
+                            behind body's oatmeal and the footer renders empty,
+                            which has cost this project a render cycle before */
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  /* 96px above the heading, like any section break. It was 320px plus an
+     80px margin, which left a 448px hole under the FAQ. The skyline is pinned
+     to the bottom edge at a fixed height, so the top padding never changed
+     where the bars sit behind the links; it only made the footer taller. */
+  padding-block: calc(var(--u) * 12) calc(var(--u) * 12);
+  margin-top: 0;
+}
+
+/* --- the skyline ----------------------------------------------------------
+   ONE SURFACE, WITH THE SILHOUETTE CUT OUT OF IT.
+
+   The previous build gave every bar its own gradient and its own animation, so
+   22 rectangles each scanned up and down on their own clock. That is what read
+   as sloppy: it is 22 effects, not one material, and nothing in the page above
+   behaves that way.
+
+   Now there is a single gradient sheet across the whole band, carrying the
+   SAME filter as the figure cards, so the footer is made of the same stuff as
+   the boxes above it. The bars are not painted at all: each rectangle is a
+   block of PAPER hanging from the top of the band, and what you read as a bar
+   is simply where no paper is covering the sheet. The silhouette is therefore
+   perfectly crisp while the colour underneath drifts, because the crisp thing
+   and the moving thing are different layers.
+
+   Nothing translates and nothing scans. The only motion is the filter's own
+   turbulence evolving, which is slow, continuous, and identical in character
+   to the card surfaces.
+   -------------------------------------------------------------------------- */
+
+.ft-sky {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 640px;
+  display: flex;
+  align-items: flex-start;   /* the paper blocks hang from the top */
+  overflow: hidden;          /* the filter needs somewhere to bleed */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* the sheet: one gradient, one filter, the same material as .fg-copy */
+.ft-sky::before {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  /* Built like a CARD, not like a rainbow: a quiet ramp with two soft blooms
+     sitting on it, which is exactly what .fg-copy does. The previous version
+     was a ten stop spectrum including a hard cyan band, and a spectrum with
+     hard bands is what turned into a visible wave the moment it was displaced.
+     Warm notes are blooms, so they read as light on a surface rather than as
+     stripes in a flag. */
+  background-image:
+    radial-gradient(36% 15% at 72% 11%, rgba(250, 196, 158, 0.9) 0%, transparent 100%),
+    radial-gradient(30% 13% at 26% 17%, rgba(244, 172, 204, 0.72) 0%, transparent 100%),
+    linear-gradient(180deg,
+      #EDE9DE 0%,
+      #F3DCCA 10%,
+      #EFC7B0 20%,
+      #E7C2CE 32%,
+      #D2CBEE 44%,
+      #B3B6F0 54%,
+      #8F97EE 63%,
+      #6470EC 73%,
+      #4553E8 84%,
+      #2E3ACB 100%);
+  filter: url(#oj-footer);
+}
+
+/* THE COLUMN EDGES. With one continuous sheet behind the silhouette there is
+   nothing separating one rectangle from the next below the bar line, so the
+   skyline reads as a single blob with a stepped top. A one pixel paper rule on
+   every column boundary puts the verticals back, drawn over the sheet at full
+   band height so the edge runs the whole way down. Aligned to 100%/22 because
+   that is exactly where the flex items divide. */
+.ft-sky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(90deg,
+    transparent 0,
+    transparent calc(100% / 22 - 1px),
+    var(--paper) calc(100% / 22 - 1px),
+    var(--paper) calc(100% / 22));
+}
+
+/* each rectangle is PAPER, not colour: it masks the sheet above the bar line */
+.ft-sky i {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  /* half a pixel of overlap each side. 22 flex items at fractional widths land
+     on subpixel boundaries and the sheet shows through as a hairline between
+     every pair, which reads as gaps between the rectangles. */
+  margin-inline: -0.5px;
+  height: calc(100% - var(--h, 60%));
+  background: var(--paper);
+}
+
+/* GRAIN over the whole footer. On a light ground this has to MULTIPLY, not
+   overlay: overlay against a pale surface returns almost nothing, which is the
+   same arithmetic that made the card grain invisible the first time it was
+   built here. */
+.ft-grain {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0.42; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2'/>\
+<feColorMatrix type='saturate' values='0'/></filter>\
+<rect width='140' height='140' filter='url(%23n)' opacity='.5'/></svg>");
+}
+
+/* the faintest lift under the copy half, so a bar that breathes upward can
+   never quite reach the type. No box, no blur, no edge. */
+.ft::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg,
+    var(--paper) 0%,
+    var(--paper) 44%,
+    color-mix(in srgb, var(--paper) 82%, transparent) 56%,
+    color-mix(in srgb, var(--paper) 30%, transparent) 68%,
+    transparent 80%);
+}
+
+/* --- content -------------------------------------------------------------- */
+
+.ft-in { position: relative; z-index: 2; }
+
+.ft-h {
+  font-family: var(--sans); font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 50px);
+  line-height: 1.06; letter-spacing: -0.02em;
+  margin: 0 0 calc(var(--u) * 7); color: var(--ink);
+}
+
+.ft-cols {
+  display: grid; grid-template-columns: 1fr; gap: calc(var(--u) * 5);
+  padding-bottom: calc(var(--u) * 7);
+}
+@media (min-width: 760px) { .ft-cols { grid-template-columns: repeat(3, 1fr); gap: calc(var(--u) * 6); } }
+
+.ft-col { display: flex; flex-direction: column; gap: calc(var(--u) * 1.5); align-items: flex-start; }
+.ft-lab {
+  font: 500 10px/1 var(--mono); letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: var(--u);
+}
+.ft-col a {
+  font-family: var(--sans); font-size: 15px; color: var(--ink);
+  text-decoration: none; transition: color 160ms ease;
+}
+.ft-col a:focus-visible { color: var(--indigo); text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) {
+  .ft-col a:hover { color: var(--indigo); text-decoration: underline; }
+}
+
+/* --- Elsewhere: a row per platform, its mark in a tile on the right --------
+   The tile is a small 8px box like every other box on the site, in the card
+   ground with a hairline. Pressing pushes the tile in (the site's press),
+   then the link goes (press.js delays the navigation one beat so the push is
+   seen). The word keeps the column's type; nothing underlines. */
+.ft-col { align-items: stretch; }
+.ft-col .ft-lab { align-self: flex-start; }
+.ft-el {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;   /* the word left, the tile at the right edge */
+  gap: calc(var(--u) * 1.5);
+  width: 100%;
+  min-height: 36px;
+  text-decoration: none;
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+}
+.ft-col .ft-el:hover, .ft-col .ft-el:focus-visible, .pg-links .ft-el:hover { text-decoration: none; color: var(--ink); }
+.ft-el-t span { display: block; margin-top: 2px; font: 500 10px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+/* on /about the list keeps its hairlines between rows; the word stays the
+   list's 15px sans (the list styles every span as a mono handle, so the
+   label span is restated) */
+.pg-links .ft-el { align-items: center; padding: calc(var(--u) * 1.25) 0; }
+.pg-links .ft-el .ft-el-t { font: 400 15px/1.3 var(--sans); letter-spacing: 0; text-transform: none; color: var(--ink); white-space: normal; }
+.pg-links .ft-el .ft-el-t span { font: 500 10px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+.ft-el-i {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-l);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-1);
+  transition: background-image 125ms cubic-bezier(0.24, 1, 0.4, 1),
+              box-shadow 125ms cubic-bezier(0.24, 1, 0.4, 1),
+              transform 125ms cubic-bezier(0.24, 1, 0.4, 1);
+}
+.ft-el-i svg { width: 18px; height: 18px; }
+.ft-el-i svg:not([fill="none"]) { fill: currentColor; }   /* the Instagram mark is strokes */
+@media (hover: hover) and (pointer: fine) {
+  .ft-el:hover .ft-el-i { background-image: linear-gradient(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.05)); }
+}
+@media not (pointer: coarse) {
+  .ft-el:active .ft-el-i {
+    background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1));
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.24), inset 0 -1px 0 rgb(255 255 255 / 0.2);
+    transform: scale(0.98);
+  }
+}
+.ft-el[data-press="on"] .ft-el-i,
+.ft-el:focus-visible .ft-el-i {
+  background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1));
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.24), inset 0 -1px 0 rgb(255 255 255 / 0.2);
+  transform: scale(0.98);
+}
+.ft-el:focus { outline: none; }
+@media (forced-colors: active) { .ft-el:focus-visible .ft-el-i { outline: 2px solid CanvasText; } }
+/* the footer's phone layout puts the words on paper; the tile reads there as is */
+.ft-p { margin: 0; font-family: var(--sans); font-size: 14px; line-height: 1.6;
+        color: var(--ink-2); max-width: 34ch; }
+
+.ft-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: calc(var(--u) * 3); flex-wrap: wrap;
+  padding-top: calc(var(--u) * 4);
+}
+/* the button sits at the right end of the bottom row, the fine print at the
+   left (Jake); when the row wraps on a phone the button takes its own line,
+   still at the right */
+.ft-foot .ft-fine { order: 1; }
+.ft-foot .ft-pill { order: 2; margin-left: auto; }
+
+/* The site's button, not the reference's. Every action on this site is 10px
+   radius, 14px sans at weight 500, padding 12 by 18, indigo for the primary
+   one. The reference used a 999px outlined pill; copying it here would have
+   put a second button language on the page for the sake of one footer. */
+.ft-pill {
+  display: inline-flex; align-items: center; gap: calc(var(--u) * 0.75);
+  font: 500 14px/1 var(--sans);
+  color: #fff; text-decoration: none;
+  background: var(--indigo); border: 0;
+  border-radius: var(--r-s);
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 2.25);
+  white-space: nowrap;
+  transition: background-color 160ms ease;
+}
+
+.ft-fine { font: 500 10px/1 var(--mono); letter-spacing: 0.2em;
+           text-transform: uppercase; color: var(--ink-3); }
+
+/* The filter animates through SMIL inside the SVG, which CSS cannot reach, so
+   reduced motion is honoured on the SVG element by the page script, the same
+   way the card surfaces are. There is no CSS animation here to disable. */
+
+@media (max-width: 720px) {
+  .ft { padding-block: calc(var(--u) * 9) calc(var(--u) * 8); }
+  .ft-sky, .ft::after { height: 460px; }
+  /* 22 columns on a phone is stripes, not a skyline */
+  .ft-sky i:nth-child(2n) { display: none; }
+}
+
+/* The Status column is desktop only (Jake: off the phone). */
+@media (max-width: 899px) {
+  .ft-col-status { display: none; }
+}
+/* On a phone the Elsewhere column runs the full width, so its tiles stand at
+   the footer's right edge, in line with the button below. */
+@media (max-width: 759px) {
+  .ft-col-else { grid-column: 1 / -1; }
+}
+
+/* On a phone the foot is ONE row (Jake, Oct 11): the three marks on the left
+   and Book a call on the right. The Elsewhere column and the sign-off give
+   way to it; desktop keeps both. */
+.ft-marks { display: none; }
+@media (max-width: 759px) {
+  /* only where the page carries the new row: a page built before it keeps
+     its Elsewhere column rather than losing its links */
+  .ft:has(.ft-marks) .ft-col-else { display: none; }
+  .ft:has(.ft-marks) .ft-foot .ft-fine { display: none; }
+  .ft-foot { align-items: center; }
+  .ft-foot .ft-marks { display: flex; gap: 10px; order: 1; }
+  .ft-foot .ft-mark { width: auto; min-height: 0; }
+}
+
+/* ==== parts/glow.css ==== */
+/* ===========================================================================
+   glow.css   prefix: gl-
+   Ambient indigo bloom behind selected sections.
+
+   The reference is a saturated periwinkle field. Reproduced at that value here
+   it would bury the oatmeal and take the body copy under AA, so what is
+   borrowed is the BEHAVIOUR, not the value: very large radial blooms, no hard
+   edge anywhere, nothing that reads as a shape.
+
+   PLACEMENT IS A CONTRAST DECISION, NOT A COMPOSITION ONE.
+   Measured against the tokens:
+
+       bloom   background        --ink   --ink-2
+       0%      237,233,222       11.59      4.70
+       13%     216,212,224        9.65      3.91
+       17%     209,206,225        9.13      3.70
+
+   --ink-2 is the body copy colour and it only clears AA by 0.2 on bare paper,
+   so ANY tint under it fails. Every bloom therefore sits in the open half of
+   its section, away from running text: the hero blooms behind the plate on the
+   left and leaves the copy column clean; the agent runs bloom on the right,
+   where the 528px call block does not reach. --ink headings are unaffected at
+   9:1 and can be bloomed over freely.
+
+   Rhythm: only the hero and the two runs glow. The figure cards stay on clean
+   paper so the page alternates ambient and plain instead of washing end to end.
+   =========================================================================== */
+
+.gl {
+  position: relative;
+  isolation: isolate;
+}
+
+.gl::before {
+  content: '';
+  position: absolute;
+  /* bleeds past the section so no bloom can show an edge at a seam */
+  inset: -20% -14%;
+  z-index: -1;
+  pointer-events: none;
+
+  /* right side only: the call block is capped at 528px and sits left, so this
+     half of the section is open ground */
+  background:
+    radial-gradient(42% 46% at 84% 34%,
+      color-mix(in oklab, var(--indigo) 17%, transparent) 0%, transparent 70%),
+    radial-gradient(34% 38% at 68% 82%,
+      color-mix(in oklab, var(--indigo) 11%, transparent) 0%, transparent 72%);
+
+  /* the fade top and bottom is what lets a glowing section sit against a plain
+     one with no seam */
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom,
+    transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
+
+/* The second run is pitched differently rather than mirrored, so the two do
+   not read as the same wallpaper repeated down the page. Still right of the
+   call block. */
+.gl-b::before {
+  background:
+    radial-gradient(50% 40% at 72% 74%,
+      color-mix(in oklab, var(--indigo) 15%, transparent) 0%, transparent 70%),
+    radial-gradient(30% 34% at 92% 22%,
+      color-mix(in oklab, var(--indigo) 10%, transparent) 0%, transparent 74%);
+}
+
+/* Hero: blooms behind the portrait on the left and off the bottom edge. The
+   copy column on the right stays bare paper, because that is where the only
+   --ink-2 paragraph on this screen lives. */
+.gl-hero::before {
+  inset: -10% -16%;
+  background:
+    radial-gradient(46% 52% at 12% 42%,
+      color-mix(in oklab, var(--indigo) 16%, transparent) 0%, transparent 68%),
+    radial-gradient(38% 34% at 30% 104%,
+      color-mix(in oklab, var(--indigo) 11%, transparent) 0%, transparent 70%);
+  -webkit-mask-image: linear-gradient(to bottom,
+    #000 0%, #000 76%, transparent 100%);
+  mask-image: linear-gradient(to bottom,
+    #000 0%, #000 76%, transparent 100%);
+}
+
+/* Browsers without color-mix still glow, just a touch weaker. */
+@supports not (color: color-mix(in oklab, red, blue)) {
+  .gl::before {
+    background:
+      radial-gradient(42% 46% at 84% 34%, rgba(75, 74, 239, 0.15) 0%, transparent 70%),
+      radial-gradient(34% 38% at 68% 82%, rgba(75, 74, 239, 0.10) 0%, transparent 72%);
+  }
+  .gl-b::before {
+    background:
+      radial-gradient(50% 40% at 72% 74%, rgba(75, 74, 239, 0.13) 0%, transparent 70%),
+      radial-gradient(30% 34% at 92% 22%, rgba(75, 74, 239, 0.09) 0%, transparent 74%);
+  }
+  .gl-hero::before {
+    background:
+      radial-gradient(46% 52% at 12% 42%, rgba(75, 74, 239, 0.14) 0%, transparent 68%),
+      radial-gradient(38% 34% at 30% 104%, rgba(75, 74, 239, 0.10) 0%, transparent 70%);
+  }
+}
+
+/* On a narrow screen the columns stack, so there is no open half to bloom
+   into. Pull the whole effect right back rather than tinting under the copy. */
+@media (max-width: 900px) {
+  .gl::before,
+  .gl-b::before,
+  .gl-hero::before {
+    background:
+      radial-gradient(70% 34% at 50% 4%,
+        color-mix(in oklab, var(--indigo) 9%, transparent) 0%, transparent 70%);
+  }
+}
+
+/* ==== parts/boxed.css ==== */
+/* ===========================================================================
+   boxed.css   the alternative treatment
+   Loaded only by /site/boxed.html, on top of the same fragments.
+
+   THREE BUGS RAN FOR MANY ROUNDS. ALL ARE NAMED HERE SO THEY DO NOT RETURN.
+
+   0. THE STREAKS STOPPED HALFWAY. The reveal reached zero at card x 0.37 and
+      the streaks lived only inside it, so they ended in mid air. A streak that
+      crosses the copy has to be under the contrast ceiling, so each streak is
+      now a mid-tone BODY that spans the whole card unmasked plus a bright HEAD
+      masked to the right, sharing one height. One streak, brightening.
+
+   1. THE MASK WAS A RADIAL GRADIENT. A radial mask is a circle. Every build
+      that "put a circle on the right" did so because the reveal itself was
+      circular; no amount of retuning the shapes inside it could remove a
+      circle that was being drawn by the mask. The reveal is now LINEAR, a long
+      soft fade from right to left, so it has no shape of its own at all.
+
+   2. THE BASE WENT NEARLY NAVY. Chasing hue variation in the copy half, the
+      base was dropped to #141C52. The reference is a BRIGHT saturated blue and
+      white type does not need it dark: #3B49E6 measures L 0.114, which is
+      6.4 to 1, far more than the 4.5 required. Dark was never the price of
+      legibility here.
+
+   WHAT THE REFERENCE ACTUALLY IS
+   A bright blue field with long, soft, near horizontal light streaks flowing
+   across it and feathering out toward the middle. So:
+
+     - the streaks are EXTREMELY elongated, 55% by 4% of their tile, which is
+       about 1.7 card widths long and 0.13 card heights thick. Anything close
+       to round reads as a blob; this reads as flow.
+     - they drift UP AND DOWN rather than side to side, on long alternating
+       periods, which is the motion in the reference.
+     - the reveal fades left over 30 percent of the card, so a streak thins out
+       gradually instead of ending at a boundary.
+
+   CONTRAST. White copy needs L <= 0.183 behind it and the glyphs reach x 0.68.
+   The base at L 0.114 leaves real headroom, and the linear reveal is solved so
+   the streaks are down to a few percent of their strength by the time they
+   reach the type.
+   =========================================================================== */
+
+
+/* --- the card ------------------------------------------------------------ */
+
+.fg-copy {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--r-l);
+  padding: calc(var(--u) * 5);
+  overflow: clip;   /* clips the streaks like hidden did, without becoming a scroll container */
+  background: #3B49E6;
+  color: #fff;
+  box-shadow: var(--shadow-card);
+}
+
+/* Window controls: the same red / yellow / green page dots on every card.
+   They sit above the animated field and never accept pointer input. */
+.fg-page-dots {
+  position: absolute;
+  top: calc(var(--u) * 3);
+  left: calc(var(--u) * 3);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--u);
+  pointer-events: none;
+}
+
+.fg-page-dot {
+  display: block;
+  width: 11px;
+  height: 11px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32),
+              0 1px 2px rgba(15, 20, 80, 0.22);
+}
+
+.fg-page-dot-red    { background: #ff5f57; }
+.fg-page-dot-yellow { background: #febc2e; }
+.fg-page-dot-green  { background: #28c840; }
+
+/* THE PALETTE. Shared by all three cards, defined once, on purpose. */
+.fg-copy::before,
+.fg-copy::after {
+  content: '';
+  position: absolute;
+  inset: -55%;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+
+  /* bodies: cross the whole card, all under the L 0.183 ceiling */
+  --fg-m1: rgba( 83,  97, 236, 0.85);  /* L 0.164   4.9 to 1 */
+  --fg-m2: rgba( 68,  99, 228, 0.85);  /* L 0.158   5.1 to 1 */
+  --fg-m3: rgba( 96,  88, 224, 0.85);  /* L 0.148   5.3 to 1 */
+  /* heads: too bright to cross the copy, so masked to the right */
+  --fg-s1: rgba(198, 194, 246, 0.72);  /* lavender   */
+  --fg-s2: rgba(176, 206, 244, 0.66);  /* pale blue  */
+  --fg-s3: rgba(242, 208, 194, 0.62);  /* pale peach */
+  --fg-s4: rgba(236, 234, 250, 0.70);  /* near white */
+
+  filter: var(--fg-liquid, url(#oj-liquid-a));
+}
+
+/* the bright blue ground, with two very wide soft swells in it so the blue
+   itself is never flat */
+.fg-copy::before {
+  background-image:
+    radial-gradient(78% 4%   at 50% 50%, var(--fg-m1) 0%, var(--fg-m1) 10%, transparent 100%),
+    radial-gradient(72% 5%   at 50% 50%, var(--fg-m2) 0%, var(--fg-m2) 9%,  transparent 100%),
+    radial-gradient(75% 3.5% at 50% 50%, var(--fg-m3) 0%, var(--fg-m3) 10%, transparent 100%),
+    radial-gradient(60% 22%  at 50% 50%,
+      rgba(90, 108, 244, 0.45) 0%, rgba(90, 108, 244, 0.45) 22%, transparent 100%),
+    linear-gradient(100deg, #2F3CD8 0%, #3B49E6 52%, #4655EE 100%);
+  background-size: 150% 150%, 150% 150%, 150% 150%, 150% 150%, 100% 100%;
+  animation: var(--fg-tide) var(--fg-tide-dur) ease-in-out infinite alternate
+             var(--fg-tide-delay, 0s);
+}
+
+/* the light streaks. LINEAR reveal, not radial: a radial reveal is a circle. */
+.fg-copy::after {
+  background-image:
+    radial-gradient(55% 4%  at 50% 50%, var(--fg-s1) 0%, var(--fg-s1) 12%, transparent 100%),
+    radial-gradient(48% 5%  at 50% 50%, var(--fg-s2) 0%, var(--fg-s2) 10%, transparent 100%),
+    radial-gradient(52% 3.5% at 50% 50%, var(--fg-s3) 0%, var(--fg-s3) 12%, transparent 100%),
+    radial-gradient(44% 4.5% at 50% 50%, var(--fg-s4) 0%, var(--fg-s4) 10%, transparent 100%);
+  background-size: 150% 150%;
+  -webkit-mask-image: linear-gradient(to right,
+    rgba(0,0,0,0) 44%, rgba(0,0,0,0.05) 52%, rgba(0,0,0,0.18) 58%,
+    rgba(0,0,0,0.44) 64%, rgba(0,0,0,0.74) 70%, #000 77%, #000 100%);
+  mask-image: linear-gradient(to right,
+    rgba(0,0,0,0) 44%, rgba(0,0,0,0.05) 52%, rgba(0,0,0,0.18) 58%,
+    rgba(0,0,0,0.44) 64%, rgba(0,0,0,0.74) 70%, #000 77%, #000 100%);
+  animation: var(--fg-flow) var(--fg-flow-dur) ease-in-out infinite alternate
+             var(--fg-flow-delay, 0s);
+}
+
+/* Paths in CARD coordinates, converted once: at inset -55% with a 150 percent
+   tile, a centre at card p needs background-position (1.025 - p) / 0.0105.
+   The streaks move UP AND DOWN: X barely changes, Y sweeps. */
+@keyframes fg-flow-a {
+  0%   { background-position: 26% 74%, 31% 45%, 21% 29%, 29%  7%; }
+  50%  { background-position: 26% 60%, 31% 58%, 21% 16%, 29% 20%; }
+  100% { background-position: 26% 55%, 31% 64%, 21% 10%, 29% 23%; }
+}
+@keyframes fg-flow-b {
+  0%   { background-position: 29% 62%, 24% 33%, 33% 18%, 26% 80%; }
+  50%  { background-position: 29% 48%, 24% 47%, 33%  8%, 26% 66%; }
+  100% { background-position: 29% 41%, 24% 54%, 33%  4%, 26% 59%; }
+}
+@keyframes fg-flow-c {
+  0%   { background-position: 23% 36%, 34% 68%, 27% 12%, 31% 52%; }
+  50%  { background-position: 23% 51%, 34% 54%, 27% 25%, 31% 38%; }
+  100% { background-position: 23% 58%, 34% 47%, 27% 31%, 31% 31%; }
+}
+
+/* the two blue swells drift the other way, so the ground is never still */
+@keyframes fg-tide-a {
+  0%   { background-position: 50% 74%, 50% 45%, 50% 29%, 70% 22%, 50% 50%; }
+  50%  { background-position: 50% 60%, 50% 58%, 50% 16%, 34% 55%, 50% 50%; }
+  100% { background-position: 50% 55%, 50% 64%, 50% 10%, 58% 78%, 50% 50%; }
+}
+@keyframes fg-tide-b {
+  0%   { background-position: 50% 62%, 50% 33%, 50% 18%, 36% 64%, 50% 50%; }
+  50%  { background-position: 50% 48%, 50% 47%, 50%  8%, 68% 30%, 50% 50%; }
+  100% { background-position: 50% 41%, 50% 54%, 50%  4%, 44% 14%, 50% 50%; }
+}
+@keyframes fg-tide-c {
+  0%   { background-position: 50% 36%, 50% 68%, 50% 12%, 56% 40%, 50% 50%; }
+  50%  { background-position: 50% 51%, 50% 54%, 50% 25%, 26% 74%, 50% 50%; }
+  100% { background-position: 50% 58%, 50% 47%, 50% 31%, 64% 20%, 50% 50%; }
+}
+
+/* PER CARD: MOVEMENT ONLY. No colour below this line. */
+.fg-fig-a .fg-copy::before,
+.fg-fig-a .fg-copy::after {
+  --fg-liquid: url(#oj-liquid-a);
+  --fg-tide: fg-tide-a;  --fg-tide-dur: 61s;
+  --fg-flow: fg-flow-a;  --fg-flow-dur: 37s;
+}
+.fg-fig-b .fg-copy::before,
+.fg-fig-b .fg-copy::after {
+  --fg-liquid: url(#oj-liquid-b);
+  --fg-tide: fg-tide-b;  --fg-tide-dur: 73s;  --fg-tide-delay: -29s;
+  --fg-flow: fg-flow-b;  --fg-flow-dur: 47s;  --fg-flow-delay: -19s;
+}
+.fg-fig-c .fg-copy::before,
+.fg-fig-c .fg-copy::after {
+  --fg-liquid: url(#oj-liquid-c);
+  --fg-tide: fg-tide-c;  --fg-tide-dur: 53s;  --fg-tide-delay: -41s;
+  --fg-flow: fg-flow-c;  --fg-flow-dur: 31s;  --fg-flow-delay: -23s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fg-copy::before,
+  .fg-copy::after { animation: none; }
+}
+
+
+/* --- type ---------------------------------------------------------------- */
+
+/* The type on the card is WHITE, full stop. Stated explicitly rather than left
+   to inheritance: an earlier edit removed this block and the heading fell back
+   to the dark ink token on a saturated field, which measures 2.60. */
+.fg-copy,
+.fg-copy .fg-h,
+.fg-copy .fg-num,
+.fg-copy .fg-sys { color: #fff; }
+
+.fg-copy .fg-p { color: rgba(255, 255, 255, 0.94); }
+
+/* Capped as a share of the CARD, not in ch: a ch cap is relative to font size,
+   so 15ch on the heading resolved to 88% of the card and freed nothing.
+   Measured, the glyphs stop at x = 0.68, which is what the reveal is solved
+   against. */
+.fg-copy .fg-h { max-width: 70%; }
+.fg-copy .fg-p { max-width: 72%; }
+
+
+/* --- action -------------------------------------------------------------- */
+
+.fg-copy .fg-act-link,
+.fg-copy .fg-act-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.75);
+  border: 0;
+  border-bottom: 0;
+  border-radius: var(--r-s);
+  background: #fff;
+  color: #2438C8;
+  font: 500 14px/1 var(--sans);
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 2.25);
+  white-space: nowrap;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+/* The pill used to run the full inner width of the card with its label hugged
+   left, so "Join Opus Lab" trailed ~200px of empty white. It hugs its own text
+   now, which is the whole of direction A's geometry change. */
+.fg-copy .fg-act-link,
+.fg-copy .fg-act-btn { align-self: flex-start; width: auto; }
+
+/* The mark is an ASCII arrow in JetBrains Mono, not the Endless glyph: it reads
+   as the terminal trace the rest of the site is built around. Endless does have
+   its own U+2192, this is a choice rather than a workaround. */
+.fg-copy .fg-act-x {
+  font: 500 13px/1 var(--mono);
+  letter-spacing: -0.06em;
+  padding-left: 2px;
+}
+
+/* Hidden at rest, slides in on hover. The span keeps its box at all times, so
+   revealing it never changes the pill's width and nothing reflows.
+   Gated on (hover: hover): on a touch screen there is no hover, so the mark
+   would never appear at all and the pill would just read as a label. */
+@media (hover: hover) {
+  .fg-copy .fg-act-x {
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: opacity 160ms ease,
+                transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .fg-copy .fg-act:hover .fg-act-x,
+  .fg-copy .fg-act:focus-visible .fg-act-x { opacity: 1; transform: none; }
+}
+
+/* figures.css slides the mark 4px right on hover; that fights the reveal. */
+@media (prefers-reduced-motion: reduce) {
+  .fg-copy .fg-act-x { transition: none; transform: none; }
+}
+
+
+/* --- layout -------------------------------------------------------------- */
+
+@media (min-width: 900px) {
+  .fg-body { align-items: stretch; grid-auto-rows: minmax(464px, auto); }
+  .fg-figure { display: flex; align-items: center; }
+  .fg-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: calc(var(--u) * 6);
+  }
+}
+
+/* The ambient bloom is off here. */
+.gl::before { display: none; }
+
+/* ==== parts/home-bare.css ==== */
+/* ===========================================================================
+   home-bare.css   VARIATION B: no frame on the plate
+   Loaded last, on top of boxed.css, so it changes only what it names.
+
+   THE IDEA: the gradient cards stay exactly as they are; the ASCII loses its
+   well entirely and sits on the page. Nothing frames it, nothing tints the
+   ground behind it, so the drawing reads as printed on the paper rather than
+   displayed in a component.
+
+   The well was doing four things and all four go: the recessed muted ground,
+   the hairline border, the 20px radius, and the inner padding. The padding is
+   the one worth naming, because removing it is what lets the plate run to the
+   full width of its column and finally match the card beside it in size.
+   =========================================================================== */
+
+.fg-well {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+/* the annotations were positioned against the well's padding box; without the
+   padding they need to come inside the plate's own edge or they hang off it */
+
+/* NOTHING CLIPS THE PLATE. An earlier pass gave the frame a 20px radius with
+   overflow hidden, which re-imposed the exact hard boundary the dissolve
+   exists to remove: the scattered characters would have been cut off along a
+   curve. The plate has no clip and no radius; its edge is the dissolve. */
+
+/* --- uncropped, and dissolving at the edges --------------------------------
+   Two things were wrong and I fixed the wrong one first.
+
+   1. THE STREAKS were a shader bug, not a fade. Its coordinate clamp pins any
+      out of range fragment to the edge row, which is correct for a cover fit
+      where nothing is ever outside, and catastrophic for contain, where it
+      smeared the border cells across the whole canvas. The shader now gates
+      the sample on being inside the plate. That belonged in ascii.js, not
+      here, and it is fixed at the source.
+
+   2. THE FADE was a CSS alpha mask, which makes every glyph translucent at
+      once and reads as a faded photograph rather than an ASCII drawing coming
+      apart. The dissolve now lives in the shader and thins the CHARACTER GRID:
+      cells drop out sparsely and then completely toward the edges, each on a
+      stable hash so a cell either draws or does not and never flickers. The
+      mask is gone; there is nothing left here to make translucent.
+
+   The box keeps the size it always had. Neither fix changes the layout.
+   -------------------------------------------------------------------------- */
+
+/* --- the annotations go ----------------------------------------------------
+   The grey labels and their dashed leader lines belonged to the framed
+   version, where the well was a diagram panel and the labels were its
+   captions. With no frame and a dissolving edge there is nothing for a leader
+   line to point AT, so they read as leftovers pointing into paper. Removed
+   rather than restyled: a caption on an image with no boundary is a caption on
+   nothing.
+   -------------------------------------------------------------------------- */
+
+.fg-anno { display: none; }
+
+
+/* --- twenty percent larger -------------------------------------------------
+   Done by growing the WELL, not by transforming the canvas. A CSS transform
+   would scale the already rendered bitmap and resample it, which on an ASCII
+   plate means blurred glyph edges: the one thing this drawing cannot survive,
+   since every character is a few pixels wide. Widening the element instead
+   makes the renderer's ResizeObserver rebuild the buffer at the new size, so
+   the glyphs are redrawn crisp at 1:1.
+
+   The negative margins keep the plate centred on the spot it already occupied
+   and let the extra size spill past the column. That is safe here precisely
+   because the edge dissolves: there is no boundary to collide with anything.
+   -------------------------------------------------------------------------- */
+
+/* GROW THE COLUMN, DO NOT SPILL OUT OF IT. Widening the well to 120% with
+   negative margins pushed the plate past its grid cell, and body carries
+   overflow-x: hidden, so the overhang was clipped straight off both sides.
+   That is what cut the wrists off the hands: not the atlas, and not the fit
+   mode, but 10% of the drawing hanging outside a clipping ancestor on each
+   side. Taking the width from the grid instead keeps every pixel inside a
+   container that never clips. */
+@media (min-width: 900px) {
+  /* THE CARD SITS ON THE PLATE. Two columns meant the plate could only ever
+     have what the card did not, so every pixel given to the drawing came off
+     the copy and the copy kept shrinking. Stacking them removes the trade
+     entirely: both children occupy the same grid cell, the plate takes the
+     width it wants, and the card floats over it at the size it always was.
+
+     This only works because the plate's edges dissolve. A framed plate under a
+     card would show a hard rectangle sliding behind an opaque box, which reads
+     as a mistake; characters thinning into paper under a floating card reads
+     as depth. The two changes are the same idea. */
+  .fg-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+    align-items: center;
+    gap: 0;
+  }
+  /* figures.css pins grid-column per side, and .fg-fig-b .fg-figure is a two
+     class selector, so a bare .fg-body > * cannot beat it: the children kept
+     landing in implicit columns instead of stacking, which is why the plates
+     measured 222, 464, 222 and nothing overlapped. Match its specificity. */
+  .fg-fig .fg-copy,
+  .fg-fig .fg-figure,
+  .fg-fig-b .fg-copy,
+  .fg-fig-b .fg-figure { grid-area: 1 / 1; grid-column: 1; }
+
+  /* the drawing now gets most of the width, and it costs the card nothing */
+  /* figures.css caps .fg-figure at max-width 464px (58u), which silently ate
+     the 74% and left a 192px gap where the overlap should be. */
+  .fg-fig .fg-figure { width: 74%; max-width: none; justify-self: end;
+                       margin-inline: 0; }
+  .fg-fig .fg-copy   { width: 480px; justify-self: start; z-index: 2; min-height: 0; }
+
+  /* FIG 02 runs mirrored, so both sides swap */
+  .fg-fig-b .fg-figure { justify-self: start; }
+  .fg-fig-b .fg-copy   { justify-self: end; }
+}
+.fg-well {
+  width: 100%;
+  margin: 0;
+}
+
+/* FINDING-004: on phones the first plate ran the full 354px column while the
+   other two sat at 300px, because an unmounted canvas's intrinsic 300px
+   default was deciding the layout. The chain takes the column explicitly and
+   the canvas keeps its square through aspect-ratio, so all three match. */
+@media (max-width: 899px) {
+  .fg-frame, canvas.fg-plate { width: 100%; }
+  canvas.fg-plate { height: auto; aspect-ratio: 1 / 1; }
+}
+
+/* ==== parts/library-band.css ==== */
+/* ===========================================================================
+   library-band.css   prefix lb-
+
+   Styles the library index that sits under FIG 01.
+
+   Half the class names here are NOT mine: src/routes/index.tsx generates the
+   results markup and emits .lm-result / .lm-snippet / .lm-url and
+   .grow-recent / .gr-item / .gr-title / .gr-meta. Those are styled rather than
+   renamed, because renaming them would mean editing the route, and the route
+   is the one thing in this change that must not move: it is what injects the
+   25 /r/ links into the page.
+   =========================================================================== */
+
+/* --- the dialog ----------------------------------------------------------- */
+
+.lbm { position: fixed; inset: 0; z-index: 200; display: flex;
+       align-items: center; justify-content: center; padding: calc(var(--u) * 4); }
+.lbm[hidden] { display: none; }
+
+/* Open and close. A dialog that appears with no transition reads as a glitch,
+   one that takes its time reads as slow: in over 200ms from 96% and clear on a
+   strong ease-out, out in 150ms, because leaving is faster than arriving. The
+   origin stays centred: a modal belongs to the viewport, not to its button.
+   display is held for the exit with allow-discrete; an engine without it just
+   closes instantly, which is how it closed before. */
+.lbm { transition: display 150ms allow-discrete; }
+.lbm[hidden] { pointer-events: none; }
+.lbm-scrim { transition: opacity 200ms ease; }
+.lbm-card { transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+                      transform 200ms cubic-bezier(0.23, 1, 0.32, 1); }
+@starting-style {
+  .lbm-scrim { opacity: 0; }
+  .lbm-card { opacity: 0; transform: scale(0.96); }
+}
+.lbm[hidden] .lbm-scrim { opacity: 0; transition-duration: 150ms; }
+.lbm[hidden] .lbm-card { opacity: 0; transform: scale(0.98);
+                     transition-duration: 150ms; transition-timing-function: ease-out; }
+
+.lbm-scrim { position: absolute; inset: 0;
+             background: color-mix(in srgb, var(--ink) 42%, transparent);
+             backdrop-filter: blur(3px); }
+
+.lbm-card {
+  position: relative;
+  width: min(880px, 100%);
+  max-height: min(80vh, 900px);
+  overflow-y: auto;
+  background: var(--paper);
+  border: 1px solid var(--rule-2);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow-float);
+  padding: calc(var(--u) * 5) calc(var(--u) * 5) calc(var(--u) * 3);
+}
+
+.lbm-head { display: flex; align-items: flex-start; justify-content: space-between;
+            gap: calc(var(--u) * 3); padding-bottom: calc(var(--u) * 3); }
+
+.lbm-close {
+  flex: none;
+  font: 500 10px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--indigo); background: none;
+  border: 1px solid var(--indigo); border-radius: var(--r-s);
+  padding: calc(var(--u) * 1.25) calc(var(--u) * 2); cursor: pointer;
+  transition: color 140ms ease, background-color 140ms ease;
+}
+
+
+
+.lb-eyebrow {
+  display: block;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: calc(var(--u) * 1.5);
+}
+
+.lb-tagline { font: 400 15px/1.5 var(--sans); color: var(--ink-2); margin: 0; }
+
+/* --- latest drops (GROW_RECENT) ------------------------------------------ */
+
+.grow-recent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 2);
+  padding-bottom: calc(var(--u) * 3);
+}
+.gr-label {
+  flex: 1 0 100%;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.gr-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u);
+  text-decoration: none;
+  border: 1px solid var(--rule-2);
+  border-radius: var(--r-s);
+  padding: calc(var(--u) * 2) calc(var(--u) * 2.5);
+  transition: border-color 160ms ease;
+}
+.gr-item:focus-visible { border-color: var(--indigo); }
+@media (hover: hover) and (pointer: fine) {
+  .gr-item:hover { border-color: var(--indigo); }
+}
+.gr-title { font: 500 15px/1.3 var(--sans); color: var(--ink); text-transform: none; }
+.gr-meta  { font: 500 10px/1 var(--mono); letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--ink-3); }
+
+/* --- result bar ----------------------------------------------------------- */
+
+.lb-bar {
+  font: 500 10px/1.6 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-block: 1px solid var(--rule);
+  padding-block: calc(var(--u) * 2);
+}
+.lb-bar b { font-weight: 500; color: var(--ink); }
+
+/* --- the hits (LIB_RESULTS) ----------------------------------------------- */
+
+/* A result page, not a card grid: link, snippet, bare URL, in that order. It
+   is the one list shape a visitor can read without being taught it. */
+.lb-hits { padding-block: calc(var(--u) * 2); }
+
+.lm-result {
+  padding-block: calc(var(--u) * 4);
+  border-bottom: 1px solid var(--rule);
+  max-width: 74ch;
+}
+
+.lm-result > a {
+  display: inline-block;
+  /* one of the ported sheets uppercases links in this region; these are
+     resource titles written in sentence case and must stay that way */
+  text-transform: none;
+  font: 500 21px/1.25 var(--sans);
+  color: var(--indigo);
+  text-decoration: none;
+  margin-bottom: var(--u);
+}
+.lm-result > a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .lm-result > a:hover { text-decoration: underline; text-underline-offset: 3px; }
+}
+
+.lm-snippet {
+  text-transform: none;
+  font: 400 15px/1.6 var(--sans);
+  color: var(--ink-2);
+  margin-bottom: calc(var(--u) * 1.5);
+  max-width: 64ch;
+}
+
+.lm-url {
+  font: 500 10px/1.5 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.lm-empty { padding-block: calc(var(--u) * 6); }
+.em-title { font: 500 18px/1.4 var(--sans); color: var(--ink); margin-bottom: var(--u); }
+.em-sub   { font: 400 15px/1.6 var(--sans); color: var(--ink-2); max-width: 60ch; }
+
+@media (max-width: 720px) {
+  .lb-results-band { padding-block: calc(var(--u) * 6); }
+  .lm-result > a { font-size: 19px; }
+  .gr-item { flex: 1 1 100%; }
+}
+
+/* --- the crawler-facing copy ---------------------------------------------
+   src/app.html carries a <main class="seo-copy"> block of Grow / Connect /
+   Scale / FAQ prose that is meant to be read by crawlers, not seen. The old
+   inline stylesheet hid it and that stylesheet is gone, so without this rule
+   it renders as a wall of text over the hero.
+
+   Reproduced verbatim from the original rule: clipped to 1px rather than
+   display:none, so it stays in the accessibility tree and in the document
+   Google renders. Do not "simplify" this to display:none. */
+.seo-copy {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ==== parts/booking.css ==== */
+/* ===========================================================================
+   booking.css
+   The booking dialog: up to two questions name the call, then a calendar of
+   open times, the visitor's details, a confirm step (the only place a price
+   appears) and Stripe. Booked on opusjake.ai itself, see booking.js and
+   src/lib/booking. Same window register as the library dialog.
+   =========================================================================== */
+
+.bk { position: fixed; inset: 0; z-index: 210; display: flex;
+      align-items: center; justify-content: center; padding: calc(var(--u) * 3); }
+.bk[hidden] { display: none; }
+
+/* Open and close. A dialog that appears with no transition reads as a glitch,
+   one that takes its time reads as slow: in over 200ms from 96% and clear on a
+   strong ease-out, out in 150ms, because leaving is faster than arriving. The
+   origin stays centred: a modal belongs to the viewport, not to its button.
+   display is held for the exit with allow-discrete; an engine without it just
+   closes instantly, which is how it closed before. */
+.bk { transition: display 150ms allow-discrete; }
+.bk[hidden] { pointer-events: none; }
+.bk-scrim { transition: opacity 200ms ease; }
+.bk-card { transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+                      transform 200ms cubic-bezier(0.23, 1, 0.32, 1); }
+@starting-style {
+  .bk-scrim { opacity: 0; }
+  .bk-card { opacity: 0; transform: scale(0.96); }
+}
+.bk[hidden] .bk-scrim { opacity: 0; transition-duration: 150ms; }
+.bk[hidden] .bk-card { opacity: 0; transform: scale(0.98);
+                     transition-duration: 150ms; transition-timing-function: ease-out; }
+
+.bk-scrim { position: absolute; inset: 0;
+            background: color-mix(in srgb, var(--ink) 42%, transparent);
+            backdrop-filter: blur(3px); }
+
+.bk-card {
+  position: relative;
+  width: min(640px, 100%);
+  max-height: min(88vh, 820px);
+  overflow-y: auto;
+  background: var(--paper);
+  border: 1px solid var(--rule-2);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow-float);
+  padding: calc(var(--u) * 4) calc(var(--u) * 4) calc(var(--u) * 3);
+}
+
+.bk-head { display: flex; align-items: center; justify-content: space-between;
+           gap: calc(var(--u) * 2); padding-bottom: calc(var(--u) * 3); }
+.bk-eyebrow { font: 500 11px/1 var(--mono); letter-spacing: 0.18em;
+              text-transform: uppercase; color: var(--ink-2); }
+/* the header is the close button alone now; it keeps to the right */
+.bk-head .bk-close { margin-left: auto; }
+.bk-close {
+  flex: none;
+  font: 500 11px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--indigo); background: none;
+  border: 1px solid var(--indigo); border-radius: var(--r-s);
+  padding: calc(var(--u) * 1.25) calc(var(--u) * 2); cursor: pointer;
+  transition: color 140ms ease, background-color 140ms ease;
+}
+
+
+.bk-step[hidden] { display: none; }
+.bk-q { font: 400 clamp(24px, 3.2vw, 32px)/1.15 var(--sans); color: var(--ink);
+        margin: 0 0 calc(var(--u) * 1); letter-spacing: -0.01em; }
+.bk-sub { font: 400 15px/1.5 var(--sans); color: var(--ink-2); margin: 0 0 calc(var(--u) * 3); }
+
+.bk-opts { display: grid; gap: var(--u); margin: 0; padding: 0; list-style: none; }
+.bk-opt {
+  display: flex; align-items: center; justify-content: space-between; gap: calc(var(--u) * 2);
+  width: 100%; text-align: left;
+  font: 400 16px/1.35 var(--sans); color: var(--ink);
+  background: var(--card); border: 1px solid var(--rule-2); border-radius: var(--r-m);
+  padding: calc(var(--u) * 2) calc(var(--u) * 2.5); cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+.bk-opt small { font: 400 12px/1.4 var(--mono); color: var(--ink-3); display: block; margin-top: 2px; }
+.bk-opt-x { font: 500 15px/1 var(--mono); white-space: nowrap; color: var(--indigo); transition: transform 160ms ease; }
+.bk-opt:focus-visible { border-color: var(--indigo); background: var(--paper); outline: none; }
+@media (hover: hover) and (pointer: fine) {
+  .bk-opt:hover { border-color: var(--indigo); background: var(--paper); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .bk-opt:hover .bk-opt-x { transform: translateX(4px); }
+}
+
+/* --- the result card ------------------------------------------------------ */
+.bk-res { border: 1px solid var(--rule-2); border-radius: var(--r-m); background: var(--card);
+          padding: calc(var(--u) * 3); }
+.bk-res-row { display: flex; flex-wrap: wrap; gap: var(--u); margin-bottom: calc(var(--u) * 2); }
+.bk-tag {
+  /* Astryx Token (sm): 20px, 6px corner, 8px pad, 12px/20 at 500, no outline */
+  display: inline-flex; align-items: center; height: 20px; padding: 0 8px;
+  border-radius: var(--r-xs, 6px); font: 500 12px/20px var(--sans); letter-spacing: normal;
+}
+.bk-tag-time { background: #4b4aef33; color: var(--indigo); }
+.bk-tag-price { background: #61c45433; color: #2f7a27; }
+.bk-tag-free { background: #f4bf4f33; color: #8a6300; }
+.bk-res-h { font: 400 22px/1.2 var(--sans); color: var(--ink); margin: 0 0 var(--u); }
+.bk-res-p { font: 400 15px/1.5 var(--sans); color: var(--ink-2); margin: 0 0 calc(var(--u) * 3); }
+.bk-go {
+  display: inline-flex; align-items: center; gap: var(--u);
+  font: 500 12px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--paper); background: var(--indigo); border: 1px solid var(--indigo);
+  border-radius: var(--r-s); padding: calc(var(--u) * 1.75) calc(var(--u) * 3);
+  text-decoration: none; cursor: pointer;
+  transition: color 140ms ease, background-color 140ms ease;
+}
+.bk-note { font: 400 12px/1.5 var(--mono); color: var(--ink-3); margin: calc(var(--u) * 2) 0 0; }
+
+.bk-foot { display: flex; justify-content: space-between; align-items: center; gap: var(--u);
+           margin-top: calc(var(--u) * 3); padding-top: calc(var(--u) * 2);
+           border-top: 1px solid var(--rule); }
+.bk-back, .bk-alt {
+  font: 500 11px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-2); background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: none;
+}
+.bk-back:focus-visible, .bk-alt:focus-visible { color: var(--indigo); }
+@media (hover: hover) and (pointer: fine) {
+  .bk-back:hover, .bk-alt:hover { color: var(--indigo); }
+}
+.bk-back[hidden] { display: none; }
+
+@media (max-width: 640px) {
+  .bk { padding: calc(var(--u) * 1.5); align-items: flex-end; }
+  .bk-card { padding: calc(var(--u) * 3) calc(var(--u) * 2.5) calc(var(--u) * 2.5); border-radius: var(--r-l); }
+}
+
+/* --- the booker: cal.diy's booking page, in the dialog ------------------------
+   Matched to the Bare reskin of the cal.diy build (cal.opusjake.ai, run
+   locally from ~/Claude Code/cal-diy), measured off its rendered page:
+   squared corners, hairline dividers, Endless for words and JetBrains Mono for
+   anything the machine says (dates, times).
+
+     card       the dialog widens to 1060px, card ground, 1px hairline
+     columns    event 280 | month | times 260 (one column on a phone)
+     day        a square tile, mono 13/500; open = the muted tile,
+                chosen = indigo with a paper number, today = an indigo dot
+     weekday    12/16 500, uppercase, 0.1em tracking
+     time       a full-width outlined box, 36px, mono 13/500
+     field      32px, card ground, 1px #CFC8B8, squared, label 14/500 above
+     confirm    indigo, paper label, 32px, squared; Back is quiet text
+*/
+.bk-card.bk-wide {
+  width: min(1060px, 100%);
+  padding: 0;
+  border-radius: 0;
+  background: var(--card);
+  border-color: color-mix(in srgb, var(--ink) 12%, transparent);
+}
+.bk-wide .bk-head { padding: 14px 24px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+.bk-wide .bk-step { margin: 0; }
+/* cal.diy's corners are square, so the dialog's own buttons follow in here */
+.bk-wide .bk .bk-close, .bk-card.bk-wide .bk-close { border-radius: 0; }
+.bk-wide .bk-foot { margin: 0; padding: 12px 24px; border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+
+.bkr { display: grid; grid-template-columns: 280px minmax(0, 1fr) 260px; }
+.bkr.bkr-form-mode { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); }
+.bkr > * { min-width: 0; padding: 24px; }
+.bkr > * + * { border-left: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+
+/* the event */
+.bkr-avatar {
+  display: grid; place-items: center;
+  width: 24px; height: 24px; border-radius: 50%; overflow: hidden;
+  background: var(--muted); color: var(--ink-2); font: 500 10px/1 var(--mono);
+}
+.bkr-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bkr-host { margin: 10px 0 0; font: 500 14px/20px var(--sans); color: var(--ink-2); }
+.bkr-title { margin: 4px 0 12px; font: 600 20px/28px var(--sans); color: var(--ink); outline: none; }
+.bkr-desc { margin: 0 0 24px; font: 400 15px/24px var(--sans); color: var(--ink); }
+.bkr-meta { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.bkr-meta li { display: flex; gap: 10px; align-items: flex-start; font: 400 15px/20px var(--sans); color: var(--ink); }
+.bkr-meta svg { width: 16px; height: 16px; flex: none; margin-top: 2px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* the month */
+.bkr-cal-bar { display: flex; align-items: center; gap: 4px; margin-bottom: 20px; }
+.bkr-month { flex: 1; font: 400 16px/24px var(--sans); color: var(--ink-2); }
+.bkr-month b { font-weight: 600; color: var(--ink); }
+.bkr-nav {
+  display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+  border: 0; border-radius: 0; background: transparent; color: var(--ink); cursor: pointer;
+}
+.bkr-nav svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.bkr-nav:disabled { color: var(--ink-3); cursor: default; }
+.bkr-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.bkr-wd { padding-bottom: 12px; text-align: center; font: 500 12px/16px var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
+.bkr-day {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 500 13px/1 var(--mono);
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 125ms ease, border-color 125ms ease, color 125ms ease, box-shadow 125ms ease;
+}
+.bkr-day-open { background: var(--muted); cursor: pointer; }
+.bkr-day-on { background: var(--indigo); color: var(--card); }
+.bkr-today::after {
+  content: ""; position: absolute; left: 50%; bottom: 16%;
+  width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--indigo);
+}
+.bkr-day-on.bkr-today::after { background: var(--card); }
+.bkr-msg { margin: 12px 0 0; min-height: 20px; font: 400 13px/20px var(--sans); color: var(--ink-2); }
+.bkr-msg:empty { margin: 0; min-height: 0; }
+
+/* the day's times */
+.bkr-times-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 16px; }
+.bkr-dayh { font: 400 16px/24px var(--sans); color: var(--ink-2); }
+.bkr-dayh b { font-weight: 600; color: var(--ink); }
+.bkr-seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 8px; background: var(--muted); }
+.bkr-seg-b {
+  height: 26px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent;
+  font: 500 13px/1 var(--sans); color: var(--ink-2); cursor: pointer;
+}
+.bkr-seg-b[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow-1); }
+.bkr-slots { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 420px; overflow-y: auto; }
+.bkr-slot {
+  position: relative;
+  width: 100%; height: 36px; padding: 0 10px;
+  border: 1px solid var(--rule-2); border-radius: 0;
+  background: var(--card); color: var(--ink);
+  font: 500 13px/1 var(--mono); letter-spacing: 0.02em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 125ms ease, background-image 125ms ease, box-shadow 125ms ease;
+}
+
+/* the form */
+.bkr-form { display: grid; gap: 16px; align-content: start; }
+.bkr-field { display: grid; gap: 8px; }
+.bkr-label { font: 500 14px/20px var(--sans); color: var(--ink); }
+.bkr-input {
+  width: 100%; height: 32px; padding: 0 12px;
+  border: 1px solid var(--rule-2); border-radius: 0;
+  background: var(--card); color: var(--ink);
+  font: 400 14px/20px var(--sans);
+  transition: border-color 125ms ease, box-shadow 125ms ease;
+}
+.bkr-textarea { height: 80px; padding: 8px 12px; resize: vertical; }
+.bkr-input::placeholder { color: var(--ink-3); }
+.bkr-input:focus { outline: none; border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
+.bkr-fine { margin: 0; font: 400 12px/18px var(--sans); color: var(--ink-2); }
+.bkr-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.bkr-back, .bkr-confirm {
+  position: relative;
+  height: 32px; padding: 0 12px; border-radius: 0; cursor: pointer;
+  font: 500 14px/1 var(--sans);
+  -webkit-tap-highlight-color: transparent;
+  transition: background-image 125ms ease, box-shadow 125ms ease, opacity 125ms ease;
+}
+.bkr-back { border: 0; background: transparent; color: var(--ink-2); }
+.bkr-confirm { border: 1px solid var(--indigo); background: var(--indigo); color: var(--card); }
+.bkr-confirm:disabled { opacity: 0.6; cursor: default; }
+
+/* states: hover borders like cal.diy; a press and keyboard focus push in */
+@media (hover: hover) {
+  .bkr-day-open:not(.bkr-day-on):hover, .bkr-slot:hover { border-color: var(--indigo); }
+  .bkr-nav:not(:disabled):hover, .bkr-back:hover, .bkr-seg-b:hover { background-image: linear-gradient(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.05)); }
+  .bkr-confirm:not(:disabled):hover { background-image: linear-gradient(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.08)); }
+}
+@media not (pointer: coarse) {
+  .bkr-day-open:active, .bkr-slot:active, .bkr-nav:not(:disabled):active, .bkr-back:active, .bkr-confirm:not(:disabled):active {
+    background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1));
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.24), inset 0 -1px 0 rgb(255 255 255 / 0.2);
+  }
+}
+:is(.bkr-day-open, .bkr-slot, .bkr-nav, .bkr-back, .bkr-confirm, .bkr-seg-b)[data-press="on"] {
+  background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1));
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.24), inset 0 -1px 0 rgb(255 255 255 / 0.2);
+}
+:is(.bkr-day, .bkr-slot, .bkr-nav, .bkr-back, .bkr-confirm, .bkr-seg-b):focus { outline: none; }
+:is(.bkr-day, .bkr-slot, .bkr-nav, .bkr-back, .bkr-confirm, .bkr-seg-b):focus-visible {
+  background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1));
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.24), inset 0 -1px 0 rgb(255 255 255 / 0.2);
+}
+@media (forced-colors: active) {
+  :is(.bkr-day, .bkr-slot, .bkr-nav, .bkr-back, .bkr-confirm, .bkr-seg-b):focus-visible { outline: 2px solid CanvasText; }
+  .bkr-day-on { border-color: CanvasText; }
+}
+/* a thumb needs 44px; the drawn controls stay cal.diy's size */
+@media (pointer: coarse) {
+  :is(.bkr-nav, .bkr-back, .bkr-confirm)::before {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%);
+  }
+  .bkr-input { font-size: 16px; } /* iOS zooms into anything smaller */
+}
+
+.bk-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.bk-err { margin: 0; font: 400 13px/20px var(--sans); color: #a50c25; }
+.bk-err:empty { display: none; }
+.bk-link { padding: 0; border: 0; background: none; font: inherit; color: var(--indigo); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* stacked, the way cal.diy stacks on a phone: event, month, times */
+@media (max-width: 899px) {
+  .bkr, .bkr.bkr-form-mode { grid-template-columns: minmax(0, 1fr); }
+  .bkr > * + * { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+  .bkr > * { padding: 20px; }
+  .bkr-slots { max-height: none; }
+  .bk-wide .bk-head, .bk-wide .bk-foot { padding-inline: 20px; }
+}
+@media (max-width: 640px) {
+  .bk:has(.bk-wide) { padding: 0; align-items: stretch; }
+  .bk-card.bk-wide { max-height: none; height: 100%; border: 0; }
+  .bkr-actions { flex-direction: row-reverse; justify-content: stretch; }
+  .bkr-confirm { flex: 1; height: 40px; }
+  .bkr-back { height: 40px; }
+}
+
+/* each step moves focus to its heading so a screen reader announces it; that
+   is not a control, so it draws no ring */
+.bk .bk-q:focus { outline: none; }
+
+/* --- email: the work-with-me form ------------------------------------------
+   The live site's fields, as Astryx fields: label above, a 40px field on the
+   10px corner, card ground, the hairline turning indigo on focus. */
+.bk-wm-step { display: block; margin-bottom: calc(var(--u) * 1.5); color: var(--ink-3); }
+.bk-wm { display: grid; gap: calc(var(--u) * 2); margin-top: calc(var(--u) * 2); }
+.bk-f { display: grid; gap: 6px; min-width: 0; }
+.bk-f-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(var(--u) * 1.5); }
+.bk-f-l { font: 500 13px/20px var(--sans); color: var(--ink); }
+.bk-f-i {
+  width: 100%;
+  height: 40px;
+  padding: 0 calc(var(--u) * 1.5);
+  border: 1px solid var(--rule-2);
+  border-radius: var(--r-s);
+  background: var(--card);
+  color: var(--ink);
+  font: 400 15px/20px var(--sans);
+  transition: border-color 125ms ease, box-shadow 125ms ease;
+}
+.bk-f-area { height: auto; min-height: 112px; padding-block: 10px; resize: vertical; }
+.bk-f-sel {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236C6659' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+.bk-f-i::placeholder { color: var(--ink-3); }
+.bk-f-i:focus { outline: none; border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
+@media (forced-colors: active) { .bk-f-i:focus { outline: 2px solid CanvasText; } }
+@media (pointer: coarse) { .bk-f-i { font-size: 16px; } } /* iOS zooms into anything smaller */
+.bk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.bk .bk-opt[aria-pressed="true"] { border-color: var(--indigo); }
+@media (max-width: 420px) { .bk-f-row { grid-template-columns: minmax(0, 1fr); } }
+
+/* ==== parts/mobile.css ==== */
+/* ===========================================================================
+   mobile.css   loaded LAST, the phone layout for the Bare homepage
+
+   Rebuilt from the rules the FIRST opusjake.ai settled on, whose mobile format
+   was itself picked from a five-way design-shotgun (2026-07-26) and whose
+   reasoning is written into aqua.css and app.html. Taken from there:
+
+     1. Brand + three links + a CTA DO NOT FIT a phone. aqua.css: "brand +
+        three tabs + the CTA overrun a 360px viewport by 40px", so it dropped
+        the section links and kept brand + CTA. Everything stays in the DOM.
+     2. Gutters are 16-18px, not desktop's 32.
+     3. svh, never vh or %. iOS grows the % viewport as the address bar hides,
+        which slides anything anchored to it.
+     4. 44px is the touch-target floor and the type gives way before it does.
+     5. Inputs are 16px minimum or iOS force-zooms the page on focus.
+     6. Scale the WHOLE type system down together: "every element is sized
+        against the 31px headline the way desktop sizes against its 42px one,
+        so the hierarchy holds instead of flattening."
+     7. Height-aware, not just width-aware. A 568px-tall phone cannot carry the
+        same scale as an 844px one: on the first site the taller scale "pushed
+        the buttons 68px past the fold and forced them to wrap".
+   =========================================================================== */
+
+/* --- 1. nav: brand and CTA only ------------------------------------------- */
+
+@media (max-width: 640px) {
+  .nv-nav {
+    flex-wrap: nowrap;
+    gap: var(--u);
+    padding: calc(var(--u) * 1.5) calc(var(--u) * 2);
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+  .nv-brand { font-size: 17px; flex: none; }
+
+  /* The links stay in the DOM: they are real internal links to /blog and the
+     library, and the footer carries them visibly further down. */
+  .nv-links { flex: 0 0 auto; margin-left: auto; gap: 0; min-width: 0; }
+  .nv-link:not(.nv-link-cta) { display: none; }
+
+  .nv-link-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;              /* touch-target floor, type gives way first */
+    padding-inline: calc(var(--u) * 2);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+}
+
+/* --- 2. hero -------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .hr-hero {
+    padding-block: calc(var(--u) * 3) calc(var(--u) * 5);
+    align-items: center;
+  }
+  .hr-grid   { text-align: center; }
+  .hr-copy   { align-items: center; }
+  .hr-canvas { margin-inline: auto; }
+  .hr-title, .hr-sub { margin-inline: auto; }
+  /* .hr-copy is a centred flex column, so its children shrink-wrap: the row
+     took 286px of the 339px between the gutters and the primary label
+     overflowed by 13px. Stretch it to the full measure and the labels fit
+     without shaving type. */
+  .hr-actions {
+    justify-content: center; flex-wrap: nowrap; gap: calc(var(--u) * 1.5);
+    width: 100%; align-self: stretch;
+  }
+
+  /* The pair hugs its labels at the live site's own phone dimensions - its
+     hero gel spec is height:48px, padding:0 18px, font-size:14.5px - instead
+     of splitting the row 50/50. Stretched pills read as bars; the gel skin
+     wants the capsule proportions it has on opusjake.ai. At 320px the pair
+     measures ~270px against 284px of column, so it fits without a step. */
+  .hr-actions .hr-btn {
+    /* height, padding and label size are Astryx's lg button (button.css) */
+    flex: 0 0 auto;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+  }
+}
+
+/* Tall phones (iPhone 12 and up): the fuller scale. */
+@media (max-width: 720px) and (min-height: 680px) {
+  .hr-canvas { max-height: 42svh; width: auto; max-width: 100%; }
+  .hr-title  { font-size: 31px; }
+  .hr-sub    { font-size: 15.5px; max-width: 34ch; }
+}
+
+/* Short phones (SE at 568px): the compact set. The taller scale pushes the
+   buttons past the fold here, which is the trade the first site documented. */
+@media (max-width: 720px) and (max-height: 679px) {
+  .hr-canvas { max-height: 30svh; width: auto; max-width: 100%; }
+  .hr-title  { font-size: 26px; }
+  .hr-sub    { font-size: 14.5px; max-width: 32ch; }
+}
+
+/* --- 3. figure bands ------------------------------------------------------ */
+
+@media (max-width: 720px) {
+  .fg-fig  { padding-block: calc(var(--u) * 5); }
+  .fg-body { gap: calc(var(--u) * 3); }
+  .fg-copy {
+    padding: calc(var(--u) * 4);
+    padding-top: calc(var(--u) * 8);
+  }
+  .fg-head { padding-bottom: calc(var(--u) * 2); }
+}
+
+/* --- 4. iOS focus-zoom guard, KEEP LAST -----------------------------------
+   iOS Safari force-zooms when a focused control computes under 16px. Every
+   focusable text control is listed so no rule above can undercut it. */
+@media (max-width: 720px) {
+  .lbm input,
+  .lbm select,
+  .lb-input { font-size: 16px; }
+}
+
+/* --- 5. ONE gutter, not two ----------------------------------------------
+   .wrap carries desktop's 32px inline padding at every width. Adding a phone
+   gutter to .hr-hero and .fg-fig on top of it double-guttered the page: at
+   375px the content column measured 275px, with 50px of dead margin each side.
+   That is why the hero read as cramped and why the CTA labels would not fit
+   their buttons.
+
+   The gutter belongs in one place, and it is the nav's: 16px. At 18 the
+   content sat 2px inside the wordmark above it, off the 8px grid. */
+@media (max-width: 720px) {
+  .wrap { padding-inline: calc(var(--u) * 2); }
+}
+
+/* --- 6. no sideways pan, at the root -------------------------------------
+   base.css sets `overflow-x: hidden` on BODY only. Chrome contains the page
+   that way; iOS Safari does not reliably, and the document pans sideways even
+   though desktop measures scrollWidth === viewport. That is a page cut off on
+   the left with the nav button cut off on the right.
+
+   `clip` rather than `hidden` on the root: `hidden` makes html a scroll
+   container, which breaks position:sticky and can hijack scroll anchoring.
+   Both axes are named explicitly so vertical scrolling is untouched. */
+html {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* The visually hidden crawler block lays its text out on one nowrap line that
+   runs to roughly x=1129. Its own overflow:hidden contains it, but belt and
+   braces: it must never be able to widen the document. */
+.seo-copy { clip-path: inset(50%); max-width: 1px; }
+
+/* Nothing in the page may exceed the viewport on a phone. */
+@media (max-width: 720px) {
+  .wrap, .fg-fig, .hr-hero, .tc-wrap, .fq-wrap, .ft { max-width: 100%; }
+  img, canvas, svg, video { max-width: 100%; }
+}
+
+/* --- 7. the GPU budget ----------------------------------------------------
+   Three card surfaces each run filter: url(#oj-liquid-*), an SVG displacement
+   driven by SMIL-animated feTurbulence, continuously, plus the footer's own
+   turbulence sheet, plus a backdrop blur on the nav. Phone GPUs cannot carry
+   four live filter surfaces: that is the jank, and overloaded SVG filters are
+   also iOS Safari's other known source of black-rectangle rendering.
+
+   The gradients themselves stay: the ramp and the blooms live in background
+   layers, so the cards keep their colour and only the liquid warp goes. */
+@media (max-width: 720px) {
+  .fg-copy::before,
+  .fg-copy::after { filter: none; }
+  .ft-sky::before { filter: none; }
+  .nv-nav { backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+/* --- 8. the footer on phones ----------------------------------------------
+   Below 760px .ft-cols collapsed to one column, so all four lists stacked down
+   the left edge and the skyline sat under empty paper. The columns now run
+   ACROSS as a 2x2 grid, the type steps down, and the whole block is pushed
+   low enough to sit inside the skyline band the way the desktop footer does. */
+@media (max-width: 720px) {
+  /* The sky is anchored to the footer's bottom edge, so padding alone can
+     never move content into it: growing the footer moves the band down by the
+     same amount. The band itself grows instead: the content block runs 491px,
+     so a 560px band holds all of it with air above the heading. */
+  .ft { padding-block: calc(var(--u) * 9) calc(var(--u) * 6); }
+  .ft-sky, .ft::after { height: 560px; }
+  .ft-h { font-size: 24px; margin-bottom: calc(var(--u) * 4); }
+  .ft-cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: calc(var(--u) * 4) calc(var(--u) * 3);
+    padding-bottom: calc(var(--u) * 4);
+  }
+  .ft-lab { font-size: 9px; letter-spacing: 0.22em; }
+  .ft-col a, .ft-p { font-size: 13px; }
+  .ft-p { line-height: 1.5; }
+  .ft-foot { padding-top: calc(var(--u) * 3); gap: calc(var(--u) * 2); }
+  .ft-fine { font-size: 9px; letter-spacing: 0.16em; }
+}
+
+/* ==== parts/layout-polish.css ==== */
+/* Tighter reading rhythm, with the complete ASCII plates kept in view. */
+.hr-hero {
+  /* Keep the first screen devoted to the hero, including on mobile. */
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-block: calc(var(--u) * 6) calc(var(--u) * 7);
+}
+
+.hr-canvas {
+  width: min(100%, 464px);
+  height: auto;
+  max-height: none;
+  justify-self: center;
+}
+
+.fg-fig { padding-block: calc(var(--u) * 7); }
+.fg-body { margin-top: calc(var(--u) * 2); }
+.fg-head { padding-bottom: 0; }
+.tc-wrap { padding-block: calc(var(--u) * 4); }
+.tc-join-solo { padding-block: var(--u) 0; }
+.tc-join { padding-bottom: calc(var(--u) * 2); }
+.tc-head { padding-bottom: calc(var(--u) * 2); }
+.tc-row { padding-block: var(--u); }
+.tc-gen { margin-top: calc(var(--u) * 2); padding-top: calc(var(--u) * 2); }
+.tr-wrap { padding-block: calc(var(--u) * 5); }
+.tr-label { margin-bottom: calc(var(--u) * 3); }
+.fq-wrap { padding-block: calc(var(--u) * 6); }
+.fq-head { margin-bottom: calc(var(--u) * 3); }
+
+/* Supporting text is still quieter than headings, but remains readable. */
+.mono-label,
+.fg-num,
+.fg-sys,
+.lb-eyebrow,
+.gr-label,
+.gr-meta,
+.lb-bar,
+.lm-url,
+.tr-label,
+.fq-eyebrow {
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+}
+
+.lm-url { overflow-wrap: anywhere; }
+.lbm .lbm-close { min-height: 44px; font-size: 12px; letter-spacing: 0.08em; }
+.tc-target, .tc-stat, .tc-ms, .tc-gen, .tc-join span { color: var(--ink-2); }
+.tc-count, .tc-join span { font-size: 12px; letter-spacing: 0.06em; line-height: 1.5; }
+.tc-add { color: #307438; }
+.tc-del { color: #a43c32; }
+
+.hr-actions .hr-btn:focus-visible,
+.lbm :is(a, button, input, select):focus-visible,
+.fq-q:focus-visible,
+.ft a:focus-visible {
+  outline: 3px solid var(--indigo);
+  outline-offset: 4px;
+}
+
+.fg-copy .fg-act:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 4px;
+}
+
+.fg-copy .fg-act { min-height: 44px; }
+
+/* Compact cards: 400px tall at full width (the old 6/5 ratio), and free to
+   grow past that. A fixed ratio with overflow:hidden clipped the top of the
+   offer card's headline once its copy and the plan strip outgrew the box. */
+.fg-fig .fg-copy {
+  width: min(100%, 480px);
+  min-height: min(400px, 83.33vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (min-width: 900px) {
+  .hr-grid { grid-template-rows: auto; }
+  .hr-canvas { width: 100%; }
+  .hr-title {
+    --hr-mark-height: clamp(50.92px, 6.968vw, 91.12px);
+    /* Let the full name use the outer margin, keeping 32px at the screen edge. */
+    width: calc(100% + max(0px, (100vw - 1200px) / 2));
+  }
+  /* the greeting at the title size, the mark at the mark height: the
+     proportion Jake chose over the mark-led one (Oct 10) */
+  .hr-title .hr-lead { font-size: 1em; }
+  .hr-title .hr-wm {
+    font-size: min(var(--hr-mark-height), 12.4cqi);
+    height: 1em;
+  }
+  /* Keep the reference's three-line copy space with the current shorter text. */
+  .hr-sub { margin-top: var(--u); min-height: 3lh; }
+
+  .fg-body { margin-top: 0; }
+  .fg-fig .fg-figure { width: 66%; max-width: 720px; }
+  .fg-copy { padding-block: calc(var(--u) * 6) calc(var(--u) * 4); }
+}
+
+@media (min-width: 721px) and (max-width: 899px) {
+  .hr-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(var(--u) * 4); }
+  .hr-copy { grid-column: 2; grid-row: 1; align-self: center; }
+  .hr-actions { gap: var(--u); }
+  .hr-actions .hr-btn { padding-inline: calc(var(--u) * 2); }
+}
+
+@media (max-width: 899px) {
+  .fg-fig { padding-block: calc(var(--u) * 4); }
+  .fg-body { gap: calc(var(--u) * 2); }
+  /* the ASCII leads, the blue card follows (Jake, Oct 2026): the picture is
+     what stops the thumb, the card is what it reads after */
+  /* On a phone the card hugs its words: 48px above (the window lights live
+     there), 24px around. The 400px floor is a desktop composition; here it
+     left a one-line card mostly empty blue. */
+  .fg-copy { grid-row: 2; padding: calc(var(--u) * 6) calc(var(--u) * 3) calc(var(--u) * 3); }
+  .fg-fig .fg-copy { min-height: 0; }
+  .fg-fig .fg-copy { justify-self: center; }
+  /* The plates match the copy card's width; a 280px cap made them read as
+     thumbnails under a full-width card. */
+  .fg-figure { grid-row: 1; width: min(100%, 480px); }
+  .fg-copy .fg-h, .fg-copy .fg-p { max-width: 100%; }
+
+  /* --- the ASCII in the box, the words on the paper (Jake, Oct 2026) ----------
+     The blue tile holds the plate, drawn in paper white, with the window dots
+     at its top left; headline, body and button sit under it on the oatmeal,
+     the way an image card carries its title beneath it. */
+  .fg-well {
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 10 / 11;        /* 48px of dots above a square plate */
+    padding: calc(var(--u) * 6) calc(var(--u) * 2) calc(var(--u) * 2);
+    border: 0;
+    border-radius: var(--r-l);
+    overflow: clip;
+    background: linear-gradient(100deg, #2F3CD8 0%, #3B49E6 52%, #4655EE 100%);
+    box-shadow: var(--shadow-card);
+  }
+  /* the window dots, drawn rather than added: the figure has no dots element */
+  .fg-well::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--u) * 3);
+    left: calc(var(--u) * 3);
+    width: 49px;
+    height: 11px;
+    z-index: 2;
+    background:
+      radial-gradient(circle at 5.5px 5.5px, #ff5f57 5px, transparent 5.8px),
+      radial-gradient(circle at 24.5px 5.5px, #febc2e 5px, transparent 5.8px),
+      radial-gradient(circle at 43.5px 5.5px, #28c840 5px, transparent 5.8px);
+    filter: drop-shadow(0 1px 1px rgba(15, 20, 80, 0.22));
+    pointer-events: none;
+  }
+  /* one soft light streak across the top right, no liquid filter on phones */
+  .fg-well::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 28% at 78% 24%, rgba(198, 194, 246, 0.42), transparent 70%),
+      radial-gradient(40% 22% at 92% 60%, rgba(242, 208, 194, 0.30), transparent 70%);
+  }
+  /* a square tile; the plate stays square inside it, centred under the dots */
+  .fg-well { aspect-ratio: 1 / 1; }
+  .fg-frame { position: relative; z-index: 1; width: auto; height: 100%; aspect-ratio: 1 / 1; margin-inline: auto; }
+  .fg-plate { color: var(--paper); }
+
+  .fg-fig .fg-copy {
+    padding: 0;
+    min-height: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;   /* the words are not a box; the tile and the button carry the depth */
+    color: var(--ink);
+    overflow: visible;
+  }
+  .fg-copy::before, .fg-copy::after, .fg-copy .fg-page-dots { display: none; }
+  /* the measure of an image card's caption (openai.com on a phone): 24px
+     under the tile, a regular-weight 24px title, a 17px grey line, the
+     button 24px under that, and 48px of air before the next section */
+  .fg-fig { padding-block: calc(var(--u) * 6); }
+  .fg-body { gap: calc(var(--u) * 3); }
+  .fg-copy .fg-h { color: var(--ink); font-size: 24px; font-weight: 400; line-height: 1.25; letter-spacing: -0.01em; }
+  .fg-copy .fg-p { color: var(--ink-2); font-size: 17px; line-height: 1.5; margin-top: calc(var(--u) * 1.5); }
+  .fg-copy .fg-act { margin-top: calc(var(--u) * 3); }
+  .fg-p { margin-top: calc(var(--u) * 2); }
+  .fg-act { margin-top: calc(var(--u) * 3); }
+  /* Keep the bright streaks to the right when copy spans the narrow card. */
+  .fg-copy::after { opacity: 0.22; }
+}
+
+/* The phone hero, Oct 10 (final order, Jake's): portrait, then the claim,
+   then the pair. One block, centred in the first screen and sitting high
+   (more air under it than over it). Spacing follows proximity: the claim and
+   its buttons are one group, so they sit closer together (24px) than the
+   portrait sits to the claim (32px). The claim is the headline (Endless,
+   22 to 24px, three balanced lines); the bar already carries OPUSJAKE, so the
+   h1 stays in the document for readers and crawlers, visually hidden.
+   Nothing of the next section shows on landing. */
+@media (max-width: 720px) {
+  .hr-hero { min-height: 100svh; align-items: center; padding-block: calc(var(--nv-h, 81px) + var(--u) * 3) calc(var(--u) * 14); }
+  .hr-grid { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 4); }
+  .hr-canvas { order: 0; width: auto; max-width: 100%; max-height: 40svh; margin-inline: auto; }
+  .hr-copy { order: 1; display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .hr-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+  .hr-copy .hr-sub {
+    order: 0;
+    width: 100%; max-width: none; min-height: 0;
+    margin: 0 0 calc(var(--u) * 3);
+    font-size: clamp(22px, 6.2vw, 24px); line-height: 1.2; letter-spacing: -0.015em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .hr-actions { order: 1; flex-wrap: nowrap; }
+  .tc-wrap { padding-block: calc(var(--u) * 3); }
+  .tc-join-solo { padding-block: var(--u) 0; }
+  .tc-gen { font-size: 12px; line-height: 1.5; }
+}
+/* short phones (SE, 8): the portrait gives up some height */
+@media (max-width: 720px) and (max-height: 700px) {
+  .hr-canvas { max-height: 32svh; }
+}
+
+/* ==== parts/button.css ==== */
+/* ===========================================================================
+   button.css   every button on the site, as Astryx 0.6.7 draws its Button
+
+   Replaces gel.css (the Aqua gloss pills). The values are not eyeballed: they
+   were read off a real @astryxdesign/core 0.6.7 <Button>, rendered in the
+   OpusJake theme from opusjake-landing (the Bare mockups were built on
+   Astryx), at rest, under hover, under a press and under keyboard focus.
+
+     height        sm 28 · md 32 · lg 36 (--size-element-*); the hero pair is
+                   lg scaled whole by 4/3 (48)
+     shape         10px radius (--radius-element), no border, no shadow
+     label         14px / 20px, weight 500, 8px gap to an icon, 12px inline pad
+     primary       #4b4aef, white label (--color-accent / --color-on-accent)
+     secondary     6% ink tint, ink label (--color-neutral)
+     ghost         transparent, ink label
+     hover         a 5% ink layer over the fill, only where hover exists
+     press         a 10% layer and scale(0.98), 125ms, ease (0.24, 1, 0.4, 1)
+
+   One change from stock Astryx, at Jake's call: no focus ring. A button that
+   is pressed, or holds keyboard focus, is PUSHED IN instead: the 10% layer
+   plus an inset shadow falling from the top edge (the light on this site
+   comes from above), so the surface reads as below its surround. The nav's
+   current page wears the same well. Forced-colours mode drops box shadows,
+   so a real outline comes back there.
+     disabled      50% opacity, no hover, no press
+
+   Touch is Astryx's own press model, not :active. On a phone :active paints
+   the moment a finger lands and can outlive the start of a scroll, so under a
+   coarse pointer the press is written by press.js as data-press: "on" once
+   the touch is believed (150ms held, under 10px of travel, no scroll), a
+   100ms flash for a quick tap, then "fading" for the 200ms release.
+
+   Loaded after mobile.css and layout-polish.css, so it owns the SIZE as well
+   as the skin. The component sheets keep layout only (where a button sits);
+   every state rule a button has lives here and nowhere else.
+   =========================================================================== */
+
+/* the release fades a number, because gradients do not interpolate */
+@property --btn-press {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+:root {
+  --btn-h-sm: 28px;
+  --btn-h-md: 32px;
+  --btn-h-lg: 36px;
+  --btn-radius: 10px;
+  --btn-accent: #4b4aef;
+  --btn-neutral: rgb(0 0 0 / 0.06);
+  --btn-hover: rgb(0 0 0 / 0.05);
+  --btn-pressed: rgb(0 0 0 / 0.1);
+  /* pushed in: a soft dark lip under the top edge, a 1px light one at the foot */
+  --btn-inset: inset 0 2px 4px rgb(0 0 0 / 0.24), inset 0 -1px 0 rgb(255 255 255 / 0.2);
+  /* at rest a filled button sits ON the page: a contact shadow under it and a
+     1px line of light along its top edge, the macOS push button's depth */
+  --btn-shadow: var(--shadow-1), inset 0 1px 0 rgb(255 255 255 / 0.18);
+  --btn-fast: 125ms;
+  --btn-ease: cubic-bezier(0.24, 1, 0.4, 1);
+}
+
+/* --- shape: every button ---------------------------------------------------- */
+
+.hr-actions .hr-btn,
+.rs-btn,
+.fg-copy .fg-act,
+.ft .ft-pill,
+.nv-nav .nv-link,
+.bk .bk-go,
+.bk .bk-close,
+.lbm .lbm-close,
+.cm-send,
+.library .sort-submit,
+.nv-nav .nv-menu-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--btn-h, var(--btn-h-md));
+  /* never shorter than its size: a column flex parent would otherwise squeeze
+     it (min-height 0 collapsed the Lab card's button to 7px) */
+  min-height: var(--btn-h, var(--btn-h-md));
+  /* but free to narrow, so a long label truncates instead of overflowing */
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--btn-radius);
+  font: 500 14px/20px var(--sans, 'Endless', system-ui, sans-serif);
+  letter-spacing: normal;
+  text-transform: none;
+  text-shadow: none;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: none;
+  background-image: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transform: scale(1);
+  transition-property: background-image, background-color, color, opacity, transform, box-shadow;
+  transition-duration: var(--btn-fast);
+  transition-timing-function: var(--btn-ease);
+}
+
+/* --- size: page actions are large, chrome is medium -------------------------- */
+
+.fg-copy .fg-act,
+.ft .ft-pill,
+.bk .bk-go { --btn-h: var(--btn-h-lg); }
+
+/* The hero pair is the page's first decision, so it is bigger, but it is the
+   SAME SHAPE as every other button (the library's pair is the reference): the
+   lg button scaled whole, not stretched. Height, corner, padding, gap and
+   label all grow by one factor, --btn-k, in px per lg px. Raising the height
+   alone (48px with lg's 10px corner and a 16px label) read as squarer and
+   emptier than the library's buttons; Jake caught it.
+
+   4/3 on desktop: 48 tall, 13.3 corner, 16 padding, 16 label. On a phone the
+   factor gives way before the pair would wrap: the widest pair (Opus Lab's,
+   252 lg px with padding) plus the 12px gap must fit inside the 16px gutters,
+   so k = (100vw - 44px) / 252, capped at 4/3. That is 4/3 from 380px up and
+   about 47px tall at 375. Below 44px tall, the touch area still is 44. */
+.hr-actions .hr-btn {
+  --btn-k: 1.3333px;
+  --btn-h: calc(36 * var(--btn-k));
+  padding-inline: calc(12 * var(--btn-k));
+  gap: calc(8 * var(--btn-k));
+  border-radius: calc(10 * var(--btn-k));
+  /* the label does not scale with the rest: at 4/3 it ran 18.7px and read
+     loud for a button (Jake). 12 lg px of label is 16px on desktop. */
+  font-size: calc(12 * var(--btn-k));
+  line-height: calc(20 * var(--btn-k));
+}
+/* On a phone the pair is the lg button itself, the same size as the card
+   buttons and the footer's (Jake, Oct 10: "the same size as the rest of the
+   buttons"); the 4/3 scale is a desktop thing. */
+@media (max-width: 720px) {
+  .hr-actions .hr-btn { --btn-k: 1px; font-size: 14px; line-height: 20px; }   /* lg's own label, not the scaled 12 */
+}
+/* the resource pages (/r/<slug>): page actions are lg, a code block's Copy is sm */
+.rs-btn { --btn-h: var(--btn-h-lg); }
+.rs-btn.rs-btn-sm { --btn-h: var(--btn-h-sm); padding: 0 10px; font-size: 13px; line-height: 20px; }
+/* the library's search pair is the lg button itself */
+.library .hr-actions .hr-btn { --btn-k: 1px; }
+.library .sort-submit { --btn-h: var(--btn-h-sm); }
+
+/* the send button is Astryx's ChatSendButton: an icon-only md primary, round */
+.cm-send { width: var(--btn-h-md); padding: 0; border-radius: 50%; flex: none; }
+.cm-send::after { content: none; }
+.cm-send svg { width: 16px; height: 16px; filter: none; }
+
+/* --- variants ------------------------------------------------------------- */
+
+.hr-actions .hr-btn-solid,
+.rs-btn-primary,
+.nv-nav .nv-link-cta,
+.bk .bk-go,
+.cm-send {
+  background-color: var(--btn-accent);
+  color: #fff;
+  box-shadow: var(--btn-shadow);
+}
+
+.hr-actions .hr-btn-soft,
+.rs-btn-secondary,
+.bk .bk-close,
+.lbm .lbm-close,
+.library .sort-submit {
+  background-color: var(--btn-neutral);
+  color: var(--ink, #2F2B25);
+  box-shadow: var(--btn-shadow);
+}
+
+/* the quiet nav items are Astryx's ghost: no fill until hovered */
+.nv-nav .nv-link:not(.nv-link-cta),
+.nv-nav .nv-menu-toggle {
+  background-color: transparent;
+  color: var(--ink, #2F2B25);
+}
+/* the header's one call to action is the primary, set a step apart from the
+   links it ends (the Astryx mockup's "Work with me") */
+.nv-nav .nv-link-cta { margin-left: var(--u); }
+/* the phone menu button: a ghost icon button, and PUSHED IN while its menu
+   is open, the site's sign for "on" */
+.nv-nav .nv-menu-toggle { width: var(--btn-h-md); padding: 0; flex: none; }
+.nv-nav .nv-menu-toggle[aria-expanded="true"],
+.nv-nav .nv-menu[open]:not(.nv-js) .nv-menu-toggle {
+  background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+  box-shadow: var(--btn-inset);
+}
+.nv-nav .nv-link[aria-current="page"] {
+  background-color: color-mix(in srgb, var(--btn-accent) 10%, transparent);
+  color: var(--btn-accent);
+  box-shadow: var(--btn-inset);
+}
+
+/* On blue (the gradient cards, the footer's skyline band) the button is the
+   one light object: a white fill with a deep indigo label, the colours the card
+   buttons had before the gel. A flat indigo button on an indigo band has no
+   edge. */
+.fg-copy .fg-act,
+.rs-btn-onblue,
+.ft .ft-pill {
+  background-color: #fff;
+  color: #2438C8;
+  box-shadow: var(--btn-shadow);
+}
+/* on a phone the card's words sit on paper, so its button is the primary */
+@media (max-width: 899px) {
+  .fg-copy .fg-act { background-color: var(--btn-accent); color: #fff; }
+}
+
+/* --- states ----------------------------------------------------------------- */
+
+/* keyboard focus: pushed in, no ring */
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):focus {
+  outline: none;
+}
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):focus-visible {
+  background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+  box-shadow: var(--btn-inset);
+}
+@media (forced-colors: active) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+  }
+}
+
+@media (hover: hover) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):where(:not(:disabled, [aria-disabled="true"])):hover {
+    background-image: linear-gradient(var(--btn-hover), var(--btn-hover));
+  }
+}
+
+/* a mouse press */
+@media not (pointer: coarse) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):where(:not(:disabled, [aria-disabled="true"])):active {
+    background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+    box-shadow: var(--btn-inset);
+    transform: scale(0.98);
+  }
+}
+
+/* a finger press, written by press.js */
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle)[data-press="on"] {
+  background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed));
+  box-shadow: var(--btn-inset);
+  transform: scale(0.98);
+}
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle)[data-press="fading"] {
+  background-image: linear-gradient(rgb(0 0 0 / calc(var(--btn-press) * 0.1)),
+                                    rgb(0 0 0 / calc(var(--btn-press) * 0.1)));
+  animation: btn-release 200ms ease-out forwards;
+}
+@keyframes btn-release { from { --btn-press: 1; } to { --btn-press: 0; } }
+
+:is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+    .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle):is(:disabled, [aria-disabled="true"]) {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+/* the empty composer: Astryx disables the send button rather than greying it */
+.cm-send[disabled] { color: #fff; background-color: var(--btn-accent); border: 0; }
+
+/* A finger needs 44px even where the button draws 28 to 36. The hit area
+   grows invisibly around the drawn shape; nothing in the layout moves. */
+@media (pointer: coarse) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle)::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.hr-actions .hr-btn, .rs-btn, .fg-copy .fg-act, .ft .ft-pill, .nv-nav .nv-link,
+      .bk .bk-go, .bk .bk-close, .lbm .lbm-close, .cm-send, .library .sort-submit,
+    .nv-nav .nv-menu-toggle) {
+    transition-duration: 0s;
+  }
+}
+
+/* --- rows that act like buttons: the dialog's answers ----------------------- */
+
+/* Astryx's list rows answer a press with the same 10% layer and no scale. */
+@media not (pointer: coarse) {
+  .bk .bk-opt:active { background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed)); }
+}
+.bk .bk-opt[data-press="on"] { background-image: linear-gradient(var(--btn-pressed), var(--btn-pressed)); }
+.bk .bk-opt[data-press="fading"] {
+  background-image: linear-gradient(rgb(0 0 0 / calc(var(--btn-press) * 0.1)),
+                                    rgb(0 0 0 / calc(var(--btn-press) * 0.1)));
+  animation: btn-release 200ms ease-out forwards;
+}
+
+/* ==== parts/nav-mobile.css ==== */
+/* ===========================================================================
+   nav-mobile.css   the header on phones, plus the skip link
+
+   Phones get three things in the bar: the wordmark, "Book a call" (the one
+   action that is worth a tap from anywhere) and a menu button. The menu is
+   Astryx's dropdown, so it speaks the same language as every button on the
+   site (button.css):
+
+     the button    a ghost icon button; while the menu is open it stays
+                   PUSHED IN, the site's sign for "on"
+     the panel     a light card under the bar, 14px radius, the float shadow
+     the rows      44px tall, icon and label, the 5% / 10% layers on hover and
+                   press, the current page pushed in like the desktop nav
+
+   Motion follows Emil Kowalski's rules for a popover. It grows out of the
+   button it hangs from (transform-origin at the top right, not the centre),
+   from 96% and clear rather than from nothing, on a strong ease-out in 200ms,
+   and it leaves faster than it came (140ms). The glyph turns from two lines
+   into a cross on the on-screen-movement curve. Nothing staggers: this is a
+   menu people open many times a visit.
+
+   Without JavaScript the native details toggle still opens it (instantly).
+   With it, nav.js keeps the details open and drives .nv-open, so the panel
+   can animate closed too; a closed panel is visibility:hidden, so its links
+   leave the tab order.
+   =========================================================================== */
+
+/* desktop has its own links; the menu exists only on phones */
+.nv-menu { display: none; }
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 16px;
+  z-index: 100;
+  padding: 12px 20px;
+  border-radius: var(--r-s);
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateY(-160%);
+}
+.skip-link:focus { transform: none; }
+#top { scroll-margin-top: 88px; }
+#top:focus { outline: none; }
+#contact { scroll-margin-top: 112px; }
+
+@media (max-width: 640px) {
+  :root { --nv-h: 57px; }   /* the bar's height on phones: 16 + 32 + 16 + the hairline */
+  .nv-nav { gap: var(--u); background: var(--paper); }
+  .nv-brand { font-size: 25px; }
+
+  /* the bar keeps its call to action; the other links move into the menu */
+  .nv-nav .nv-links { display: flex; margin-left: auto; gap: 0; }
+  .nv-nav .nv-link:not(.nv-link-cta) { display: none; }
+
+  .nv-menu {
+    display: block;
+    flex: none;
+    position: static;
+  }
+  .nv-menu-toggle { list-style: none; }
+  .nv-menu-toggle::-webkit-details-marker { display: none; }
+  .nv-menu-toggle::marker { content: ""; }
+
+  /* two lines that cross when the menu opens */
+  .nv-menu-glyph { width: 16px; height: 16px; overflow: visible; }
+  .nv-menu-glyph path {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 200ms cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  .nv-menu.nv-open .nv-mg-a,
+  .nv-menu[open]:not(.nv-js) .nv-mg-a { transform: translateY(2.5px) rotate(45deg); }
+  .nv-menu.nv-open .nv-mg-b,
+  .nv-menu[open]:not(.nv-js) .nv-mg-b { transform: translateY(-2.5px) rotate(-45deg); }
+
+  /* --- the panel ---------------------------------------------------------- */
+  .nv-menu-panel {
+    position: absolute;
+    top: calc(100% + var(--u));
+    right: max(16px, env(safe-area-inset-right));
+    width: min(280px, calc(100vw - 32px));
+    padding: 4px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-m);
+    box-shadow: var(--shadow-1), var(--shadow-2);
+    transform-origin: top right;
+    /* closed */
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 140ms ease-out,
+      transform 140ms ease-out,
+      visibility 0s linear 140ms;
+  }
+  .nv-menu.nv-open .nv-menu-panel,
+  .nv-menu[open]:not(.nv-js) .nv-menu-panel {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      visibility 0s;
+  }
+
+  .nv-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+
+  /* --- the rows ------------------------------------------------------------ */
+  .nv-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--u) * 1.5);
+    height: 44px;
+    padding: 0 calc(var(--u) * 1.5);
+    border-radius: var(--r-s);
+    font: 500 15px/20px var(--sans);
+    color: var(--ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-image 125ms cubic-bezier(0.24, 1, 0.4, 1),
+                box-shadow 125ms cubic-bezier(0.24, 1, 0.4, 1);
+  }
+  .nv-item svg { width: 18px; height: 18px; flex: none; color: var(--ink-2); }
+  .nv-item[aria-current="page"] {
+    color: var(--indigo);
+    background-color: color-mix(in srgb, var(--indigo) 10%, transparent);
+    box-shadow: var(--btn-inset, inset 0 2px 4px rgb(0 0 0 / 0.24));
+  }
+  .nv-item[aria-current="page"] svg { color: var(--indigo); }
+  .nv-item:focus { outline: none; }
+  .nv-item:focus-visible {
+    background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1));
+    box-shadow: var(--btn-inset, inset 0 2px 4px rgb(0 0 0 / 0.24));
+  }
+  @media (hover: hover) {
+    .nv-item:hover { background-image: linear-gradient(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.05)); }
+  }
+  @media not (pointer: coarse) {
+    .nv-item:active { background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1)); }
+  }
+  .nv-item[data-press="on"] {
+    background-image: linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.1));
+    box-shadow: var(--btn-inset, inset 0 2px 4px rgb(0 0 0 / 0.24));
+  }
+  @media (forced-colors: active) {
+    .nv-item:focus-visible { outline: 2px solid CanvasText; }
+    .nv-item[aria-current="page"] { border: 2px solid; }
+  }
+
+  #contact { scroll-margin-top: 88px; }
+}
+
+@media (max-width: 360px) {
+  .nv-brand { font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-menu-panel, .nv-menu-glyph path { transition-duration: 0s !important; transition-delay: 0s !important; }
+}
+
+/* ==== parts/cards-mobile.css ==== */
+/* ===========================================================================
+   cards-mobile.css   the phone spec cards (Jake, Oct 11 2026)
+
+   On a phone each figure section is ONE card, after the Matt Pocock skills
+   card Jake sent: an outlined card, the section's ASCII plate in the
+   background and pixel scatter, with only the section's own words on it
+   (Jake: "just initial copy, no new copy or numbers or buttons"). The title
+   sits straight on the blue, with no corner brackets; the line and the
+   action share one white window on the card's foot. The added pieces are
+   graphics only: the scatter, the window dots and a page count (no frame
+   line: Jake had it removed).
+
+   The art is a square at the card's full width (the plates' content is
+   square), and the white window sits right under it, so the bottom of the
+   ASCII stands on the window. The plate and the scatter are the same deep ink at
+   the same opacity and the same pixel scale, so the scatter reads as the
+   plate coming apart. Desktop is untouched: the wrappers are display:
+   contents there and every added piece is hidden.
+   =========================================================================== */
+
+:root {
+  --mc-ink: #16143F;      /* the plate, the scatter, the window bar and border */
+  --mc-text: #FBFAF6;     /* words straight on the blue */
+  --mc-art: 0.62;         /* one opacity for the plate and its scatter */
+}
+
+/* desktop: none of the card pieces exist */
+.mc-scatter, .mc-count, .mc-win-t, .mc-proof { display: none; }
+.mc-run, .mc-run-b, .mc-act-row { display: contents; }
+
+@media (max-width: 899px) {
+  .fg-fig { padding-block: calc(var(--u) * 3); }
+
+  /* --- the card: two rows, the art and then the white window ------------- */
+  /* The plates' CONTENT is square (240 x 240 cells from a square source; only
+     the 5 x 8 cell makes the pixel shape look tall, see
+     opusjake-landing/scripts/assemble_figures.py), so the art row is a square
+     at the card's full width and the plate fills it: the same proportion as
+     the desktop box, nothing warped. The window sits directly under it, so
+     the bottom of the ASCII stands on the window's top edge (Jake, Oct 11).
+     The title lies over the top of the art. */
+  .fg-fig .fg-body {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "art" "box";
+    gap: 0;
+    width: min(100%, 480px);
+    margin-inline: auto;
+    padding: 0 0 24px;
+    border-radius: var(--r-l);
+    overflow: clip;
+    box-shadow: var(--shadow-card);
+    background:
+      radial-gradient(circle, rgb(255 255 255 / 0.12) 0.9px, transparent 1.3px) 0 0 / 6px 6px,
+      linear-gradient(100deg, #2F3CD8 0%, #3B49E6 52%, #4655EE 100%);
+  }
+  .fg-fig .fg-body > .fg-figure {
+    grid-area: art;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    align-self: start;
+  }
+  .fg-fig .fg-well {
+    position: relative;
+    height: 100%;
+    aspect-ratio: auto;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+  }
+  .fg-fig .fg-well::before,
+  .fg-fig .fg-well::after { display: none; }
+  .fg-fig .fg-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    margin: 0;
+  }
+  .fg-fig .fg-plate { width: 100%; height: 100%; color: var(--mc-ink); opacity: var(--mc-art); }
+  .fg-fig .fg-anno { display: none; }
+
+  /* --- the words: their own wrapper steps aside so they can join the rows -- */
+  .fg-fig .fg-body > .fg-copy { display: contents; color: var(--mc-text); }
+  .fg-fig .fg-copy > * { position: relative; z-index: 1; }
+
+  /* the scatter: the plate's ink, the plate's opacity, the plate's scale */
+  .fg-fig .fg-copy > .mc-scatter {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: var(--mc-art);
+    pointer-events: none;
+    background: url(/bare/scatter/card-1.svg?v=4) center / cover no-repeat;
+  }
+  .fg-fig-b .fg-copy > .mc-scatter { background-image: url(/bare/scatter/card-2.svg?v=3); }
+  .fg-fig-a .fg-copy > .mc-scatter { background-image: url(/bare/scatter/card-3.svg?v=3); }
+
+  /* which card of three this is */
+  .fg-fig .fg-copy > .mc-count {
+    display: flex;
+    gap: 3px;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+  .mc-count i { display: block; width: 9px; height: 9px; border: 1.5px solid var(--mc-ink); }
+  .mc-count i.on { background: var(--mc-ink); }
+
+  /* the title, straight on the blue, over the top of the art */
+  .fg-fig .fg-copy .fg-h {
+    grid-area: art;
+    align-self: start;
+    justify-self: start;
+    margin: 40px 24px 0;
+    padding: 0;
+    max-width: 11ch;
+    font: 400 36px/1.02 var(--sans);
+    letter-spacing: -0.035em;
+    color: var(--mc-text);
+    background: none;
+  }
+
+  /* the line and the action in one white window, right under the art */
+  .fg-fig .mc-run {
+    grid-area: box;
+    display: flex;
+    flex-direction: column;
+    margin: 0 24px;
+    border: 1.5px solid var(--mc-ink);
+    background: var(--card);
+    box-shadow: 3px 3px 0 rgb(22 20 63 / 0.35);
+  }
+  .fg-fig .mc-win-t {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 20px;
+    padding: 0 8px;
+    background: var(--mc-ink);
+  }
+  .mc-win-t i { display: block; width: 7px; height: 7px; border-radius: 50%; }
+  .mc-win-t i:nth-child(1) { background: #ff5f57; }
+  .mc-win-t i:nth-child(2) { background: #febc2e; }
+  .mc-win-t i:nth-child(3) { background: #28c840; }
+  .fg-fig .mc-run-b { display: block; padding: 14px 14px 14px; }
+  .fg-fig .fg-copy .mc-run-b .fg-p {
+    margin: 0;
+    max-width: none;
+    font: 400 17px/1.4 var(--sans);
+    color: var(--ink);
+  }
+  /* the action and, right-justified beside it, its proof in muted grey */
+  .fg-fig .mc-act-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .fg-fig .mc-run .fg-act { margin: 0; flex: none; }
+  .fg-fig .mc-proof {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 0;
+    text-align: right;
+    color: #8C8678;
+    font: 400 11.5px/1.2 var(--sans);
+  }
+  .mc-proof-a { display: inline-flex; align-items: center; gap: 4px; font: 400 12.5px/1 var(--sans); }
+  .mc-proof-a[role="img"] { gap: 1px; }
+  .mc-proof-a svg { display: block; width: 11px; height: 11px; fill: currentColor; }
+  .mc-proof-a svg[fill="none"] { fill: none; stroke: currentColor; width: 12px; height: 12px; }
+  .mc-proof-a svg + svg { margin: 0; }
+  .fg-fig .mc-run .fg-act-x { display: none; }
+}
+
+/* ===========================================================================
+   The soft card (variant on mobile-cards-soft, Jake Oct 11, after a
+   Passionfroot welcome card). The card is a soft mesh-gradient panel with
+   fine grain, Jake's blue into burnt orange through a light centre, with no
+   white bezel (Jake cut it). The words sit in a
+   frosted white box with a hairline, no ink bar. The plate and its scatter
+   keep one ink and one opacity, lighter for the pale ground. Copy, plates,
+   proof and layout are unchanged.
+   =========================================================================== */
+:root {
+  --mc-art-soft: 0.4;
+  --mc-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 899px) {
+  /* the card is the gradient panel itself: no white bezel, no hairline
+     (Jake: "no white border"), just the soft shadow */
+  .fg-fig .fg-body {
+    padding: 0;
+    border: 0;
+    border-radius: 22px;
+    background: none;
+    box-shadow: 0 1px 2px rgb(31 29 58 / 0.05), 0 18px 40px -18px rgb(31 29 58 / 0.28);
+  }
+  /* the gradient: Jake's blue to burnt orange. The blue (#3B49E6, the card
+     blue) comes in from the top right and the burnt orange (#CC5500) from
+     the bottom left, each fading into a light centre, so the dark headline
+     and the ASCII keep their contrast; fine grain over all of it */
+  .fg-fig .fg-body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background:
+      var(--mc-grain),
+      radial-gradient(78% 56% at 100% 0%, rgb(59 73 230 / 0.92) 0%, rgb(59 73 230 / 0.35) 42%, transparent 74%),
+      radial-gradient(52% 42% at 0% 26%, rgb(112 124 240 / 0.42) 0%, transparent 72%),
+      radial-gradient(84% 58% at 0% 100%, rgb(204 85 0 / 0.88) 0%, rgb(204 85 0 / 0.32) 44%, transparent 76%),
+      radial-gradient(58% 42% at 100% 92%, rgb(228 128 62 / 0.50) 0%, transparent 72%),
+      #F8F5EF;
+    background-blend-mode: soft-light, normal, normal, normal, normal, normal;
+  }
+  .fg-fig .fg-body > .fg-figure { border-radius: 22px 22px 0 0; overflow: clip; }
+  .fg-fig .fg-plate { opacity: var(--mc-art-soft); }
+  .fg-fig .fg-copy > .mc-scatter { inset: 0; border-radius: inherit; opacity: var(--mc-art-soft); }
+
+  /* the words in the site's ink on the pale ground */
+  .fg-fig .fg-body > .fg-copy { color: var(--ink); }
+  .fg-fig .fg-copy .fg-h { margin: 34px 22px 0; color: var(--ink); }
+  /* the page count sits on the blue, so it is white */
+  .fg-fig .fg-copy > .mc-count { top: 22px; right: 22px; }
+  .mc-count i { border-color: rgb(255 255 255 / 0.70); }
+  .mc-count i.on { background: rgb(255 255 255 / 0.92); border-color: transparent; }
+
+  /* the box: frosted white, a hairline, a soft shadow, no ink bar */
+  .fg-fig .mc-run {
+    margin: 0 14px 14px;
+    border: 1px solid rgb(255 255 255 / 0.85);
+    border-radius: 16px;
+    background: rgb(255 255 255 / 0.74);
+    -webkit-backdrop-filter: blur(12px) saturate(1.15);
+    backdrop-filter: blur(12px) saturate(1.15);
+    box-shadow: 0 1px 2px rgb(31 29 58 / 0.06), 0 10px 26px -12px rgb(31 29 58 / 0.22);
+    overflow: clip;
+  }
+  .fg-fig .mc-win-t { display: none; }
+  .fg-fig .mc-run-b { padding: 16px; }
+  .fg-fig .fg-copy .mc-run-b .fg-p { color: var(--ink-2); }
+}
+

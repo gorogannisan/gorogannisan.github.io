@@ -1,1149 +1,334 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>whatrushik — Developer & Founder of WHAT Technologies</title>
-
-    <meta name="description"
-        content="Личный сайт разработчика whatrushik (Гор). Android, Compose, Python, Web. Основатель WHAT Technologies.">
-    <meta name="author" content="whatrushik">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
-        rel="stylesheet">
-
-    <style>
-        :root {
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-
-            --background: #030303;
-            --background-rgb: 3, 3, 3;
-            --foreground: #fafafa;
-            --muted: #09090b;
-            --muted-foreground: #a1a1aa;
-            --card: #09090b;
-            --card-foreground: #fafafa;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.25);
-            --radius: 8px;
-
-            --accent: #ffffff;
-            --accent-rgb: 255, 255, 255;
-            --accent-glow: rgba(255, 255, 255, 0.05);
-            --theme-bg-glow: rgba(255, 255, 255, 0.02);
-            --grid-line: rgba(255, 255, 255, 0.03);
-
-            --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-normal: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        [data-theme="blue"] {
-            --background: #0b0c13;
-            --background-rgb: 11, 12, 19;
-            --foreground: #f0f2f5;
-            --card: #121424;
-            --border: rgba(99, 102, 241, 0.15);
-            --border-hover: rgba(99, 102, 241, 0.4);
-            --accent: #5c6cfa;
-            --accent-rgb: 92, 108, 250;
-            --accent-glow: rgba(92, 108, 250, 0.18);
-            --theme-bg-glow: radial-gradient(circle at 50% 50%, rgba(31, 33, 55, 0.4) 0%, transparent 70%);
-            --grid-line: rgba(92, 108, 250, 0.04);
-        }
-
-        [data-theme="burgundy"] {
-            --background: #0d0606;
-            --background-rgb: 13, 6, 6;
-            --foreground: #f9f5f5;
-            --card: #1a0b0b;
-            --border: rgba(239, 68, 68, 0.15);
-            --border-hover: rgba(239, 68, 68, 0.4);
-            --accent: #ef4444;
-            --accent-rgb: 239, 68, 68;
-            --accent-glow: rgba(239, 68, 68, 0.18);
-            --theme-bg-glow: radial-gradient(circle at 50% 50%, rgba(105, 22, 22, 0.4) 0%, transparent 70%);
-            --grid-line: rgba(239, 68, 68, 0.04);
-        }
-
-        [data-theme="orange"] {
-            --background: #0d0906;
-            --background-rgb: 13, 9, 6;
-            --foreground: #faf6f0;
-            --card: #1a110a;
-            --border: rgba(249, 115, 22, 0.15);
-            --border-hover: rgba(249, 115, 22, 0.4);
-            --accent: #f97316;
-            --accent-rgb: 249, 115, 22;
-            --accent-glow: rgba(249, 115, 22, 0.18);
-            --theme-bg-glow: radial-gradient(circle at 50% 50%, rgba(210, 119, 49, 0.4) 0%, transparent 70%);
-            --grid-line: rgba(249, 115, 22, 0.04);
-        }
-
-        [data-theme="green"] {
-            --background: #060a06;
-            --background-rgb: 6, 10, 6;
-            --foreground: #f5faf5;
-            --card: #0b140b;
-            --border: rgba(34, 197, 94, 0.15);
-            --border-hover: rgba(34, 197, 94, 0.4);
-            --accent: #22c55e;
-            --accent-rgb: 34, 197, 94;
-            --accent-glow: rgba(34, 197, 94, 0.18);
-            --theme-bg-glow: radial-gradient(circle at 50% 50%, rgba(39, 83, 37, 0.4) 0%, transparent 70%);
-            --grid-line: rgba(34, 197, 94, 0.04);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-snap-type: y mandatory;
-            overflow-x: hidden;
-            height: 100%;
-        }
-
-        body {
-            background-color: var(--background);
-            color: var(--foreground);
-            font-family: var(--font-sans);
-            font-size: 15px;
-            line-height: 1.5;
-            overflow-x: hidden;
-            transition: background-color var(--transition-normal), color var(--transition-normal);
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--background);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: var(--radius);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent);
-        }
-
-        /* Ambient effects */
-        .ambient-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            background: var(--theme-bg-glow);
-            filter: blur(120px);
-        }
-
-        .mouse-glow {
-            position: fixed;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 1;
-            transform: translate(-50%, -50%);
-            left: -9999px;
-            top: -9999px;
-            mix-blend-mode: screen;
-        }
-
-        .background-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            background-image:
-                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-            background-size: 80px 80px;
-            mask-image: radial-gradient(circle 80% at 50% 50%, black 30%, transparent 100%);
-            -webkit-mask-image: radial-gradient(circle 80% at 50% 50%, black 30%, transparent 100%);
-            opacity: 0.8;
-        }
-
-        /* Cursor */
-        .custom-cursor {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent);
-            border-radius: 50%;
-            position: fixed;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            display: none;
-        }
-
-        .custom-cursor-outline {
-            width: 36px;
-            height: 36px;
-            border: 1px solid var(--accent);
-            border-radius: 50%;
-            position: fixed;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0.4;
-            display: none;
-        }
-
-        body.has-mouse .custom-cursor,
-        body.has-mouse .custom-cursor-outline {
-            display: block;
-        }
-
-        body.cursor-hover .custom-cursor {
-            width: 20px;
-            height: 20px;
-            opacity: 0.15;
-            mix-blend-mode: normal;
-        }
-
-        body.cursor-hover .custom-cursor-outline {
-            width: 50px;
-            height: 50px;
-            opacity: 0.8;
-        }
-
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 999;
-            background: rgba(var(--background-rgb), 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--foreground);
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .nav-brand-badge {
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            color: var(--accent);
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-link {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--muted-foreground);
-            text-decoration: none;
-            transition: color var(--transition-fast);
-        }
-
-        .nav-link:hover {
-            color: var(--foreground);
-        }
-
-        .theme-switcher {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            padding: 3px;
-            border-radius: 30px;
-            gap: 4px;
-        }
-
-        .theme-btn {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            padding: 0;
-            transition: transform var(--transition-fast);
-        }
-
-        .theme-btn:hover {
-            transform: scale(1.15);
-        }
-
-        .theme-btn.active {
-            border-color: var(--foreground);
-        }
-
-        .theme-btn-black {
-            background: #fafafa;
-        }
-
-        .theme-btn-blue {
-            background: #1F2137;
-        }
-
-        .theme-btn-burgundy {
-            background: #691616;
-        }
-
-        .theme-btn-orange {
-            background: #D27731;
-        }
-
-        .theme-btn-green {
-            background: #275325;
-        }
-
-        /* --- 100VH SECTIONS STRUCTURE --- */
-        .section-wrapper {
-            height: 100vh;
-            min-height: 100vh;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 5rem 2rem 1.5rem;
-            box-sizing: border-box;
-            z-index: 2;
-        }
-
-        .section-container {
-            max-width: 1100px;
-            width: 100%;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .section-divider {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
-        }
-
-        /* --- SECTION 1: ABOUT --- */
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 310px 1fr;
-            gap: 3.5rem;
-            align-items: center;
-            width: 100%;
-        }
-
-        .founder-visual {
-            position: relative;
-            border-radius: var(--radius);
-            aspect-ratio: 4/5;
-            background: var(--card);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform-style: preserve-3d;
-            transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .founder-visual:hover {
-            border-color: var(--border-hover);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
-        }
-
-        .founder-scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            box-shadow: 0 0 12px var(--accent);
-            pointer-events: none;
-            z-index: 4;
-            opacity: 0;
-            transition: opacity var(--transition-normal);
-        }
-
-        .founder-visual:hover .founder-scan-line {
-            opacity: 0.85;
-            animation: scanVertical 2.2s linear infinite;
-        }
-
-        @keyframes scanVertical {
-            0% {
-                top: 0%;
-            }
-
-            100% {
-                top: 100%;
-            }
-        }
-
-        .founder-image-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: var(--radius);
-            filter: grayscale(100%) contrast(110%);
-            mix-blend-mode: luminosity;
-            transition: filter var(--transition-normal);
-            z-index: 2;
-        }
-
-        .founder-visual:hover .founder-image-img {
-            filter: grayscale(0%) contrast(100%);
-            mix-blend-mode: normal;
-        }
-
-        .founder-fallback {
-            display: none;
-            position: absolute;
-            font-family: var(--font-mono);
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent);
-            z-index: 1;
-        }
-
-        .founder-name {
-            font-size: clamp(2.2rem, 3.5vw, 3rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 0.3rem;
-        }
-
-        .founder-role {
-            font-family: var(--font-mono);
-            color: var(--accent);
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-            margin-bottom: 1.25rem;
-            text-transform: uppercase;
-        }
-
-        .founder-bio {
-            font-size: 1rem;
-            color: var(--muted-foreground);
-            line-height: 1.65;
-            margin-bottom: 1.75rem;
-        }
-
-        .founder-bio strong {
-            color: var(--foreground);
-            font-weight: 600;
-        }
-
-        .founder-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            border-top: 1px solid var(--border);
-            padding-top: 1.25rem;
-        }
-
-        .stat-val {
-            font-family: var(--font-mono);
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--foreground);
-            line-height: 1;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-val::after {
-            content: '+';
-            color: var(--accent);
-            margin-left: 2px;
-        }
-
-        .stat-lbl {
-            font-size: 0.75rem;
-            color: var(--muted-foreground);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* --- SECTION 2: PROJECTS --- */
-        .section-title-simple {
-            font-size: 1.7rem;
-            font-weight: 700;
-            margin-bottom: 1.75rem;
-            letter-spacing: -0.02em;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
-        }
-
-        .project-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.75rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 290px;
-            text-decoration: none;
-            transition: border-color var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-normal);
-        }
-
-        .project-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
-        }
-
-        .project-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.25rem;
-        }
-
-        .project-cat {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent);
-            border: 1px solid var(--border);
-            padding: 3px 8px;
-            border-radius: 12px;
-            text-transform: uppercase;
-        }
-
-        .project-arrow {
-            color: var(--muted-foreground);
-            transition: transform var(--transition-fast), color var(--transition-fast);
-        }
-
-        .project-card:hover .project-arrow {
-            transform: translate(2px, -2px);
-            color: var(--foreground);
-        }
-
-        .project-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.6rem;
-            color: var(--foreground);
-        }
-
-        .project-desc {
-            color: var(--muted-foreground);
-            font-size: 0.85rem;
-            line-height: 1.5;
-            margin-bottom: 1.25rem;
-        }
-
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-        }
-
-        .project-tech-item {
-            color: var(--muted-foreground);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            padding: 2px 7px;
-            border-radius: 4px;
-        }
-
-        /* --- SECTION 3: CONTACT & FOOTER IN 100VH --- */
-        .contact-section-wrapper {
-            justify-content: space-between;
-            padding-top: 5rem;
-            padding-bottom: 1.5rem;
-        }
-
-        .contact-content {
-            margin: auto 0;
-            width: 100%;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        .socials-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.85rem;
-        }
-
-        .social-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 1rem 1.15rem;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            text-decoration: none;
-            color: var(--foreground);
-            transition: border-color var(--transition-fast), transform var(--transition-fast);
-        }
-
-        .social-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
-        }
-
-        .social-card-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .social-card-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .social-card-handle {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--muted-foreground);
-        }
-
-        .social-icon {
-            width: 18px;
-            height: 18px;
-            color: var(--accent);
-            flex-shrink: 0;
-        }
-
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-        }
-
-        .form-input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            padding: 0.75rem 0.9rem;
-            color: var(--foreground);
-            border-radius: var(--radius);
-            font-family: var(--font-sans);
-            font-size: 0.85rem;
-            transition: border-color var(--transition-fast);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .btn-submit {
-            background: var(--foreground);
-            color: var(--background);
-            border: none;
-            padding: 0.75rem;
-            border-radius: var(--radius);
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: opacity var(--transition-fast);
-        }
-
-        .btn-submit:hover {
-            opacity: 0.9;
-        }
-
-        .integrated-footer {
-            width: 100%;
-            border-top: 1px solid var(--border);
-            padding-top: 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--muted-foreground);
-        }
-
-        .footer-org-link {
-            font-family: var(--font-mono);
-            color: var(--foreground);
-            text-decoration: none;
-            border-bottom: 1px dashed var(--border-hover);
-            transition: color var(--transition-fast), border-color var(--transition-fast);
-        }
-
-        .footer-org-link:hover {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-
-        /* --- RESPONSIVE FALLBACK --- */
-        @media (max-width: 900px),
-        (max-height: 650px) {
-            html {
-                scroll-snap-type: none;
-                height: auto;
-            }
-
-            .section-wrapper {
-                height: auto;
-                min-height: auto;
-                padding: 6rem 1.5rem 3rem;
-            }
-
-            .profile-grid {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-            }
-
-            .founder-visual {
-                max-width: 280px;
-                margin: 0 auto;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .contact-section-wrapper {
-                padding-bottom: 2rem;
-            }
-
-            .integrated-footer {
-                margin-top: 2.5rem;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .navbar {
-                padding: 0.85rem 1.25rem;
-            }
-
-            .nav-menu {
-                display: none;
-            }
-
-            .socials-list {
-                grid-template-columns: 1fr;
-            }
-
-            .integrated-footer {
-                flex-direction: column;
-                gap: 0.75rem;
-                text-align: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gorogannisan — Личный сайт разработчика</title>
+<meta name="description" content="Разработка цифровых продуктов и автоматизация бизнеса под ключ: мобильные приложения, Telegram-боты, веб-платформы. Прозрачный процесс с результатом каждую неделю.">
+<meta name="author" content="Гор Оганнисян (gorogannisan)">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/pixeboy.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/endless.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <div class="custom-cursor"></div>
-    <div class="custom-cursor-outline"></div>
+<nav aria-label="Primary" class="nv-nav">
+<a class="nv-brand" href="index.html">gor</a>
+<div class="nv-links">
+<a class="nv-link" href="about.html">Обо мне</a>
+<a class="nv-link" href="#projects">Проекты</a>
+<a class="nv-link" href="library.html">Библиотека</a>
+<a class="nv-link nv-link-cta" href="contact.html">Обсудить проект</a>
+</div>
+<details class="nv-menu">
+<summary aria-controls="nv-orbs" aria-expanded="false" aria-label="Menu" class="nv-menu-toggle">
+<svg aria-hidden="true" class="nv-menu-glyph" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6" viewBox="0 0 16 16"><path class="nv-mg-a" d="M2.5 5.5h11"></path><path class="nv-mg-b" d="M2.5 10.5h11"></path></svg>
+</summary>
+<div class="nv-menu-panel" id="nv-orbs">
+<ul class="nv-items">
+<li><a class="nv-item" href="index.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Главная</span></a></li>
+<li><a class="nv-item" href="about.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Обо мне</span></a></li>
+<li><a class="nv-item" href="#projects"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg><span>Проекты</span></a></li>
+<li><a class="nv-item" href="library.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4.5h5.5A2.5 2.5 0 0 1 12 7v13a2 2 0 0 0-2-2H4z"></path><path d="M20 4.5h-5.5A2.5 2.5 0 0 0 12 7v13a2 2 0 0 1 2-2h6z"></path></svg><span>Библиотека</span></a></li>
+</ul>
+<div class="nv-drop-cta">
+<a class="nv-drop-btn" href="contact.html">Обсудить проект</a>
+</div>
+</div>
+</details>
+</nav>
 
-    <div class="ambient-glow"></div>
-    <div class="mouse-glow"></div>
-    <div class="background-grid"></div>
+<main id="top">
 
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <a href="#about" class="nav-brand">
-            <span>whatrushik</span>
-            <span class="nav-brand-badge">DEV</span>
-        </a>
+<!-- HERO SECTION (100vh) -->
+<section class="hr-hero gl gl-hero" id="hero">
+<div class="wrap">
+<div class="hr-grid">
+<canvas aria-label="ASCII portrait of Gor" class="hr-canvas" data-src="portrait-grid.json" role="img" style="color: var(--indigo);"></canvas>
+<div class="hr-copy">
+<h1 class="hr-title"><span class="hr-lead">Привет, я</span> <b class="hr-wm" data-hr-wordmark="gor">gor</b></h1>
+<p class="hr-sub">Автоматизирую бизнес и создаю цифровые продукты под ключ: мобильные приложения, веб-платформы и Telegram-ботов. <span class="hr-sub-b">Прозрачный процесс с результатом каждую неделю.</span></p>
+<div class="hr-actions">
+<a class="hr-btn hr-btn-solid" href="contact.html">Обсудить проект</a>
+<a class="hr-btn hr-btn-soft" href="#projects">Смотреть проекты</a>
+</div>
+</div>
+</div>
+</div>
+</section>
 
-        <nav class="nav-menu">
-            <a href="#about" class="nav-link">Обо мне</a>
-            <a href="#projects" class="nav-link">Проекты</a>
-            <a href="#contact" class="nav-link">Контакты</a>
-        </nav>
+<!-- Item 1: Text Left, Rocket Right (100vh, NO UGLY STATS) -->
+<section id="scale" class="fg-section-list">
+<div class="wrap">
+<div class="fg-row">
+<div class="fg-row-text">
+<span class="fg-row-kicker">● 01 / ЧЕМ Я ЗАНИМАЮСЬ</span>
+<h2 class="fg-row-title">Автоматизация бизнеса под ключ</h2>
+<p class="fg-row-desc">Создаю цифровые инструменты, которые берут на себя рутину: мобильные приложения для iOS и Android, Telegram-ботов для работы с клиентами, веб-сервисы и интеграции с базами данных и CRM. Собираю всё в единую работающую систему без разрозненных костылей.</p>
+<a class="hr-btn hr-btn-solid" href="contact.html">Обсудить задачу →</a>
+</div>
+<div class="fg-row-visual">
+<canvas class="fg-plate" data-src="plates/motion-rocket.json" data-fit="fill" aria-hidden="true"></canvas>
+</div>
+</div>
+</div>
+</section>
 
-        <div class="nav-actions">
-            <div class="theme-switcher" title="Сменить тему">
-                <button class="theme-btn theme-btn-black active" data-theme-name="black" aria-label="Black"></button>
-                <button class="theme-btn theme-btn-blue" data-theme-name="blue" aria-label="Blue"></button>
-                <button class="theme-btn theme-btn-burgundy" data-theme-name="burgundy" aria-label="Burgundy"></button>
-                <button class="theme-btn theme-btn-orange" data-theme-name="orange" aria-label="Orange"></button>
-                <button class="theme-btn theme-btn-green" data-theme-name="green" aria-label="Green"></button>
-            </div>
-        </div>
-    </header>
+<!-- Item 2: Hands Left, Text Right (REVERSE, 100vh, MATURE TITLE) -->
+<section id="lab" class="fg-section-list">
+<div class="wrap">
+<div class="fg-row fg-row-reverse">
+<div class="fg-row-text">
+<span class="fg-row-kicker">● 02 / КАК Я РАБОТАЮ</span>
+<h2 class="fg-row-title">Пошаговая разработка и живой результат каждую неделю</h2>
+<p class="fg-row-desc">Нормальный проект требует проектирования архитектуры, живых обсуждений, тестов и рефакторинга — я не обещаю собрать сложную систему за два дня. Я работаю прозрачными недельными спринтами: вы регулярно щупаете рабочий билд на своем телефоне, видите реальный прогресс и можете вовремя скорректировать требования на живом проекте.</p>
+<a class="hr-btn hr-btn-solid" href="about.html">О моем подходе →</a>
+</div>
+<div class="fg-row-visual">
+<canvas class="fg-plate" data-src="plates/motion-hands.json" data-fit="fill" aria-hidden="true"></canvas>
+</div>
+</div>
+</div>
+</section>
 
-    <!-- 1. ABOUT BLOCK (SCREEN 1) -->
-    <section class="section-wrapper" id="about">
-        <div class="section-container">
-            <div class="profile-grid">
+<!-- Item 3: Text Left, Crystal Right (100vh, MATURE TITLE) -->
+<section id="fig-library" class="fg-section-list">
+<div class="wrap">
+<div class="fg-row">
+<div class="fg-row-text">
+<span class="fg-row-kicker">● 03 / ЧТО ВЫ ПОЛУЧАЕТЕ</span>
+<h2 class="fg-row-title">Чистая архитектура и полный контроль над кодом</h2>
+<p class="fg-row-desc">Никаких менеджеров-испорченных телефонов: вы общаетесь напрямую со мной. Я проектирую систему с запасом прочности, чтобы она выдерживала нагрузки и легко масштабировалась. Все репозитории, базы данных и сервера с первого дня оформляются на вас — вы остаетесь полноправным владельцем своего продукта.</p>
+<a class="hr-btn hr-btn-solid" href="library.html">Перейти в библиотеку →</a>
+</div>
+<div class="fg-row-visual">
+<canvas class="fg-plate" data-src="plates/motion-grow.json" data-fit="fill" aria-hidden="true"></canvas>
+</div>
+</div>
+</div>
+</section>
 
-                <!-- 3D INTERACTIVE TILT CARD -->
-                <div class="founder-visual" id="avatar-card">
-                    <div class="founder-scan-line"></div>
-                    <img src="assets/me.webp" class="founder-image-img" alt="Гор (whatrushik)"
-                        onerror="this.style.display='none'; document.querySelector('.founder-fallback').style.display='block';">
-                    <div class="founder-fallback">WHAT</div>
-                </div>
+<!-- PROJECTS SECTION (100vh, REAL VERIFIED DATA) -->
+<section id="projects" class="projects-section">
+<div class="wrap">
+<div class="projects-header">
+<span class="projects-kicker">● ПОРТФОЛИО И КЕЙСЫ</span>
+<h2 class="projects-title">Реальные проекты, запущенные в продакшн</h2>
+<p class="projects-subtitle">Каждый проект — это работающий бизнес-инструмент с чистой архитектурой, высокой скоростью работы и понятным кодом.</p>
+</div>
 
-                <!-- BIO CONTENT -->
-                <div class="founder-content">
-                    <h1 class="founder-name">Гор</h1>
-                    <div class="founder-role">Lead Developer & Founder · WHAT Technologies</div>
+<div class="projects-grid">
 
-                    <div class="founder-bio">
-                        <p>
-                            Разрабатываю нативные и кроссплатформенные клиенты на <strong>Kotlin</strong> и
-                            <strong>Jetpack Compose</strong>, создаю асинхронный бэкенд на <strong>Python</strong> и
-                            быстрый веб. Руковожу проектами в открытом сообществе <strong>WHAT Technologies</strong>.
-                        </p>
-                        <p style="margin-top: 8px;">
-                            Ценю чистую архитектуру, высокую отзывчивость UI без визуального мусора и постоянную
-                            практику на хакатонах.
-                        </p>
-                    </div>
+<!-- Project 1: Schedule -->
+<article class="project-card">
+<div>
+<div class="project-card-top">
+<div class="project-card-dots">
+<span class="project-dot project-dot-red"></span>
+<span class="project-dot project-dot-yellow"></span>
+<span class="project-dot project-dot-green"></span>
+</div>
+<span class="project-badge">МОБИЛЬНЫЕ ПРИЛОЖЕНИЯ</span>
+</div>
+<h3 class="project-title">Schedule</h3>
+<p class="project-desc">Приложение расписания для студентов: работает без интернета и выводит пары прямо на виджет рабочего стола. Моментально открывается даже в подвальных аудиториях. Сотни активных пользователей ежедневно.</p>
+<div class="project-tags">
+<span class="project-tag">Kotlin</span>
+<span class="project-tag">Jetpack Compose</span>
+<span class="project-tag">Room</span>
+<span class="project-tag">Glance</span>
+</div>
+</div>
+<div class="project-card-bottom">
+<a class="project-link" href="https://www.rustore.ru/catalog/app/app.what.schedule" target="_blank" rel="noopener">Открыть проект →</a>
+<a class="project-extra-link" href="https://github.com/gorogannisan/schedule" target="_blank" rel="noopener">GitHub</a>
+</div>
+</article>
 
-                    <div class="founder-stats">
-                        <div class="stat-item">
-                            <span class="stat-val">4</span>
-                            <span class="stat-lbl">Года в коде</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-val">15</span>
-                            <span class="stat-lbl">Хакатонов</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-val">100%</span>
-                            <span class="stat-lbl">Open Source</span>
-                        </div>
-                    </div>
-                </div>
+<!-- Project 2: Les Kub -->
+<article class="project-card">
+<div>
+<div class="project-card-top">
+<div class="project-card-dots">
+<span class="project-dot project-dot-red"></span>
+<span class="project-dot project-dot-yellow"></span>
+<span class="project-dot project-dot-green"></span>
+</div>
+<span class="project-badge">ВЕБ-СЕРВИСЫ</span>
+</div>
+<h3 class="project-title">Лес Куб (Les Kub)</h3>
+<p class="project-desc">Сайт для оптовой базы пиломатериалов с калькулятором пересчета кубов в штуки и быстрым заказом в Telegram. Клиенты сами выбирают параметры доски, а менеджеры склада получают готовые заявки.</p>
+<div class="project-tags">
+<span class="project-tag">JavaScript</span>
+<span class="project-tag">HTML5</span>
+<span class="project-tag">CSS3</span>
+<span class="project-tag">Telegram Bot API</span>
+</div>
+</div>
+<div class="project-card-bottom">
+<a class="project-link" href="https://leskub.ru/" target="_blank" rel="noopener">Открыть проект →</a>
+<a class="project-extra-link" href="https://github.com/gorogannisan/leskub" target="_blank" rel="noopener">GitHub</a>
+</div>
+</article>
 
-            </div>
-        </div>
-        <div class="section-divider"></div>
-    </section>
+<!-- Project 3: Urartu Ensemble -->
+<article class="project-card">
+<div>
+<div class="project-card-top">
+<div class="project-card-dots">
+<span class="project-dot project-dot-red"></span>
+<span class="project-dot project-dot-yellow"></span>
+<span class="project-dot project-dot-green"></span>
+</div>
+<span class="project-badge">ВЕБ-ИНТЕРФЕЙСЫ</span>
+</div>
+<h3 class="project-title">Urartu Ensemble</h3>
+<p class="project-desc">Атмосферный промо-сайт ансамбля армянских народных танцев «Урарту» с видео, афишей и формой заказа выступлений для организаторов концертов и фестивалей.</p>
+<div class="project-tags">
+<span class="project-tag">JavaScript</span>
+<span class="project-tag">HTML5</span>
+<span class="project-tag">CSS3</span>
+</div>
+</div>
+<div class="project-card-bottom">
+<a class="project-link" href="https://gorogannisan.site/urartu/" target="_blank" rel="noopener">Открыть проект →</a>
+<a class="project-extra-link" href="https://github.com/gorogannisan/urartu" target="_blank" rel="noopener">GitHub</a>
+</div>
+</article>
 
-    <!-- 2. PROJECTS BLOCK (SCREEN 2) -->
-    <section class="section-wrapper" id="projects">
-        <div class="section-container">
-            <h2 class="section-title-simple">Проекты</h2>
+</div>
+</div>
+</section>
 
-            <div class="projects-grid">
-                <!-- WHAT Schedule -->
-                <a href="https://github.com/whatrushki/WHAT-Schedule-android" target="_blank" rel="noopener"
-                    class="project-card">
-                    <div>
-                        <div class="project-top">
-                            <span class="project-cat">Android</span>
-                            <span class="project-arrow">↗</span>
-                        </div>
-                        <h3 class="project-title">WHAT Schedule</h3>
-                        <p class="project-desc">
-                            Нативное Android-приложение расписания с локальным кэшированием, оффлайн-режимом и виджетами
-                            на Jetpack Glance.
-                        </p>
-                    </div>
-                    <div class="project-tech">
-                        <span class="project-tech-item">Kotlin</span>
-                        <span class="project-tech-item">Compose</span>
-                        <span class="project-tech-item">Ktor</span>
-                        <span class="project-tech-item">Room</span>
-                    </div>
-                </a>
+<!-- FAQ SECTION -->
+<section class="fq-wrap" id="faq">
+<div class="wrap">
+<div class="fq-head">
+<span class="fq-eyebrow">Частые вопросы</span>
+<h2 class="fq-h">Все, что нужно знать до старта</h2>
+</div>
+<div class="fq-list">
 
-                <!-- Лес Куб -->
-                <a href="https://leskub.ru/" target="_blank" rel="noopener" class="project-card">
-                    <div>
-                        <div class="project-top">
-                            <span class="project-cat">Web</span>
-                            <span class="project-arrow">↗</span>
-                        </div>
-                        <h3 class="project-title">Лес Куб</h3>
-                        <p class="project-desc">
-                            Интерактивный e-commerce каталог пиломатериалов с калькулятором пересчета кубатуры и заказом
-                            через Telegram API.
-                        </p>
-                    </div>
-                    <div class="project-tech">
-                        <span class="project-tech-item">JavaScript</span>
-                        <span class="project-tech-item">HTML5</span>
-                        <span class="project-tech-item">CSS3</span>
-                        <span class="project-tech-item">Telegram API</span>
-                    </div>
-                </a>
+<details class="fq-item">
+<summary class="fq-q"><span>Сколько реально длится разработка проекта?</span><span class="fq-x" aria-hidden="true"></span></summary>
+<div class="fq-a"><p>От 3–4 недель для базовой системы, бота или MVP до 2–3 месяцев для комплексного приложения со сложным бэкендом. Я закладываю время на проектирование архитектуры, рефакторинг и тщательное тестирование, чтобы в прод не ушло сырое решение, которое сломается при первой нагрузке.</p></div>
+</details>
 
-                <!-- Urartu Ensemble -->
-                <a href="https://whatrushki.github.io/urartu/" target="_blank" rel="noopener" class="project-card">
-                    <div>
-                        <div class="project-top">
-                            <span class="project-cat">Web</span>
-                            <span class="project-arrow">↗</span>
-                        </div>
-                        <h3 class="project-title">Urartu Ensemble</h3>
-                        <p class="project-desc">
-                            Атмосферный промо-сайт и медиа-платформа ансамбля этнических танцев с плавной анимацией и
-                            галереей.
-                        </p>
-                    </div>
-                    <div class="project-tech">
-                        <span class="project-tech-item">HTML5</span>
-                        <span class="project-tech-item">CSS3</span>
-                        <span class="project-tech-item">JavaScript</span>
-                        <span class="project-tech-item">BEM</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="section-divider"></div>
-    </section>
+<details class="fq-item">
+<summary class="fq-q"><span>Как формируется стоимость?</span><span class="fq-x" aria-hidden="true"></span></summary>
+<div class="fq-a"><p>Я оцениваю объем задач по понятным этапам или спринтам. Стоимость каждого этапа фиксируется до старта работ — никаких скрытых накруток, раздутых смет или неожиданных счетов в процессе.</p></div>
+</details>
 
-    <!-- 3. CONTACT & INTEGRATED FOOTER (SCREEN 3) -->
-    <section class="section-wrapper contact-section-wrapper" id="contact">
-        <div class="section-container contact-content">
-            <h2 class="section-title-simple">Связаться</h2>
+<details class="fq-item">
+<summary class="fq-q"><span>Можно ли вносить изменения в процессе разработки?</span><span class="fq-x" aria-hidden="true"></span></summary>
+<div class="fq-a"><p>Да. Я работаю недельными спринтами именно для того, чтобы вовремя корректировать курс. Вы видите рабочий результат каждую неделю на живом проекте и можете вносить уточнения по мере поступления обратной связи от рынка.</p></div>
+</details>
 
-            <div class="contact-grid">
-                <!-- Social Cards -->
-                <div class="socials-list">
-                    <a href="https://t.me/whatrushik" target="_blank" rel="noopener" class="social-card">
-                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m22 2-7 20-4-9-9-4Z" />
-                            <path d="M22 2 11 13" />
-                        </svg>
-                        <div class="social-card-info">
-                            <span class="social-card-name">Telegram</span>
-                            <span class="social-card-handle">@whatrushik</span>
-                        </div>
-                    </a>
+<details class="fq-item">
+<summary class="fq-q"><span>Что нужно для старта?</span><span class="fq-x" aria-hidden="true"></span></summary>
+<div class="fq-a"><p>Достаточно описания вашей бизнес-задачи или текущей проблемы своими словами. Я сам задам правильные вопросы, помогу отсечь лишнее, выделю ключевой функционал и предложу надежную архитектуру.</p></div>
+</details>
 
-                    <a href="https://github.com/topanim" target="_blank" rel="noopener" class="social-card">
-                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                        </svg>
-                        <div class="social-card-info">
-                            <span class="social-card-name">GitHub</span>
-                            <span class="social-card-handle">@topanim</span>
-                        </div>
-                    </a>
+<details class="fq-item">
+<summary class="fq-q"><span>Кому принадлежит код и что происходит после запуска?</span><span class="fq-x" aria-hidden="true"></span></summary>
+<div class="fq-a"><p>100% прав на исходный код, базы данных, сервера и аккаунты принадлежат вам с первого дня. После релиза я даю гарантийный период на стабильность работы, а дальше могу поддерживать проект по спринтам или передать его вашей команде — код чистый и документированный.</p></div>
+</details>
 
-                    <a href="https://vk.com/whatrushik" target="_blank" rel="noopener" class="social-card">
-                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                            <path d="M8 10c1.5 3 3.5 4 6 4V7" />
-                        </svg>
-                        <div class="social-card-info">
-                            <span class="social-card-name">VK</span>
-                            <span class="social-card-handle">vk.com/whatrushik</span>
-                        </div>
-                    </a>
+</div>
+</div>
+</section>
 
-                    <a href="mailto:gorogannisan641@gmail.com" class="social-card">
-                        <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect width="20" height="16" x="2" y="4" rx="2" />
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                        </svg>
-                        <div class="social-card-info">
-                            <span class="social-card-name">Email</span>
-                            <span class="social-card-handle">gorogannisan641...</span>
-                        </div>
-                    </a>
-                </div>
+</main>
 
-                <!-- Direct Message Form -->
-                <form class="contact-form" id="tg-form">
-                    <input type="text" id="tg-name" class="form-input" placeholder="Ваше имя" required>
-                    <input type="text" id="tg-contact" class="form-input"
-                        placeholder="Telegram ник или почта для связи">
-                    <textarea id="tg-message" class="form-input" rows="2" placeholder="Сообщение или идея..."
-                        required></textarea>
-                    <button type="submit" class="btn-submit">Отправить в Telegram →</button>
-                </form>
-            </div>
-        </div>
+<!-- PROFESSIONAL FOOTER -->
+<!-- PROFESSIONAL FOOTER -->
+<footer class="ft" id="footer">
+<div aria-hidden="true" class="ft-sky">
+<i style="--h:86%;--d:0s"></i>
+<i style="--h:72%;--d:-7s"></i>
+<i style="--h:95%;--d:-13s"></i>
+<i style="--h:67%;--d:-3s"></i>
+<i style="--h:79%;--d:-19s"></i>
+<i style="--h:64%;--d:-9s"></i>
+<i style="--h:91%;--d:-24s"></i>
+<i style="--h:70%;--d:-5s"></i>
+<i style="--h:100%;--d:-16s"></i>
+<i style="--h:66%;--d:-11s"></i>
+<i style="--h:83%;--d:-21s"></i>
+<i style="--h:74%;--d:-2s"></i>
+<i style="--h:97%;--d:-14s"></i>
+<i style="--h:68%;--d:-8s"></i>
+<i style="--h:88%;--d:-26s"></i>
+<i style="--h:76%;--d:-4s"></i>
+<i style="--h:93%;--d:-18s"></i>
+<i style="--h:65%;--d:-12s"></i>
+<i style="--h:90%;--d:-6s"></i>
+<i style="--h:99%;--d:-22s"></i>
+<i style="--h:81%;--d:-10s"></i>
+<i style="--h:71%;--d:-15s"></i>
+</div>
+<div aria-hidden="true" class="ft-grain"></div>
+<div class="wrap ft-in">
+<h2 class="ft-h">Создано для тех,<br>у кого есть реальные дела</h2>
+<div class="ft-cols">
+<nav aria-label="Разделы" class="ft-col">
+<span class="ft-lab">Разделы</span>
+<a href="index.html">Главная</a>
+<a href="about.html">Обо мне</a>
+<a href="index.html#projects">Проекты</a>
+<a href="library.html">Библиотека</a>
+<a href="contact.html">Контакты</a>
+</nav>
+<div class="ft-col">
+<span class="ft-lab">Связь</span>
+<a href="contact.html">Обсудить проект</a>
+<a href="https://t.me/gorogannisan" target="_blank" rel="noopener">Telegram @gorogannisan</a>
+<a href="mailto:gorogannisan641@gmail.com">gorogannisan641@gmail.com</a>
+</div>
+<nav aria-label="В сети" class="ft-col ft-col-else">
+<span class="ft-lab">В сети</span>
+<a class="ft-el" data-press-nav="" href="https://t.me/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-t">Telegram</span>
+  <span class="ft-el-i"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+</a>
+<a class="ft-el" data-press-nav="" href="https://github.com/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-t">GitHub</span>
+  <span class="ft-el-i"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg></span>
+</a>
+</nav>
+<div class="ft-col ft-col-status">
+<span class="ft-lab">Статус</span>
+<p class="ft-p" style="font-family: var(--mono); font-size: 13px; color: var(--ink-2); line-height: 1.6; margin: 0;">Открыт к новым проектам. Отвечаю в день обращения.</p>
+</div>
+</div>
+<div class="ft-foot">
+<nav aria-label="Соцсети" class="ft-marks">
+<a aria-label="Telegram" class="ft-el ft-mark" data-press-nav="" href="https://t.me/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-i"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+</a>
+<a aria-label="GitHub" class="ft-el ft-mark" data-press-nav="" href="https://github.com/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-i"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg></span>
+</a>
+</nav>
+<a class="ft-pill" href="contact.html">Обсудить проект</a>
+<span class="ft-fine">gorogannisan · всегда качество. никакого шлака.</span>
+</div>
+</div>
+</footer>
 
-        <div class="section-container">
-            <div class="integrated-footer">
-                <span>© 2026 whatrushik</span>
-                <a href="https://whatrushki.github.io" target="_blank" rel="noopener"
-                    class="footer-org-link">whatrushki.github.io ↗</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- JAVASCRIPT -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            initTilt();
-            initThemes();
-            initCursor();
-            initContactForm();
-        });
-
-        // 3D Card Tilt Functionality
-        function initTilt() {
-            const card = document.getElementById('avatar-card');
-            if (!card || !window.matchMedia('(pointer: fine)').matches) return;
-
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-                const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-                card.style.transform = `perspective(1000px) rotateX(${-y * 10}deg) rotateY(${x * 10}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-            });
-        }
-
-        // Theme Switcher
-        function initThemes() {
-            const themeBtns = document.querySelectorAll('.theme-btn');
-            const root = document.documentElement;
-            const savedTheme = localStorage.getItem('what-theme') || 'black';
-            setTheme(savedTheme);
-
-            themeBtns.forEach(btn => {
-                const theme = btn.getAttribute('data-theme-name');
-                if (theme === savedTheme) btn.classList.add('active');
-                else btn.classList.remove('active');
-
-                btn.addEventListener('click', () => {
-                    themeBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    setTheme(theme);
-                });
-            });
-
-            function setTheme(themeName) {
-                if (themeName === 'black') root.removeAttribute('data-theme');
-                else root.setAttribute('data-theme', themeName);
-                localStorage.setItem('what-theme', themeName);
-            }
-        }
-
-        // Custom Cursor
-        function initCursor() {
-            const cursor = document.querySelector('.custom-cursor');
-            const outline = document.querySelector('.custom-cursor-outline');
-            const glow = document.querySelector('.mouse-glow');
-            const root = document.documentElement;
-
-            if (!window.matchMedia('(pointer: fine)').matches) return;
-            document.body.classList.add('has-mouse');
-
-            let mouseX = -100, mouseY = -100, curX = -100, curY = -100, outX = -100, outY = -100;
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                root.style.setProperty('--mouse-x', `${e.clientX}px`);
-                root.style.setProperty('--mouse-y', `${e.clientY}px`);
-                if (glow) {
-                    glow.style.left = `${e.clientX}px`;
-                    glow.style.top = `${e.clientY}px`;
-                }
-            });
-
-            function render() {
-                curX += (mouseX - curX) * 0.35;
-                curY += (mouseY - curY) * 0.35;
-                if (cursor) {
-                    cursor.style.left = `${curX}px`;
-                    cursor.style.top = `${curY}px`;
-                }
-
-                outX += (mouseX - outX) * 0.15;
-                outY += (mouseY - outY) * 0.15;
-                if (outline) {
-                    outline.style.left = `${outX}px`;
-                    outline.style.top = `${outY}px`;
-                }
-                requestAnimationFrame(render);
-            }
-            render();
-
-            document.addEventListener('mouseover', (e) => {
-                if (e.target.closest('a, button, .project-card, .founder-visual, input, textarea')) {
-                    document.body.classList.add('cursor-hover');
-                } else {
-                    document.body.classList.remove('cursor-hover');
-                }
-            });
-        }
-
-        // Contact Form
-        function initContactForm() {
-            const form = document.getElementById('tg-form');
-            if (!form) return;
-
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const name = document.getElementById('tg-name').value.trim();
-                const contact = document.getElementById('tg-contact').value.trim();
-                const msg = document.getElementById('tg-message').value.trim();
-
-                let text = `Привет, Гор! Меня зовут ${name}.\n\n${msg}`;
-                if (contact) text += `\n\nМой контакт: ${contact}`;
-
-                window.open(`https://t.me/whatrushik?text=${encodeURIComponent(text)}`, '_blank');
-            });
-        }
-    </script>
+<script src="scripts/ascii-data.js"></script>
+<script src="scripts/ascii.js"></script>
+<script src="scripts/hero.js"></script>
+<script src="scripts/figures.js"></script>
+<script src="scripts/nav.js"></script>
+<script src="scripts/calls.js"></script>
+<script src="scripts/booking.js"></script>
+<script src="scripts/press.js"></script>
+<script src="scripts/mount-ascii.js"></script>
+<script src="scripts/gsap.min.js"></script>
+<script src="scripts/ScrollTrigger.min.js"></script>
+<script src="scripts/scroll-animations.js"></script>
 </body>
-
 </html>

@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Хакатон за 48 часов: мой стек, шаблоны и пайплайн от нуля до победы | gorogannisan</title>
+<meta name="description" content="Чек-лист и тактика, с которыми я забрал 7+ призовых мест на всероссийских хакатонах.">
+<meta name="author" content="Гор Оганнисян">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="article-bundle.css">
+</head>
+<body>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;pointer-events:none">
+  <filter id="oj-liquid-a" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.0014 0.0031" numOctaves="2" seed="11" result="field">
+      <animate attributeName="baseFrequency" dur="41s" begin="0s" repeatCount="indefinite" values="0.0014 0.0031; 0.0019 0.0024; 0.0010 0.0038; 0.0016 0.0028; 0.0014 0.0031"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="field" scale="150" xChannelSelector="R" yChannelSelector="G" result="wave">
+      <animate attributeName="scale" dur="29s" repeatCount="indefinite" values="150; 194; 118; 168; 150"/>
+    </feDisplacementMap>
+    <feTurbulence type="fractalNoise" baseFrequency="0.0011 0.0022" numOctaves="2" seed="28" result="field2">
+      <animate attributeName="baseFrequency" dur="53s" begin="0s" repeatCount="indefinite" values="0.0011 0.0022; 0.0014 0.0017; 0.0008 0.0027; 0.0012 0.0020; 0.0011 0.0022"/>
+    </feTurbulence>
+    <feDisplacementMap in="wave" in2="field2" scale="90" xChannelSelector="G" yChannelSelector="B" result="swell">
+      <animate attributeName="scale" dur="37s" repeatCount="indefinite" values="90; 118; 72; 102; 90"/>
+    </feDisplacementMap>
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="11" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
+    <feComposite in="swell" in2="mono" operator="arithmetic" k1="0" k2="1" k3="0.34" k4="-0.17"/>
+  </filter>
+
+  <filter id="oj-footer" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.0011 0.0019" numOctaves="2" seed="53" result="field">
+      <animate attributeName="baseFrequency" dur="59s" begin="0s" repeatCount="indefinite" values="0.0011 0.0019; 0.0014 0.0015; 0.0009 0.0023; 0.0011 0.0019"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="field" scale="44" xChannelSelector="R" yChannelSelector="G" result="soft">
+      <animate attributeName="scale" dur="47s" repeatCount="indefinite" values="44; 58; 34; 44"/>
+    </feDisplacementMap>
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="53" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
+    <feComposite in="soft" in2="mono" operator="arithmetic" k1="0" k2="1" k3="0.26" k4="-0.13"/>
+  </filter>
+
+  <filter id="oj-liquid-b" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.0014 0.0031" numOctaves="2" seed="43" result="field">
+      <animate attributeName="baseFrequency" dur="27s" begin="-9s" repeatCount="indefinite" values="0.0014 0.0031; 0.0019 0.0024; 0.0010 0.0038; 0.0016 0.0028; 0.0014 0.0031"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="field" scale="150" xChannelSelector="R" yChannelSelector="G" result="wave">
+      <animate attributeName="scale" dur="29s" repeatCount="indefinite" values="150; 194; 118; 168; 150"/>
+    </feDisplacementMap>
+    <feTurbulence type="fractalNoise" baseFrequency="0.0011 0.0022" numOctaves="2" seed="60" result="field2">
+      <animate attributeName="baseFrequency" dur="37s" begin="-14s" repeatCount="indefinite" values="0.0011 0.0022; 0.0014 0.0017; 0.0008 0.0027; 0.0012 0.0020; 0.0011 0.0022"/>
+    </feTurbulence>
+    <feDisplacementMap in="wave" in2="field2" scale="90" xChannelSelector="G" yChannelSelector="B" result="swell">
+      <animate attributeName="scale" dur="37s" repeatCount="indefinite" values="90; 118; 72; 102; 90"/>
+    </feDisplacementMap>
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="43" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
+    <feComposite in="swell" in2="mono" operator="arithmetic" k1="0" k2="1" k3="0.34" k4="-0.17"/>
+  </filter>
+</svg>
+
+<nav class="nv-nav" aria-label="Primary">
+  <a class="nv-brand" href="index.html">gor</a>
+  <div class="nv-links">
+    <a class="nv-link" href="index.html">Главная</a>
+    <a class="nv-link" href="about.html">Обо мне</a>
+    <a aria-current="page" class="nv-link" href="library.html">Библиотека</a>
+    <a class="nv-link nv-link-cta" href="contact.html">Обсудить проект</a>
+  </div>
+  <details class="nv-menu">
+    <summary class="nv-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nv-orbs">
+      <svg class="nv-menu-glyph" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path class="nv-mg-a" d="M2.5 5.5h11"/><path class="nv-mg-b" d="M2.5 10.5h11"/></svg>
+    </summary>
+    <div class="nv-menu-panel" id="nv-orbs">
+      <ul class="nv-items">
+        <li><a class="nv-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Главная</span></a></li>
+        <li><a class="nv-item" href="about.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg><span>Обо мне</span></a></li>
+        <li><a aria-current="page" class="nv-item" href="library.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5h5.5A2.5 2.5 0 0 1 12 7v13a2 2 0 0 0-2-2H4z"/><path d="M20 4.5h-5.5A2.5 2.5 0 0 0 12 7v13a2 2 0 0 1 2-2h6z"/></svg><span>Библиотека</span></a></li>
+      </ul>
+      <div class="nv-drop-cta">
+        <a class="nv-drop-btn" href="contact.html">Обсудить проект</a>
+      </div>
+    </div>
+  </details>
+</nav>
+
+<main id="top" class="rs rs-playbooks rs-deck" data-slug="hackathon-48h-mvp-pipeline">
+
+<header class="rs-head">
+<div class="wrap">
+  <div class="rs-tags">
+    <nav class="rs-crumbs pg-eyebrow" aria-label="Breadcrumb">
+      <a href="library.html">Библиотека</a>
+      <span aria-hidden="true">/</span>
+    </nav>
+    <a class="resource-badge badge-playbooks" href="library.html">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3.5h6v3H9zM9 12h6M9 16h4"/></svg>
+      Плейбук
+    </a>
+    <span class="resource-badge badge-file">Руководство</span>
+  </div>
+  <h1 class="pg-h1 rs-h1">Хакатон за 48 часов: мой стек, шаблоны и пайплайн от нуля до победы</h1>
+  <p class="pg-lede">Чек-лист и тактика, с которыми я забрал 7+ призовых мест на всероссийских хакатонах.</p>
+  <p class="rs-meta">
+    <span>Автор: <a href="about.html" rel="author">Гор Оганнисян</a></span>
+    <i aria-hidden="true">·</i>
+    <span>2026-09-22</span>
+    <i aria-hidden="true">·</i>
+    <span>v1.0</span>
+    <i aria-hidden="true">·</i>
+    <span>8 мин</span>
+  </p>
+  <div class="rs-hosts" style="display:flex;flex-wrap:wrap;gap:16px 36px;align-items:center;margin:28px 0 4px">
+    <div style="display:flex;align-items:center;gap:14px">
+      <img src="assets/gor-avatar.png" alt="Гор Оганнисян" width="52" height="52" decoding="async" style="width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 4px 14px rgba(29,29,34,.16)">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font:400 19px/1.2 var(--sans);color:var(--ink)">Гор Оганнисян</span>
+        <span style="display:flex;flex-wrap:gap;gap:4px 12px">
+          <a href="https://t.me/gorogannisan" target="_blank" rel="noreferrer" style="font:400 13px/1.3 var(--mono);color:var(--ink-3);text-decoration:none">@gorogannisan</a>
+          <a href="https://gorogannisan.site" target="_blank" rel="noreferrer" style="font:600 13px/1.3 var(--mono);color:var(--indigo);text-decoration:none">gorogannisan.site</a>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="rs-apps">
+    <span class="rs-apps-k">Стек</span>
+    <span class="rs-app">Compose Multiplatform</span><span class="rs-app">Vite + Tailwind</span><span class="rs-app">FastAPI / Ktor</span><span class="rs-app">Docker Compose</span><span class="rs-app">Certbot SSL</span><span class="rs-app">GitHub Actions</span>
+  </div>
+  <div class="rs-actions">
+    <a class="rs-btn rs-btn-primary" href="contact.html">Обсудить проект</a>
+    <a class="rs-btn rs-btn-secondary" href="https://t.me/gorogannisan" target="_blank" rel="noreferrer">Telegram @gorogannisan</a>
+  </div>
+</div>
+</header>
+
+<div class="wrap">
+<div class="rs-grid">
+<article class="rs-article">
+<p>Победа на хакатоне — это не магия, не «гениальные озарения» в 4 утра и не бессонные ночи. Это жесткая декомпозиция, заранее заготовленные боевые шаблоны репозиториев, беспощадное отсечение вторичных фич и стопроцентный фокус на рабочий демо-сценарий, который жюри сможет проверить вживую.</p>
+
+<ol class="rv rv-flow">
+<li class="rv-step">
+  <span class="rv-step-k"><span class="rv-step-n">0–4 ч</span></span>
+  <b class="rv-step-t">Kill Your Darlings</b>
+  <span class="rv-step-p">Выбор одной ключевой ценности и фиксация контракта API</span>
+</li>
+<li class="rv-step">
+  <span class="rv-step-k"><span class="rv-step-n">4–24 ч</span></span>
+  <b class="rv-step-t">Сборка ядра</b>
+  <span class="rv-step-p">Рабочий Happy Path к субботнему вечеру на реальном VDS</span>
+</li>
+<li class="rv-step">
+  <span class="rv-step-k"><span class="rv-step-n">24–36 ч</span></span>
+  <b class="rv-step-t">Полировка UI</b>
+  <span class="rv-step-p">Анимации, обработка крайних случаев и наполнение демо-данными</span>
+</li>
+<li class="rv-step">
+  <span class="rv-step-k"><span class="rv-step-n">36–48 ч</span></span>
+  <b class="rv-step-t">Питч & Бэкапы</b>
+  <span class="rv-step-p">Запись демо-видео, репетиция тайминга и защита</span>
+</li>
+</ol>
+
+<h2 id="pravilo-pervyh-dvuh-chasov-kill-your-darlings">Правило первых двух часов: Kill Your Darlings</h2>
+
+<p>90% команд проигрывают хакатон еще в пятницу вечером. Они собираются в переговорке и начинают проектировать «убийцу Uber с искусственным интеллектом, геймификацией и блокчейном». К утру воскресенья у них есть 10 недописанных микросервисов, падающий фронтенд и презентация с красивыми картинками, за которой нет продукта.</p>
+
+<blockquote><p>Мое золотое правило: <strong>Один сквозной пользовательский сценарий (Happy Path)</strong>. Пользователь нажимает три кнопки и получает видимый, осязаемый результат. Всё остальное — за борт.</p></blockquote>
+
+<h2 id="boevoy-tehnologicheskiy-stek-bez-overheda">Боевой технологический стек без оверхеда</h2>
+
+<p>Во время 48 часов нет времени настраивать webpack, разбираться с CORS или настраивать базу данных с нуля. Вся архитектура поднимается из готового проверенного шаблона за 60 секунд.</p>
+
+<div class="rv rv-hub" role="img" aria-label="48h MVP Core architecture">
+  <div class="rv-hub-center">
+    <span class="rv-hub-name">48h MVP Core</span>
+    <span class="rv-hub-note">Boilerplate Stack</span>
+  </div>
+  <svg class="rv-hub-wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,50 C55,50 45,12.50 100,12.50"/><path d="M0,50 C55,50 45,37.50 100,37.50"/><path d="M0,50 C55,50 45,62.50 100,62.50"/><path d="M0,50 C55,50 45,87.50 100,87.50"/>
+  </svg>
+  <ol class="rv-hub-spokes">
+    <li class="rv-spoke">
+  <span class="rv-spoke-t">
+    <b>Frontend: Compose / Vite Starter</b>
+    <span>Готовый шаблон с роутингом, темами и адаптивностью из коробки</span>
+  </span>
+</li>
+<li class="rv-spoke">
+  <span class="rv-spoke-t">
+    <b>Backend: FastAPI + OpenAPI</b>
+    <span>Автоматическая интерактивная документация Swagger для фронтендеров</span>
+  </span>
+</li>
+<li class="rv-spoke">
+  <span class="rv-spoke-t">
+    <b>Инфраструктура: Docker Compose</b>
+    <span>Поднятый VDS с Nginx, SSL certbot и авто-деплоем по git push</span>
+  </span>
+</li>
+<li class="rv-spoke">
+  <span class="rv-spoke-t">
+    <b>Mock API Layer</b>
+    <span>Фронтенд начинает верстку сразу на моках без ожидания бэкенда</span>
+  </span>
+</li>
+  </ol>
+</div>
+
+<h2 id="tayming-hakatona-raspisanie-po-chasam">Тайминг хакатона: расписание по часам</h2>
+
+<p>Четкое распределение обязанностей и отсечек по времени позволяет спать по 5–6 часов каждую ночь и оставаться со свежей головой к моменту защиты перед жюри:</p>
+
+<div class="rs-table">
+  <table>
+    <thead><tr><th>Время</th><th>Фаза</th><th>Ключевой результат</th></tr></thead>
+    <tbody>
+      <tr><td><strong>0 – 4 ч (Пт, вечер)</strong></td><td>Скоуп и контракт</td><td>Зафиксирован Swagger API, развернут репозиторий, подняты моки.</td></tr>
+<tr><td><strong>4 – 24 ч (Сб, день)</strong></td><td>Ядро системы</td><td>К 20:00 субботы основной сценарий работает в проде на сервере.</td></tr>
+<tr><td><strong>24 – 36 ч (Сб–Вс)</strong></td><td>Полировка и данные</td><td>Красивый визуал, анимации успеха, наполнение реалистичными данными.</td></tr>
+<tr><td><strong>36 – 44 ч (Вс, утро)</strong></td><td>Презентация и видео</td><td>Запись демо-скринкаста на случай падения Wi-Fi площадки.</td></tr>
+<tr><td><strong>44 – 48 ч (Вс, финал)</strong></td><td>Защита проекта</td><td>3 минуты питча: проблема → наше решение вживую → экономика.</td></tr>
+    </tbody>
+  </table>
+</div>
+<h2 id="gotovye-starter-kity-i-skripty-avtomatizatsii">Готовые стартер-киты и скрипты автоматизации</h2>
+
+<p>Вот рабочий <code>docker-compose.yml</code>, который я разворачиваю на сервере в первые 15 минут любого хакатона:</p>
+
+<p><div class="rs-code">
+  <div class="rs-code-bar">
+    <span class="resource-badge badge-prompts">docker-compose.production.yml</span>
+    <button type="button" class="rs-btn rs-btn-secondary rs-btn-sm" data-rs-copy>
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h9"></path></svg>
+      <span>Copy</span>
+    </button>
+  </div>
+  <pre><code>version: '3.8'</p>
+
+<p>services:
+  web:
+    build: ./frontend
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - api</p>
+
+<p>api:
+    build: ./backend
+    restart: always
+    environment:
+      - DATABASE_URL=sqlite:///./prod.db
+      - ENVIRONMENT=production
+    volumes:
+      - ./data:/app/data</code></pre>
+</div></p>
+
+<h2 id="podgotovka-k-pitchu-i-strahovka-ot-sboev">Подготовка к питчу и страховка от сбоев</h2>
+
+<p>На финальной защите хакатона решают не строчки кода, а то, как продукт воспринимает жюри за отведенные 3 минуты. Правила идеального демо:</p>
+
+<ol class="rv-steps">
+<li><strong>Никаких слайдов с кодом.</strong> Экспертам не интересен ваш Redux store. Покажите боль пользователя и решение в 2 клика.</li>
+<li><strong>Локальная демо-запись (Бэкап-видео).</strong> На хакатонах интернет всегда ложится в момент финальных защит из-за сотен ноутбуков. Всегда держите видеозапись рабочего экрана в 60 FPS на флешке.</li>
+<li><strong>Дайте кликнуть жюри.</strong> QR-код со ссылкой на живой рабочий веб-сервис на последнем слайде презентации производит в 10 раз большее впечатление, чем любой скриншот.</li>
+</ol>
+
+<p>С этой тактикой наша команда выиграла и заняла призовые места более чем в 7 крупнейших хакатонах. Главное — дисциплина процессов и готовность выбрасывать лишнее.</p>
+</article>
+
+<aside class="rs-toc" aria-label="На этой странице">
+  <div class="rs-toc-in">
+    <p class="rs-toc-h">На этой странице</p>
+    <ol>
+      <li><a href="#pravilo-pervyh-dvuh-chasov-kill-your-darlings"><span>Правило первых двух часов: Kill Your Darlings</span></a></li><li><a href="#boevoy-tehnologicheskiy-stek-bez-overheda"><span>Боевой технологический стек без оверхеда</span></a></li><li><a href="#tayming-hakatona-raspisanie-po-chasam"><span>Тайминг хакатона: расписание по часам</span></a></li><li><a href="#gotovye-starter-kity-i-skripty-avtomatizatsii"><span>Готовые стартер-киты и скрипты автоматизации</span></a></li><li><a href="#podgotovka-k-pitchu-i-strahovka-ot-sboev"><span>Подготовка к питчу и страховка от сбоев</span></a></li>
+    </ol>
+    <div class="rs-toc-foot">
+      <a class="rs-btn rs-btn-secondary rs-btn-sm" href="library.html">← Все статьи</a>
+    </div>
+  </div>
+</aside>
+</div>
+
+<section class="rs-end" aria-label="Связь и рассылка">
+  <div class="rs-door">
+    <div class="fg-copy">
+      <div class="fg-page-dots" aria-hidden="true">
+        <span class="fg-page-dot fg-page-dot-red"></span>
+        <span class="fg-page-dot fg-page-dot-yellow"></span>
+        <span class="fg-page-dot fg-page-dot-green"></span>
+      </div>
+      <h2 class="fg-h">Разработка и архитектура</h2>
+      <p class="fg-p">Помогу спроектировать надежную архитектуру, быстро собрать MVP или автоматизировать процессы разработки.</p>
+      <a class="rs-btn rs-btn-onblue" href="contact.html">Обсудить проект</a>
+    </div>
+  </div>
+  <div class="rs-card">
+    <p class="rs-card-k">Канал & Рассылка</p>
+    <h2 class="rs-card-h">Новые разборы первыми</h2>
+    <p class="rs-card-p">Новые кейсы, архитектурные рецепты и код выходят без спама. Прямо в ваш Telegram или на почту.</p>
+    <form class="rs-form" onsubmit="event.preventDefault(); window.open('https://t.me/gorogannisan', '_blank');">
+      <input class="rs-field" type="email" placeholder="you@company.com" aria-label="Email">
+      <button type="submit" class="rs-btn rs-btn-primary">Подписаться</button>
+    </form>
+    <p class="rs-note">Или сразу в Telegram: <a href="https://t.me/gorogannisan" target="_blank" style="color:var(--indigo);text-decoration:underline;">@gorogannisan</a></p>
+  </div>
+</section>
+
+<section class="rs-more" aria-labelledby="rs-more-h">
+  <div class="rs-more-head">
+    <h2 class="rs-more-h" id="rs-more-h">Еще из библиотеки</h2>
+    <a class="rs-more-all" href="library.html">Все материалы</a>
+  </div>
+  <ul class="rs-more-list">
+    <li><a class="rs-item" href="compose-multiplatform-offline-schedule.html">
+  <span class="rs-item-tags"><span class="resource-badge badge-guides"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="m15 9-1.8 4.2L9 15l1.8-4.2z"/></svg>Разбор</span></span>
+  <span class="rs-item-t">Как я перевел расписание университета на Compose Multiplatform</span>
+  <span class="rs-item-p">Оффлайн-кэш, виджеты Glance на рабочем столе и архитектура, которая не подводит в подвальных аудиториях.</span>
+  <span class="rs-item-u">gorogannisan.site · 6 мин</span>
+</a></li>
+<li><a class="rs-item" href="lightweight-calc-pure-js-telegram.html">
+  <span class="rs-item-tags"><span class="resource-badge badge-skills"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2 5.5 5.5 2-5.5 2-2 5.5-2-5.5-5.5-2 5.5-2z"/></svg>Разбор</span></span>
+  <span class="rs-item-t">Калькулятор кубатуры без фреймворков: чистый JS и заказы в Telegram</span>
+  <span class="rs-item-p">Как коммерческий проект «Лес Куб» конвертирует строителей в покупателей со скоростью 100 баллов PageSpeed.</span>
+  <span class="rs-item-u">gorogannisan.site · 4 мин</span>
+</a></li>
+<li><a class="rs-item" href="linux-infra-and-ai-automation.html">
+  <span class="rs-item-tags"><span class="resource-badge badge-infra"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Гайд</span></span>
+  <span class="rs-item-t">Linux-автоматизация и локальные AI-агенты: как я автоматизирую разработку</span>
+  <span class="rs-item-p">Настройка CI/CD, контейнеризация и подключение Claude/Gemini CLI к внутренним процессам разработки.</span>
+  <span class="rs-item-u">gorogannisan.site · 5 мин</span>
+</a></li>
+  </ul>
+</section>
+</div>
+
+<footer class="ft" id="footer">
+  <div class="ft-sky" aria-hidden="true">
+    <i style="--h:86%;--d:0s"></i>
+    <i style="--h:72%;--d:-7s"></i>
+    <i style="--h:95%;--d:-13s"></i>
+    <i style="--h:67%;--d:-3s"></i>
+    <i style="--h:79%;--d:-19s"></i>
+    <i style="--h:64%;--d:-9s"></i>
+    <i style="--h:91%;--d:-24s"></i>
+    <i style="--h:70%;--d:-5s"></i>
+    <i style="--h:100%;--d:-16s"></i>
+    <i style="--h:66%;--d:-11s"></i>
+    <i style="--h:83%;--d:-21s"></i>
+    <i style="--h:74%;--d:-2s"></i>
+    <i style="--h:97%;--d:-14s"></i>
+    <i style="--h:68%;--d:-8s"></i>
+    <i style="--h:88%;--d:-26s"></i>
+    <i style="--h:76%;--d:-4s"></i>
+    <i style="--h:93%;--d:-18s"></i>
+    <i style="--h:65%;--d:-12s"></i>
+    <i style="--h:90%;--d:-6s"></i>
+    <i style="--h:99%;--d:-22s"></i>
+    <i style="--h:81%;--d:-10s"></i>
+    <i style="--h:71%;--d:-15s"></i>
+  </div>
+  <div class="ft-grain" aria-hidden="true"></div>
+
+  <div class="wrap ft-in">
+    <h2 class="ft-h">Создано для тех,<br>у кого есть реальные дела</h2>
+
+    <div class="ft-cols">
+      <nav class="ft-col" aria-label="Site">
+        <span class="ft-lab">Навигация</span>
+        <a href="index.html">Главная</a>
+        <a href="about.html">Обо мне</a>
+        <a href="index.html#projects">Проекты</a>
+        <a href="library.html">Библиотека</a>
+        <a href="contact.html">Контакты</a>
+      </nav>
+      <div class="ft-col">
+        <span class="ft-lab">Связь</span>
+        <a href="contact.html">Обсудить проект</a>
+        <a href="https://t.me/gorogannisan" target="_blank" rel="noopener">Telegram @gorogannisan</a>
+        <a href="mailto:gorogannisan641@gmail.com">gorogannisan641@gmail.com</a>
+      </div>
+      <nav class="ft-col ft-col-else" aria-label="Elsewhere">
+        <span class="ft-lab">Соцсети</span>
+        <a class="ft-el" href="https://t.me/gorogannisan" target="_blank" rel="noopener"><span class="ft-el-t">Telegram</span></a>
+        <a class="ft-el" href="https://github.com/gorogannisan" target="_blank" rel="noopener"><span class="ft-el-t">GitHub</span></a>
+      </nav>
+      <div class="ft-col ft-col-status">
+        <span class="ft-lab">Статус</span>
+        <p class="ft-p" style="font-family: var(--mono); font-size: 13px; color: var(--ink-2); line-height: 1.6; margin: 0;">Открыт к новым проектам. Отвечаю в день обращения.</p>
+      </div>
+    </div>
+
+    <div class="ft-foot">
+      <nav class="ft-marks" aria-label="Elsewhere">
+        <a class="ft-el ft-mark" aria-label="Telegram" href="https://t.me/gorogannisan" target="_blank" rel="noopener"><span class="ft-el-t">Telegram</span></a>
+        <a class="ft-el ft-mark" aria-label="GitHub" href="https://github.com/gorogannisan" target="_blank" rel="noopener"><span class="ft-el-t">GitHub</span></a>
+      </nav>
+      <a class="ft-pill" href="contact.html">Обсудить проект</a>
+      <span class="ft-fine">gorogannisan · всегда качество. никакого шлака.</span>
+    </div>
+  </div>
+</footer>
+</main>
+
+<script src="scripts/article.js"></script>
+</body>
+</html>

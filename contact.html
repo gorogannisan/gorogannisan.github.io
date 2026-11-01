@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты — gorogannisan</title>
+<meta name="description" content="Прямая связь с разработчиком (gorogannisan) в Telegram.">
+<meta name="author" content="Гор Оганнисян (gorogannisan)">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/pixeboy.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/endless.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<style>
+/* Full viewport height (100vh / 100svh) with perfectly centered content */
+.ct-hero-section {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding-block: calc(var(--u) * 4);
+  overflow-x: clip;
+}
+
+.ct-hero-section > .wrap {
+  width: 100%;
+}
+
+.ct-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* Left text block: sits on top with z-index */
+.ct-text {
+  position: relative;
+  z-index: 3;
+  flex: 0 0 52%;
+  max-width: 540px;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.ct-title {
+  font-family: var(--sans);
+  font-size: clamp(34px, 4.4vw, 56px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 calc(var(--u) * 2.5);
+  text-wrap: balance;
+}
+
+.ct-desc {
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0 0 calc(var(--u) * 5);
+  max-width: 48ch;
+}
+
+/* Right canvas: big, square, tucks slightly under the text */
+.ct-canvas-wrap {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 54%;
+  max-width: 580px;
+  margin-left: -10%; /* Заходит под текст */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ct-square-plate {
+  display: block;
+  width: 100% !important;
+  max-width: 580px !important;
+  height: auto !important;
+  aspect-ratio: 1 / 1 !important; /* Крупное и квадратное */
+  color: var(--indigo);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: var(--r-l);
+  clip-path: inset(0 round var(--r-l));
+  animation: fg-levitate 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (max-width: 900px) {
+  .ct-hero-section {
+    min-height: auto;
+    padding-block: calc(var(--u) * 12) calc(var(--u) * 8);
+  }
+  .ct-stage {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ct-text {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  .ct-canvas-wrap {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 420px;
+    margin-left: 0;
+    margin-top: calc(var(--u) * 4);
+    margin-inline: auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;pointer-events:none">
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+    <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.045 0" />
+  </filter>
+</svg>
+
+<nav aria-label="Primary" class="nv-nav">
+  <a class="nv-brand" href="index.html">gor</a>
+  <div class="nv-links">
+    <a class="nv-link" href="about.html">Обо мне</a>
+    <a class="nv-link" href="index.html#projects">Проекты</a>
+    <a class="nv-link" href="library.html">Библиотека</a>
+    <a class="nv-link nv-link-cta nv-link-active" aria-current="page" href="contact.html">Обсудить проект</a>
+  </div>
+  <details class="nv-menu">
+    <summary aria-controls="nv-orbs" aria-expanded="false" aria-label="Меню" class="nv-menu-toggle">
+      <svg aria-hidden="true" class="nv-menu-glyph" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 16 16"><path class="nv-mg-a" d="M2.5 5.5h11"></path><path class="nv-mg-b" d="M2.5 10.5h11"></path></svg>
+    </summary>
+    <div class="nv-menu-panel" id="nv-orbs">
+      <ul class="nv-items">
+        <li><a class="nv-item" href="index.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Главная</span></a></li>
+        <li><a class="nv-item" href="about.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Обо мне</span></a></li>
+        <li><a class="nv-item" href="index.html#projects"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg><span>Проекты</span></a></li>
+        <li><a class="nv-item" href="library.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4.5h5.5A2.5 2.5 0 0 1 12 7v13a2 2 0 0 0-2-2H4z"></path><path d="M20 4.5h-5.5A2.5 2.5 0 0 0 12 7v13a2 2 0 0 1 2-2h6z"></path></svg><span>Библиотека</span></a></li>
+      </ul>
+      <div class="nv-drop-cta">
+        <a class="nv-drop-btn" href="contact.html">Обсудить проект</a>
+      </div>
+    </div>
+  </details>
+</nav>
+
+<main id="top">
+
+<section class="ct-hero-section">
+  <div class="wrap">
+    <div class="ct-stage">
+
+      <!-- Left: Text block (sits on top, overlapping the canvas) -->
+      <div class="ct-text">
+        <span class="fg-row-kicker">● ПРЯМАЯ СВЯЗЬ / TELEGRAM</span>
+        <h1 class="ct-title">Есть проект? Давайте обсудим.</h1>
+        <p class="ct-desc">Напишите напрямую в Telegram. Обсудим мобильное приложение, веб-сервис, Telegram-бота или автоматизацию компании. Отвечаю лично, без менеджеров и испорченных телефонов.</p>
+        <a class="hr-btn hr-btn-solid" href="https://t.me/gorogannisan" target="_blank" rel="noopener">Написать мне →</a>
+      </div>
+
+      <!-- Right: Big square canvas slightly tucking under text -->
+      <div class="ct-canvas-wrap">
+        <canvas class="fg-plate ct-square-plate" data-src="plates/motion-ridge.json" data-fit="fill" role="img" aria-label="Скалолазы на гребне, ASCII-анимация"></canvas>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="ft" id="footer">
+<div aria-hidden="true" class="ft-sky">
+<i style="--h:86%;--d:0s"></i>
+<i style="--h:72%;--d:-7s"></i>
+<i style="--h:95%;--d:-13s"></i>
+<i style="--h:67%;--d:-3s"></i>
+<i style="--h:79%;--d:-19s"></i>
+<i style="--h:64%;--d:-9s"></i>
+<i style="--h:91%;--d:-24s"></i>
+<i style="--h:70%;--d:-5s"></i>
+<i style="--h:100%;--d:-16s"></i>
+<i style="--h:66%;--d:-11s"></i>
+<i style="--h:83%;--d:-21s"></i>
+<i style="--h:74%;--d:-2s"></i>
+<i style="--h:97%;--d:-14s"></i>
+<i style="--h:68%;--d:-8s"></i>
+<i style="--h:88%;--d:-26s"></i>
+<i style="--h:76%;--d:-4s"></i>
+<i style="--h:93%;--d:-18s"></i>
+<i style="--h:65%;--d:-12s"></i>
+<i style="--h:90%;--d:-6s"></i>
+<i style="--h:99%;--d:-22s"></i>
+<i style="--h:81%;--d:-10s"></i>
+<i style="--h:71%;--d:-15s"></i>
+</div>
+<div aria-hidden="true" class="ft-grain"></div>
+<div class="wrap ft-in">
+<h2 class="ft-h">Создано для тех,<br>у кого есть реальные дела</h2>
+<div class="ft-cols">
+<nav aria-label="Разделы" class="ft-col">
+<span class="ft-lab">Разделы</span>
+<a href="index.html">Главная</a>
+<a href="about.html">Обо мне</a>
+<a href="index.html#projects">Проекты</a>
+<a href="library.html">Библиотека</a>
+<a href="contact.html">Контакты</a>
+</nav>
+<div class="ft-col">
+<span class="ft-lab">Связь</span>
+<a href="contact.html">Обсудить проект</a>
+<a href="https://t.me/gorogannisan" target="_blank" rel="noopener">Telegram @gorogannisan</a>
+<a href="mailto:gorogannisan641@gmail.com">gorogannisan641@gmail.com</a>
+</div>
+<nav aria-label="В сети" class="ft-col ft-col-else">
+<span class="ft-lab">В сети</span>
+<a class="ft-el" data-press-nav="" href="https://t.me/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-t">Telegram</span>
+  <span class="ft-el-i"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+</a>
+<a class="ft-el" data-press-nav="" href="https://github.com/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-t">GitHub</span>
+  <span class="ft-el-i"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg></span>
+</a>
+</nav>
+<div class="ft-col ft-col-status">
+<span class="ft-lab">Статус</span>
+<p class="ft-p" style="font-family: var(--mono); font-size: 13px; color: var(--ink-2); line-height: 1.6; margin: 0;">Открыт к новым проектам. Отвечаю в день обращения.</p>
+</div>
+</div>
+<div class="ft-foot">
+<nav aria-label="Соцсети" class="ft-marks">
+<a aria-label="Telegram" class="ft-el ft-mark" data-press-nav="" href="https://t.me/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-i"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+</a>
+<a aria-label="GitHub" class="ft-el ft-mark" data-press-nav="" href="https://github.com/gorogannisan" target="_blank" rel="noopener">
+  <span class="ft-el-i"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg></span>
+</a>
+</nav>
+<a class="ft-pill" href="contact.html">Обсудить проект</a>
+<span class="ft-fine">gorogannisan · всегда качество. никакого шлака.</span>
+</div>
+</div>
+</footer>
+
+<script src="scripts/ascii-data.js"></script>
+<script src="scripts/ascii.js"></script>
+<script src="scripts/nav.js"></script>
+<script src="scripts/press.js"></script>
+<script>
+(function () {
+  'use strict';
+  if (!window.OJAscii) return;
+  var plate = document.querySelector('canvas.fg-plate');
+  if (plate) {
+    plate.dataset.dissolve = '0.16';
+    window.OJAscii.mount(plate, {});
+  }
+})();
+</script>
+</body>
+</html>

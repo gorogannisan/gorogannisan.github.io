@@ -1,0 +1,17 @@
+# Backups and temporary files
+*.backup.*
+*.backup
+*.bak
+scraped_pages/
+opusjake_home.html
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE and OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WHAT Builder — Редактор контента</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            overflow-y: auto;
+        }
+
+        .builder-container {
+            max-width: 1050px;
+            margin: 3rem auto;
+            padding: 2.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .builder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .builder-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .builder-title span {
+            color: var(--accent);
+        }
+
+        .builder-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 4px;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--muted-foreground);
+            padding: 0.75rem 1rem;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            font-size: 0.85rem;
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .tab-btn.active {
+            background: var(--foreground);
+            color: var(--background);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .item-editor-card {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .upload-row {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .upload-row .form-input {
+            flex: 1;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--card);
+            border: 1px solid var(--accent);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-glow"></div>
+    <div class="background-grid"></div>
+
+    <div class="builder-container">
+        <div class="builder-header">
+            <div>
+                <h1 class="builder-title">WHAT <span>BUILDER</span></h1>
+                <p style="font-size: 0.85rem; color: var(--muted-foreground);">Редактируйте данные и скачивайте готовый
+                    <code>data.json</code> для публикации на GitHub Pages</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <input type="file" id="load-json-file" accept=".json" style="display: none;"
+                    onchange="loadExistingJSON(this)">
+                <button type="button" class="btn btn-outline"
+                    onclick="document.getElementById('load-json-file').click()">Загрузить свой JSON</button>
+                <a href="index.html" class="btn btn-outline">Открыть сайт ↗</a>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="builder-tabs">
+            <button class="tab-btn active" data-target="tab-hero-about">Главная & О нас</button>
+            <button class="tab-btn" data-target="tab-projects">Проекты</button>
+            <button class="tab-btn" data-target="tab-founder-team">Основатель & Команда</button>
+            <button class="tab-btn" data-target="tab-footer">Контакты & Подвал</button>
+        </div>
+
+        <form id="builder-form">
+            <!-- SECTION 1: HERO & ABOUT -->
+            <div class="form-section active" id="tab-hero-about">
+                <div class="input-grid">
+                    <h3 class="full-width"
+                        style="font-size: 1.15rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        Главный экран (Hero)</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="hero-slogan-start">Начало заголовка</label>
+                        <input type="text" id="hero-slogan-start" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="hero-slogan-highlight">Акцент заголовка (выделение)</label>
+                        <input type="text" id="hero-slogan-highlight" class="form-input" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="hero-desc">Описание под заголовком</label>
+                        <textarea id="hero-desc" class="form-input" rows="3" required></textarea>
+                    </div>
+
+                    <h3 class="full-width"
+                        style="font-size: 1.15rem; margin-top: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        О компании (About)</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="about-title">Заголовок секции</label>
+                        <input type="text" id="about-title" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="about-subtitle">Подзаголовок секции</label>
+                        <input type="text" id="about-subtitle" class="form-input" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="about-desc-huge">Главный текст (поддерживает
+                            &lt;strong&gt;)</label>
+                        <textarea id="about-desc-huge" class="form-input" rows="4" required></textarea>
+                    </div>
+
+                    <!-- Mini Cards -->
+                    <div class="full-width" style="margin-top: 1rem;">
+                        <h4 style="font-size: 1rem; margin-bottom: 1rem;">3 карточки направлений</h4>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius);">
+                                <input type="hidden" id="about-card-num-0">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <input type="text" id="about-card-title-0" class="form-input"
+                                        placeholder="Заголовок 1" required>
+                                    <input type="text" id="about-card-desc-0" class="form-input"
+                                        placeholder="Описание 1" required>
+                                </div>
+                            </div>
+                            <div style="border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius);">
+                                <input type="hidden" id="about-card-num-1">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <input type="text" id="about-card-title-1" class="form-input"
+                                        placeholder="Заголовок 2" required>
+                                    <input type="text" id="about-card-desc-1" class="form-input"
+                                        placeholder="Описание 2" required>
+                                </div>
+                            </div>
+                            <div style="border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius);">
+                                <input type="hidden" id="about-card-num-2">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <input type="text" id="about-card-title-2" class="form-input"
+                                        placeholder="Заголовок 3" required>
+                                    <input type="text" id="about-card-desc-2" class="form-input"
+                                        placeholder="Описание 3" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: PROJECTS -->
+            <div class="form-section" id="tab-projects">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                    <h3 style="font-size: 1.25rem;">Список проектов</h3>
+                    <button type="button" class="btn btn-outline" id="add-project-btn">+ Добавить проект</button>
+                </div>
+                <div id="projects-list-container"></div>
+            </div>
+
+            <!-- SECTION 3: FOUNDER & TEAM -->
+            <div class="form-section" id="tab-founder-team">
+                <div class="input-grid">
+                    <h3 class="full-width"
+                        style="font-size: 1.15rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        Основатель</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="founder-name">Имя</label>
+                        <input type="text" id="founder-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="founder-role">Должность</label>
+                        <input type="text" id="founder-role" class="form-input" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="founder-image">Фото основателя (URL или путь)</label>
+                        <input type="text" id="founder-image" class="form-input"
+                            placeholder="https://... или local-path.jpg">
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="founder-bio">Биография</label>
+                        <textarea id="founder-bio" class="form-input" rows="4" required></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h3 style="font-size: 1.25rem;">Команда</h3>
+                        <button type="button" class="btn btn-outline" id="add-member-btn">+ Добавить участника</button>
+                    </div>
+                    <div id="team-list-container"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: FOOTER -->
+            <div class="form-section" id="tab-footer">
+                <div class="input-grid">
+                    <h3 class="full-width"
+                        style="font-size: 1.15rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        Подвал и контакты</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="footer-cta-start">Начало призыва</label>
+                        <input type="text" id="footer-cta-start" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="footer-cta-highlight">Акцент призыва</label>
+                        <input type="text" id="footer-cta-highlight" class="form-input" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="footer-cta-desc">Текст под призывом</label>
+                        <textarea id="footer-cta-desc" class="form-input" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="footer-email">Email для связи</label>
+                        <input type="email" id="footer-email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="footer-copyright">Копирайт</label>
+                        <input type="text" id="footer-copyright" class="form-input" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="action-bar">
+                <button type="button" class="btn btn-outline" onclick="copyJSONToClipboard()">Скопировать JSON</button>
+                <button type="submit" class="btn btn-primary">Скачать data.json</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="toast" id="toast-notify">Готово!</div>
+
+    <script>
+        let currentConfig = null;
+
+        // Tab Switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+            });
+        });
+
+        // Load data.json on init
+        fetch('data.json')
+            .then(res => res.json())
+            .then(data => {
+                currentConfig = data;
+                populateForm(data);
+            })
+            .catch(() => {
+                // Sane default if fetch is blocked
+                currentConfig = {
+                    hero: {slogan_start: "Архитектура цифрового опыта.", slogan_highlight: "Инженерия без компромиссов.", description: "Описание..."},
+                    about: {title: "Инженерия и эстетика", subtitle: "Подзаголовок", description_huge: "Описание", cards: [{num: "01", title: "T1", desc: "D1"}, {num: "02", title: "T2", desc: "D2"}, {num: "03", title: "T3", desc: "D3"}]},
+                    projects: [],
+                    founder: {name: "Architect", role: "Founder", image: "", bio: "Bio...", stats: [{value: "10", label: "Лет"}, {value: "50M", label: "Запросов"}, {value: "15", label: "Релизов"}]},
+                    team: [],
+                    footer: {cta_title_start: "Давайте создадим", cta_title_highlight: "что-то стоящее.", cta_description: "Контакты", contact_email: "hello@what.tech", copyright: "WHAT Technologies.", socials: [{name: "GitHub", url: "#"}, {name: "Telegram", url: "#"}]}
+                };
+                populateForm(currentConfig);
+            });
+
+        function populateForm(data) {
+            document.getElementById('hero-slogan-start').value = data.hero.slogan_start || '';
+            document.getElementById('hero-slogan-highlight').value = data.hero.slogan_highlight || '';
+            document.getElementById('hero-desc').value = data.hero.description || '';
+
+            document.getElementById('about-title').value = data.about.title || '';
+            document.getElementById('about-subtitle').value = data.about.subtitle || '';
+            document.getElementById('about-desc-huge').value = data.about.description_huge || '';
+
+            (data.about.cards || []).forEach((c, idx) => {
+                if (idx < 3) {
+                    document.getElementById(`about-card-num-${idx}`).value = c.num;
+                    document.getElementById(`about-card-title-${idx}`).value = c.title;
+                    document.getElementById(`about-card-desc-${idx}`).value = c.desc;
+                }
+            });
+
+            document.getElementById('founder-name').value = data.founder.name || '';
+            document.getElementById('founder-role').value = data.founder.role || '';
+            document.getElementById('founder-bio').value = data.founder.bio || '';
+            document.getElementById('founder-image').value = data.founder.image || '';
+
+            document.getElementById('footer-cta-start').value = data.footer.cta_title_start || '';
+            document.getElementById('footer-cta-highlight').value = data.footer.cta_title_highlight || '';
+            document.getElementById('footer-cta-desc').value = data.footer.cta_description || '';
+            document.getElementById('footer-email').value = data.footer.contact_email || '';
+            document.getElementById('footer-copyright').value = data.footer.copyright || '';
+
+            renderProjectsList(data.projects || []);
+            renderTeamList(data.team || []);
+        }
+
+        function renderProjectsList(projects) {
+            const container = document.getElementById('projects-list-container');
+            container.innerHTML = '';
+            projects.forEach((proj, idx) => {
+                const div = document.createElement('div');
+                div.className = 'item-editor-card';
+                div.innerHTML = `
+                    <button type="button" class="remove-btn" onclick="removeProject(${idx})">×</button>
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label class="form-label">Название проекта</label>
+                            <input type="text" class="form-input" value="${proj.title}" oninput="currentConfig.projects[${idx}].title = this.value" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Метка категории</label>
+                            <input type="text" class="form-input" value="${proj.category_label || ''}" oninput="currentConfig.projects[${idx}].category_label = this.value" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Категория</label>
+                            <select class="form-input" onchange="currentConfig.projects[${idx}].category = this.value">
+                                <option value="infra" ${proj.category === 'infra' ? 'selected' : ''}>Инфраструктура (infra)</option>
+                                <option value="interfaces" ${proj.category === 'interfaces' ? 'selected' : ''}>Интерфейсы (interfaces)</option>
+                                <option value="labs" ${proj.category === 'labs' ? 'selected' : ''}>Лаборатория (labs)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Стек технологий (через запятую)</label>
+                            <input type="text" class="form-input" value="${(proj.tech || []).join(', ')}" oninput="currentConfig.projects[${idx}].tech = this.value.split(',').map(s=>s.trim()).filter(Boolean)">
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Краткое описание</label>
+                            <textarea class="form-input" rows="2" oninput="currentConfig.projects[${idx}].description = this.value">${proj.description || ''}</textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Подробное описание (в модальном окне)</label>
+                            <textarea class="form-input" rows="3" oninput="currentConfig.projects[${idx}].long_description = this.value">${proj.long_description || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ссылка на GitHub</label>
+                            <input type="text" class="form-input" value="${proj.github_url || ''}" oninput="currentConfig.projects[${idx}].github_url = this.value">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ссылка на релиз/демо</label>
+                            <input type="text" class="form-input" value="${proj.download_url || ''}" oninput="currentConfig.projects[${idx}].download_url = this.value">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderTeamList(team) {
+            const container = document.getElementById('team-list-container');
+            container.innerHTML = '';
+            team.forEach((member, idx) => {
+                const div = document.createElement('div');
+                div.className = 'item-editor-card';
+                div.innerHTML = `
+                    <button type="button" class="remove-btn" onclick="removeMember(${idx})">×</button>
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label class="form-label">Имя</label>
+                            <input type="text" class="form-input" value="${member.name}" oninput="currentConfig.team[${idx}].name = this.value" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Роль / Должность</label>
+                            <input type="text" class="form-input" value="${member.role}" oninput="currentConfig.team[${idx}].role = this.value" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Описание</label>
+                            <textarea class="form-input" rows="2" oninput="currentConfig.team[${idx}].description = this.value">${member.description || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telegram URL</label>
+                            <input type="text" class="form-input" value="${member.telegram || ''}" oninput="currentConfig.team[${idx}].telegram = this.value">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">GitHub URL</label>
+                            <input type="text" class="form-input" value="${member.github || ''}" oninput="currentConfig.team[${idx}].github = this.value">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.removeProject = (idx) => {
+            currentConfig.projects.splice(idx, 1);
+            renderProjectsList(currentConfig.projects);
+        };
+
+        window.removeMember = (idx) => {
+            currentConfig.team.splice(idx, 1);
+            renderTeamList(currentConfig.team);
+        };
+
+        document.getElementById('add-project-btn').addEventListener('click', () => {
+            currentConfig.projects.push({
+                id: 'proj-' + Date.now(),
+                category: 'infra',
+                category_label: 'Инфраструктура',
+                title: 'Новый проект',
+                description: 'Описание проекта...',
+                long_description: 'Подробное описание...',
+                tech: ['TypeScript', 'Node.js'],
+                screenshots: [],
+                github_url: '',
+                download_url: ''
+            });
+            renderProjectsList(currentConfig.projects);
+        });
+
+        document.getElementById('add-member-btn').addEventListener('click', () => {
+            currentConfig.team.push({
+                id: 'member-' + Date.now(),
+                name: 'Имя',
+                role: 'Разработчик',
+                image: '',
+                description: 'Описание обязанностей...',
+                github: '',
+                telegram: ''
+            });
+            renderTeamList(currentConfig.team);
+        });
+
+        // Load custom JSON file
+        window.loadExistingJSON = (input) => {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    currentConfig = JSON.parse(e.target.result);
+                    populateForm(currentConfig);
+                    showToast('Файл JSON успешно загружен в редактор!');
+                } catch (err) {
+                    alert('Ошибка парсинга JSON файла.');
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        function collectConfigFromForm() {
+            currentConfig.hero.slogan_start = document.getElementById('hero-slogan-start').value;
+            currentConfig.hero.slogan_highlight = document.getElementById('hero-slogan-highlight').value;
+            currentConfig.hero.description = document.getElementById('hero-desc').value;
+
+            currentConfig.about.title = document.getElementById('about-title').value;
+            currentConfig.about.subtitle = document.getElementById('about-subtitle').value;
+            currentConfig.about.description_huge = document.getElementById('about-desc-huge').value;
+
+            for (let i = 0; i < 3; i++) {
+                if (currentConfig.about.cards[i]) {
+                    currentConfig.about.cards[i].title = document.getElementById(`about-card-title-${i}`).value;
+                    currentConfig.about.cards[i].desc = document.getElementById(`about-card-desc-${i}`).value;
+                }
+            }
+
+            currentConfig.founder.name = document.getElementById('founder-name').value;
+            currentConfig.founder.role = document.getElementById('founder-role').value;
+            currentConfig.founder.bio = document.getElementById('founder-bio').value;
+            currentConfig.founder.image = document.getElementById('founder-image').value;
+
+            currentConfig.footer.cta_title_start = document.getElementById('footer-cta-start').value;
+            currentConfig.footer.cta_title_highlight = document.getElementById('footer-cta-highlight').value;
+            currentConfig.footer.cta_description = document.getElementById('footer-cta-desc').value;
+            currentConfig.footer.contact_email = document.getElementById('footer-email').value;
+            currentConfig.footer.copyright = document.getElementById('footer-copyright').value;
+
+            return currentConfig;
+        }
+
+        // Form Submit -> Download data.json
+        document.getElementById('builder-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const config = collectConfigFromForm();
+            const jsonStr = JSON.stringify(config, null, 4);
+
+            const blob = new Blob([jsonStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('data.json скачан! Замените им файл в корне проекта.');
+        });
+
+        window.copyJSONToClipboard = () => {
+            const config = collectConfigFromForm();
+            const jsonStr = JSON.stringify(config, null, 4);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                showToast('JSON скопирован в буфер обмена!');
+            });
+        };
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notify');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+    </script>
+</body>
+
+</html>
